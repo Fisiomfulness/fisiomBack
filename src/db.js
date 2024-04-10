@@ -7,8 +7,11 @@ const PASS = process.env.PASS;
 const DB = process.env.DB;
 const PORT = process.env.PORT;
 const ENDPOINT = process.env.ENDPOINT;
+
 // let connectionString = `${SERVER}://${USER}:${PASS}@${DB}.${PORT}.${ENDPOINT}`;
-let connectionString = "mongodb+srv://admin:admin@fisiumfulness.nwkkpwv.mongodb.net/"
+
+let connectionString = 'mongodb+srv://user:oX7K6nY3nBJLHeXA@fisiumfulness.nwkkpwv.mongodb.net/FisiumFulness'
+
 mongoose
   .connect(connectionString, {
     useNewUrlParser: true,
