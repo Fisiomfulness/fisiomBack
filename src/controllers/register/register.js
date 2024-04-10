@@ -1,35 +1,32 @@
-const User = require("../../models/User");
-const { check, validationResult } = require("express-validator");
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
-const jwt = require("jsonwebtoken");
-const { hashData } = require("../../util/hashData");
-const E_HOST = process.env.MAILHOST;
-const E_PORT = process.env.MAILPORT;
+const User = require('../../models/User');
+const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+const { hashData } = require('../../util/hashData');
 
 const register = async (req, res) => {
-    try {
-        const { password, email, ...restData } = req.body;
+  try {
+    const { password, email, ...restData } = req.body;
 
-        const emailVerify = await User.findOne({ email })
+    const emailVerify = await User.findOne({ email });
 
-        if (emailVerify) {
-            res.status(201).json({message: 'este email ya existe'});
-        } else {
-            const hashedPass = await hashData(password)
+    if (emailVerify) {
+      res.status(201).json({ message: 'este email ya existe' });
+    } else {
+      const hashedPass = await hashData(password);
 
-            restData.password = hashedPass
-            restData.email = email
+      restData.password = hashedPass;
+      restData.email = email;
 
-            await User.create(restData);
-            res.status(200).json({ message: 'creado con exito' });
-        }
-    } catch (error) {
-        res.status(400).send(error.message)
+      await User.create(restData);
+      res.status(200).json({ message: 'creado con exito' });
     }
-    // Envío del correo electrónico de confirmación
-    /*
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+  // Envío del correo electrónico de confirmación
+  /*
     const emailConfirmation = async (data) => {
         const transport = nodemailer.createTransport({
             host: E_HOST,
@@ -60,4 +57,4 @@ const register = async (req, res) => {
     });)*/
 };
 
-module.exports = { register }
+module.exports = { register };

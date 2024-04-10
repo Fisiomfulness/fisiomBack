@@ -1,0 +1,42 @@
+# variables
+@url = http://localhost:3000
+
+@user1 = 6617362bdaf979733f35c8b9
+@user2 = 66173646daf979733f35c8bc
+@user3 = 661736a57b0386e96b6c1ecb
+
+@specialty1 = 661862fd474d67f5e1b029b4
+@specialty2 = 661862fd474d67f5e1b029b5
+@specialty3 = 661862fd474d67f5e1b029b6
+
+
+### obtener usuarios
+GET {{url}}/users
+
+### obtener especialidades
+GET {{url}}/specialty
+
+### crear una nueva especialidad
+POST {{url}}/specialty
+Content-Type: application/json
+
+{
+  "name": "especialidad nueva"
+}
+
+### renombrar una especialidad
+PATCH {{url}}/specialty
+Content-Type: application/json
+
+{
+  "id": "{{specialty1}}",
+  "new_name": "testing working"
+}
+
+### eliminar una especialidad
+DELETE {{url}}/specialty
+Content-Type: application/json
+
+{
+  "id": "661862fd474d67f5e1b029b7"
+}
