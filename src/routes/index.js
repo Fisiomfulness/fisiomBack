@@ -17,6 +17,7 @@ router.use('/blogs', blog);
 router.use('/types', type);
 router.use('/comments', comment);
 router.use('/login', login);
+//router.user('/register', register);
 router.use('/products', product);
 router.use('/category', category);
 router.use('/mail', mail)

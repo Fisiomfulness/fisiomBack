@@ -19,7 +19,6 @@ const User = new Schema(
       unique: true,
       required: true,
     },
-
     firstname: {
       type: String,
       default: ' ',
@@ -36,14 +35,22 @@ const User = new Schema(
       type: String,
       required: true,
     },
-    username: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     role: {
       type: String,
+      enum: ['admin', 'user', 'profesional'],
       default: 'user',
+    },
+    specialties: {
+      type: Array,
+      default: [],
+    },
+    curriculum: {
+      type: String,
+      default: null
+    },
+    license: {
+      type: String,
+      default: null
     },
     token: {
       type: String,
