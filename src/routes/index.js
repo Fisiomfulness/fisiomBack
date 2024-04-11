@@ -6,7 +6,8 @@ const comment = require('./commentRoutes.js')
 const login = require('./loginRoutes.js')
 const product = require('./productRoutes.js')
 const category = require('./categoryRoutes.js')
-const mail = require("./mailRoutes.js")
+const mail = require("./mailRoutes.js");
+const register = require('./register.js')
 
 
 const router = Router()
@@ -17,7 +18,7 @@ router.use('/blogs', blog);
 router.use('/types', type);
 router.use('/comments', comment);
 router.use('/login', login);
-//router.user('/register', register);
+router.use('/register', register);
 router.use('/products', product);
 router.use('/category', category);
 router.use('/mail', mail)

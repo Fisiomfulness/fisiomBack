@@ -3,14 +3,12 @@ const {
   login,
   recoverAccount
 } = require("../controllers/index");
-const { register } = require("../controllers/login/loginExample");
 
-const loginRouter = Router();
+const router = Router();
 
 // loginRouter.post("/", loginController.login); // Cambio aquí
-loginRouter.post("/", login);
-loginRouter.post("/register", register)
-loginRouter.post("/recover-password", recoverAccount);
+router.post("/", login);
+router.post("/recover-password", recoverAccount);
 
-module.exports = loginRouter;
+module.exports = router;
 

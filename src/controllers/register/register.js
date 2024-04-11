@@ -11,32 +11,27 @@ const E_PORT = process.env.MAILPORT;
 const register = async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     try {
-        const { name, email, password, role, specialties, curriculum, phone, address, license } = req.body;
+        const { password, email, ...restData } = req.body;
 
-        const emailVerify = await User.findOne({email})
+        const emailVerify = await User.findOne({ email })
 
-        console.log(emailVerify);
-
-        if(emailVerify){
-            res.status(400).send("este email ya existe")
-        }
-
-        else if (role === 'user') {
+        if (emailVerify) {
+            res.status(400).json({message: 'este email ya existe'});
+        } else {
             const hashedPass = await hashData(password)
 
-            await User.create({
-                name,
-                email,
-                password: hashedPass,
-                specialties,
-                curriculum,
-                phone,
-                address,
-                license
-            });
-            
-            res.status(200).send("creado");
+            restData.password = hashedPass
+            restData.email = email
+
+            await User.create(restData);
+
+            res.status(200).json({ message: 'creado con exito' });
         }
+
+
+
+
+
     } catch (error) {
         res.status(400).send(error.message)
     }
