@@ -1,20 +1,18 @@
-require("dotenv").config();
-const jwt = require('jsonwebtoken');
-const JWT_secret = process.env.JWT_secret;
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/envConfig");
 
 const authAll = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  //console.log(token);
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Invalid token" });
     }
-    //console.log(token);
-    jwt.verify(token, JWT_secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-        next();
-    });
-}
-
+    next();
+  });
+};
 
 module.exports = authAll;
