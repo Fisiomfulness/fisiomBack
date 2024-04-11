@@ -9,7 +9,6 @@ const E_HOST = process.env.MAILHOST;
 const E_PORT = process.env.MAILPORT;
 
 const register = async (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
     try {
         const { password, email, ...restData } = req.body;
 
