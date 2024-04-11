@@ -1,11 +1,8 @@
-const User = require("../../models/User");
-const { check, validationResult } = require("express-validator");
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
-const jwt = require("jsonwebtoken");
-const E_HOST = process.env.MAILHOST;
-const E_PORT = process.env.MAILPORT;
+const User = require('../../models/User');
+const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 // exports.login = async (req, res) => {
 //   res.header("Access-Control-Allow-Origin", "*");
 //   const { email, password, username } = req.body;

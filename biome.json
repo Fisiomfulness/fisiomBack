@@ -10,5 +10,10 @@
     "indentWidth": 2,
     "lineWidth": 80,
     "ignore": []
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
   }
 }
