@@ -1,17 +1,23 @@
-const cloudinary = require('cloudinary').v2;
-const dotenv = require('dotenv');
-dotenv.config();
+const cloudinary = require("cloudinary").v2;
+const {
+  CLOUDINARY_NAME,
+  CLOUDINARY_KEY,
+  CLOUDINARY_SECRET,
+} = require("./envConfig");
 
-const { cloud_name, api_key, api_secret } = process.env;
-const cloudinaryCredentials = { cloud_name, api_key, api_secret };
+const cloudinaryCredentials = {
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_KEY,
+  api_secret: CLOUDINARY_SECRET,
+};
 cloudinary.config(cloudinaryCredentials);
 
-const FOLDER_PRODUCTS = 'FisiumFulness/products';
-const FOLDER_BLOGS = 'FisiumFulness/blogs';
-const FOLDER_USERS = 'FisiumFulness/users';
+const FOLDER_PRODUCTS = "FisiumFulness/products";
+const FOLDER_BLOGS = "FisiumFulness/blogs";
+const FOLDER_USERS = "FisiumFulness/users";
 
 const uploadOptions = {
-  resource_type: 'image',
+  resource_type: "image",
   use_filename: true,
   unique_filename: false,
   overwrite: true,
@@ -19,19 +25,19 @@ const uploadOptions = {
 
 const productsUploadOptions = {
   ...uploadOptions,
-  tags: ['product'],
+  tags: ["product"],
   folder: FOLDER_PRODUCTS,
 };
 
 const blogsUploadOptions = {
   ...uploadOptions,
-  tags: ['blog'],
+  tags: ["blog"],
   folder: FOLDER_BLOGS,
 };
 
 const userUploadOptions = {
   ...uploadOptions,
-  tags: ['user'],
+  tags: ["user"],
   folder: FOLDER_USERS,
 };
 
