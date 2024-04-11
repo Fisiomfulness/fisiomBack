@@ -1,21 +1,21 @@
-const User = require("../../models/User");
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
+const User = require('../../models/User');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
 const {
   MAIL_PORT,
   MAIL_HOST,
   MAIL_USER,
   MAIL_PASSWORD,
-} = require("../../config/envConfig");
+} = require('../../config/envConfig');
 
 const recoverAccount = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Origin', '*');
   const { email } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.send("Invalid email");
+    return res.send('Invalid email');
   }
 
   const newPassword = Math.random().toString(32).substring(2);
@@ -38,10 +38,10 @@ const recoverAccount = async (req, res) => {
 
     const { username, email, password } = data;
     await transport.sendMail({
-      from: "fisiumfulness",
+      from: 'fisiumfulness',
       to: email,
-      subject: "Account Recovery - Fisium Fulness",
-      text: "Account Recovery - Fisium Fulness",
+      subject: 'Account Recovery - Fisium Fulness',
+      text: 'Account Recovery - Fisium Fulness',
       html: `
         <p> Hi! ${username}, Reset your password on Fisium Fulness</p>
         <p> This is your new password: ${password}</p>
@@ -57,7 +57,7 @@ const recoverAccount = async (req, res) => {
     password: newPassword,
   });
 
-  res.send("Account recovery email sent");
+  res.send('Account recovery email sent');
 };
 
 module.exports = {
