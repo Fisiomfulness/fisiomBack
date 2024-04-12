@@ -1,24 +1,11 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
-const os = require("os");
-const USER = os.platform() === "win32" ? process.env.USER : process.env.DB_USER;
-const SERVER = process.env.SERVER_CONN;
-const PASS = process.env.PASS;
-const DB = process.env.DB;
-const PORT = process.env.PORT;
-const ENDPOINT = process.env.ENDPOINT;
-
-// let connectionString = `${SERVER}://${USER}:${PASS}@${DB}.${PORT}.${ENDPOINT}`;
-
-let connectionString = 'mongodb+srv://user:oX7K6nY3nBJLHeXA@fisiumfulness.nwkkpwv.mongodb.net/FisiumFulness'
+const { DB_SERVER } = require('./config/envConfig');
+const mongoose = require('mongoose');
 
 mongoose
-  .connect(connectionString, {
-    useNewUrlParser: true,
-  })
+  .connect(DB_SERVER)
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log('Connected to MongoDB');
   })
   .catch((error) => {
-    console.error("Error connecting to MongoDB:", error);
+    console.error('Error connecting to MongoDB:', error);
   });

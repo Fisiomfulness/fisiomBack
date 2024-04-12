@@ -1,20 +1,21 @@
-const User = require("../../models/User");
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
-const E_HOST = process.env.MAILHOST;
-const E_PORT = process.env.MAILPORT;
-const E_USER = process.env.MAILUSER;
-const E_PASSWORD = process.env.MAILPASSWORD;
+const User = require('../../models/User');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
+const {
+  MAIL_PORT,
+  MAIL_HOST,
+  MAIL_USER,
+  MAIL_PASSWORD,
+} = require('../../config/envConfig');
 
 const recoverAccount = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Origin', '*');
   const { email } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.send("Invalid email");
+    return res.send('Invalid email');
   }
 
   const newPassword = Math.random().toString(32).substring(2);
@@ -27,20 +28,20 @@ const recoverAccount = async (req, res) => {
   // Envío del correo electrónico de recuperación de cuenta
   const emailRecovery = async (data) => {
     const transport = nodemailer.createTransport({
-      host: E_HOST,
-      port: E_PORT,
+      host: MAIL_HOST,
+      port: MAIL_PORT,
       auth: {
-        user: E_USER,
-        pass: E_PASSWORD,
+        user: MAIL_USER,
+        pass: MAIL_PASSWORD,
       },
     });
 
     const { username, email, password } = data;
     await transport.sendMail({
-      from: "fisiumfulness",
+      from: 'fisiumfulness',
       to: email,
-      subject: "Account Recovery - Fisium Fulness",
-      text: "Account Recovery - Fisium Fulness",
+      subject: 'Account Recovery - Fisium Fulness',
+      text: 'Account Recovery - Fisium Fulness',
       html: `
         <p> Hi! ${username}, Reset your password on Fisium Fulness</p>
         <p> This is your new password: ${password}</p>
@@ -56,9 +57,9 @@ const recoverAccount = async (req, res) => {
     password: newPassword,
   });
 
-  res.send("Account recovery email sent");
-}
+  res.send('Account recovery email sent');
+};
 
 module.exports = {
-  recoverAccount
-}
+  recoverAccount,
+};

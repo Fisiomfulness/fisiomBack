@@ -1,21 +1,19 @@
 const nodemailer = require('nodemailer');
-require('dotenv').config();
-
-const USER = process.env.MAIL_USER;
-const PASS = process.env.MAIL_PASSWORD;
-const HOST = process.env.MAILHOST;
-const PORT = process.env.MAILPORT;
-const MAIL = process.env.MAIL_USER;
-
+const {
+  MAIL_PORT,
+  MAIL_HOST,
+  MAIL_USER,
+  MAIL_PASSWORD,
+} = require('../../config/envConfig');
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  host : HOST,
-  port: PORT,
+  host: MAIL_HOST,
+  port: MAIL_PORT,
   secure: false,
   auth: {
-    user: USER,
-    pass: PASS,
+    user: MAIL_USER,
+    pass: MAIL_PASSWORD,
   },
 });
 
@@ -23,7 +21,7 @@ const transporter = nodemailer.createTransport({
 const sendEmail = async (req, res) => {
   try {
     const { dni, to, text, attach } = req.body;
-    console.log("estamos en el back: ",attach.data)
+    console.log('estamos en el back: ', attach.data);
     const htmlUser = `
       <p>Su postulacion fue recibida con exito y sera revisada a la brevedad.</p>
       <p>A continuación, los detalles:</p>
@@ -36,18 +34,19 @@ const sendEmail = async (req, res) => {
     `;
 
     const mailOptions = {
-      from: MAIL,
+      from: MAIL_USER,
       to,
-      subject:"Postulacion a FisiomFulness",
+      subject: 'Postulacion a FisiomFulness',
       html: htmlUser,
-      attachments: [{
-        filename: "lorem-ipsum.pdf",
-        path: "./src/controllers/mail/lorem-ipsum.pdf",
-      }]
+      attachments: [
+        {
+          filename: 'lorem-ipsum.pdf',
+          path: './src/controllers/mail/lorem-ipsum.pdf',
+        },
+      ],
     };
 
     await transporter.sendMail(mailOptions);
-
 
     const htmlAdmin = `
       <p>Se recibio una nueva postulacion a FisiomFulness.</p>
@@ -60,11 +59,10 @@ const sendEmail = async (req, res) => {
       <p>${text}</p>
     `;
 
-
     const mailOptions2 = {
-      from: MAIL,
+      from: MAIL_USER,
       to, //agregar : MAIL para que este mail llegue a dilan
-      subject: "Nueva postulacion a FisiomFulness",
+      subject: 'Nueva postulacion a FisiomFulness',
       html: htmlAdmin,
       attachments: [
         {
@@ -84,5 +82,5 @@ const sendEmail = async (req, res) => {
 };
 
 module.exports = {
-  sendEmail
-}
+  sendEmail,
+};

@@ -1,7 +1,7 @@
-const User = require("../../models/User");
-const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require('../../config/envConfig');
 const { verifyHashedData } = require("../../util/hashData");
-const JWT_secret = process.env.JWT_secret;
+const User = require('../../models/User');
+const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -18,7 +18,7 @@ const login = async (req, res) => {
       if (!coincidePass) {
         res.status(201).json({ message: "Password incorrecto" })
       } else {
-        const token = jwt.sign({ userId: user._id, role: user.role }, JWT_secret, { expiresIn: '1h' })
+        const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' })
 
         /*
       - Colocar estos parametros dentro de cookie en un obj como tercer parametro para producion
@@ -56,5 +56,5 @@ const login = async (req, res) => {
 // }
 
 module.exports = {
-  login
-}
+  login,
+};

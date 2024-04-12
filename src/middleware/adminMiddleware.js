@@ -1,6 +1,5 @@
-require("dotenv").config();
 const jwt = require('jsonwebtoken');
-const JWT_secret = process.env.JWT_secret;
+const { JWT_SECRET } = require('../config/envConfig');
 
 const adminAuthMiddleware = (req, res, next) => {
   const token = req.cookies.token;
@@ -9,11 +8,11 @@ const adminAuthMiddleware = (req, res, next) => {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  jwt.verify(token, JWT_secret, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
-    if (decoded.role != 'admin'){
+    if (decoded.role != 'admin') {
       return res.status(401).json({ message: 'Invalid user' });
     }
     next();
