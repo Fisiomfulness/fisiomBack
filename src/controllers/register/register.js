@@ -15,7 +15,7 @@ const register = async (req, res) => {
         const emailVerify = await User.findOne({ email })
 
         if (emailVerify) {
-            res.status(400).json({message: 'este email ya existe'});
+            res.status(201).json({message: 'este email ya existe'});
         } else {
             const hashedPass = await hashData(password)
 
@@ -23,20 +23,11 @@ const register = async (req, res) => {
             restData.email = email
 
             await User.create(restData);
-
             res.status(200).json({ message: 'creado con exito' });
         }
-
-
-
-
-
     } catch (error) {
         res.status(400).send(error.message)
     }
-
-
-
     // Envío del correo electrónico de confirmación
     /*
     const emailConfirmation = async (data) => {
