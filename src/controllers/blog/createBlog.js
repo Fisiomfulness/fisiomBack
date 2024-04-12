@@ -1,5 +1,8 @@
-const fs = require('fs');
-const { blogsUploadOptions, cloudinary } = require('../../config/cloudinaryConfig');
+const fs = require('node:fs/promises');
+const {
+  blogsUploadOptions,
+  cloudinary,
+} = require('../../config/cloudinaryConfig');
 const Blog = require('../../models/Blog');
 
 const createBlog = async (req, res) => {
@@ -10,7 +13,7 @@ const createBlog = async (req, res) => {
     const nameImageDelete = req.file.filename;
     const { public_id, url } = await cloudinary.uploader.upload(
       newImage,
-      blogsUploadOptions
+      blogsUploadOptions,
     );
     const newBlog = {
       text,
@@ -21,7 +24,7 @@ const createBlog = async (req, res) => {
       id_image: public_id,
     };
     const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
-    await fs.promises.unlink(routeImageDelete);
+    await fs.unlink(routeImageDelete);
     const blog = new Blog(newBlog);
     await blog.save();
     return res.status(200).json({ blog });
@@ -29,9 +32,8 @@ const createBlog = async (req, res) => {
     //console.log(error);
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  createBlog
-}
+  createBlog,
+};
