@@ -16,14 +16,9 @@ const User = new Schema(
       unique: true,
       required: true,
     },
-
-    firstname: {
+    name: {
       type: String,
-      default: ' ',
-    },
-    lastname: {
-      type: String,
-      default: ' ',
+      required: true
     },
     status: {
       type: Boolean,
@@ -33,14 +28,22 @@ const User = new Schema(
       type: String,
       required: true,
     },
-    username: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     role: {
       type: String,
+      enum: ['admin', 'user', 'profesional'],
       default: 'user',
+    },
+    curriculum: {
+      type: String,
+      default: null
+    },
+    license: {
+      type: String,
+      default: null
+    },
+    stars: {
+      type: Number,
+      default: 0
     },
     token: {
       type: String,
