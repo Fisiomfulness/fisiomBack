@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "ESNext"
+    "target": "ESNext",
+    "strict": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "paths": {
+      "#src/*": ["src/*"]
+    }
   },
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
