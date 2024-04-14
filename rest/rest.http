@@ -9,10 +9,6 @@
 @specialty2 = 661862fd474d67f5e1b029b5
 @specialty3 = 661862fd474d67f5e1b029b6
 
-
-### obtener usuarios
-GET {{url}}/users
-
 ### obtener especialidades
 GET {{url}}/specialty
 

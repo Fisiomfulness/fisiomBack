@@ -1,0 +1,19 @@
+# variables
+@url = http://localhost:3000
+
+### crear producto
+POST {{url}}/products/create
+Content-Type: application/json
+// Para crear PRODUCTOS con este metodo, se debe tomar el un token valido con el rol admin y agregarlo aqui manualmente.
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjFhZTJhYzRhMTM4YWNjNDI5OGYzYzkiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTMxMDY5NjAsImV4cCI6MTcxMzExMDU2MH0.6vkjuNp13Fg_QZTSbiphuDABGdqaxhPd8mYeOot5KKQ
+
+{
+	"name": "producto",
+	"price": "123",
+	"stock": "1",
+	"category": "producto",
+    "description": "descripcion"
+}
+
+### obtener usuarios
+GET {{url}}/users
