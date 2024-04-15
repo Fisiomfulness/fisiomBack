@@ -1,0 +1,46 @@
+# variables
+@url = http://localhost:3000
+
+### crear usuario admin
+POST {{url}}/register
+Content-Type: application/json
+
+{
+	"email": "admin@gmail.com",
+	"role": "admin",
+	"name": "admin",
+	"password": "admin",
+	"dateOfBirth": "2006-04-13"
+}
+
+### crear usuario normal
+POST {{url}}/register
+Content-Type: application/json
+
+{
+	"email": "user4@gmail.com",
+	"name": "user",
+	"password": "user",
+	"dateOfBirth": "2006-04-13"
+}
+
+### obtener usuarios
+GET {{url}}/users
+
+### logear usuario normal
+POST {{url}}/login
+Content-Type: application/json
+
+{			
+	"email": "user@gmail.com",
+	"password": "user"
+}
+
+### logear usuario admin
+POST {{url}}/login
+Content-Type: application/json
+
+{			
+	"email": "admin@gmail.com",
+	"password": "admin"
+}
