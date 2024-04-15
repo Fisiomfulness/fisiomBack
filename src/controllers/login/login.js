@@ -1,24 +1,32 @@
 const { JWT_SECRET } = require('../../config/envConfig');
+const { verifyHashedData } = require('../../util/hashData');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email, password });
-    if (user) {
-      const token = jwt.sign(
-        { userId: user._id, role: user.role },
-        JWT_SECRET,
-        { expiresIn: '1h' },
-      );
-      return res.status(200).json({ user, token });
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.status(401).json({ message: 'Usuario no encontrado' });
     } else {
-      return res.status(401).json({ message: 'Usuario no encontrado' });
+      const coincidePass = await verifyHashedData(password, user.password);
+
+      if (!coincidePass) {
+        res.status(401).json({ message: 'Password incorrecto' });
+      } else {
+        let userForToken = { userId: user._id, role: user.role };
+
+        const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: '1h' });
+
+        res.setHeader('Authorization', `Bearer ${token}`);
+
+        return res.status(201).json({ message: 'Sesión iniciada con éxito' });
+      }
     }
   } catch (error) {
-    return res.status(400).send(error.message);
+    res.status(500).send(error.message);
   }
 };
 

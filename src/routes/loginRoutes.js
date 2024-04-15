@@ -4,11 +4,11 @@ const {
   recoverAccount
 } = require("../controllers/index");
 
-const loginRouter = Router();
+const router = Router();
 
 // loginRouter.post("/", loginController.login); // Cambio aquí
-loginRouter.post("/", login);
-loginRouter.post("/recover-password", recoverAccount);
+router.post("/", login);
+router.post("/recover-password", recoverAccount);
 
-module.exports = loginRouter;
+module.exports = router;
 
