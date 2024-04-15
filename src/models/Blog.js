@@ -10,11 +10,11 @@ const Blog = new Schema(
         return new ObjectId().toString();
       },
     },
-    text: {
+    title: {
       type: String,
       required: true,
     },
-    title: {
+    text: {
       type: String,
       required: true,
     },
@@ -24,23 +24,24 @@ const Blog = new Schema(
     },
     id_image: {
       type: String,
-      required: true,
     },
-    user_id: {
-      type: String,
-      // required: true,
+    avg_rating: {
+      type: Number,
+      max: 5,
+      default: 0,
     },
     status: {
       type: Boolean,
       default: true,
     },
-    type_id: {
+    createdBy: {
+      type: ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    type: {
       type: ObjectId,
       ref: 'Type',
-    },
-    createBy: {
-      type: String,
-      required: true,
     },
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }

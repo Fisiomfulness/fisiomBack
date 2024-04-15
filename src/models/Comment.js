@@ -10,22 +10,29 @@ const Comment = new Schema(
         return new ObjectId().toString();
       },
     },
-    user_id: {
-      type: ObjectId,
-      ref: 'User',
-      required: true,
-    },
     content: {
       type: String,
       required: true,
     },
-    blog_id: {
-      type: String,
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
       required: true,
     },
     status: {
       type: Boolean,
       default: true,
+    },
+    sender: {
+      type: ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    blog: {
+      type: ObjectId,
+      ref: 'Blog',
+      required: true,
     },
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
