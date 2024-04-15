@@ -77,6 +77,10 @@ const User = new Schema(
       type: String,
       default: 'does not have image id',
     },
+    specialty: {
+      type: Schema.Types.ObjectId,
+      ref: 'Specialty' 
+    }
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
 );
