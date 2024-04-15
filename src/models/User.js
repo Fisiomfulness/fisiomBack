@@ -18,7 +18,7 @@ const User = new Schema(
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     status: {
       type: Boolean,
@@ -35,15 +35,15 @@ const User = new Schema(
     },
     curriculum: {
       type: String,
-      default: null
+      default: null,
     },
     license: {
       type: String,
-      default: null
+      default: null,
     },
     stars: {
       type: Number,
-      default: 0
+      default: 0,
     },
     token: {
       type: String,
@@ -68,6 +68,11 @@ const User = new Schema(
     address: {
       type: String,
       default: '',
+    },
+    birthDate: {
+      type: String,
+      default: '',
+      required: true,
     },
     image: {
       type: String,

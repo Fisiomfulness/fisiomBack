@@ -1,29 +1,44 @@
+const moment = require('moment');
 const User = require('../../models/User');
-const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken');
 const { hashData } = require('../../util/hashData');
 
 const register = async (req, res) => {
   try {
-    const { password, email, ...restData } = req.body;
+    const { password, email, dateOfBirth, ...restData } = req.body;
 
     const emailVerify = await User.findOne({ email });
 
     if (emailVerify) {
-      res.status(201).json({ message: 'este email ya existe' });
+      res.status(401).json({ message: 'este email ya existe' });
     } else {
       const hashedPass = await hashData(password);
 
-      restData.password = hashedPass;
-      restData.email = email;
+      if (!moment(dateOfBirth, 'YYYY-MM-DD', true).isValid()) {
+        res.status(401).json({
+          message:
+            'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
+        });
+      } else {
+        const today = moment();
+        const birthDate = moment(dateOfBirth);
+        const age = today.diff(birthDate, 'years', true);
 
-      await User.create(restData);
-      res.status(200).json({ message: 'creado con exito' });
+        if (age < 18) {
+          res.status(401).json({
+            message: 'Necesitas tener 18 años o mas para registrarte.',
+          });
+        } else {
+          restData.password = hashedPass;
+          restData.birthDate = dateOfBirth;
+          restData.email = email;
+
+          await User.create(restData);
+          res.status(201).json({ message: 'creado con exito' });
+        }
+      }
     }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).send(error.message);
   }
   // Envío del correo electrónico de confirmación
   /*
