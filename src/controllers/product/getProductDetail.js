@@ -1,7 +1,5 @@
 const Product = require('../../models/Product');
 
-
-
 const getProductDetail = async (req, res) => {
   const { id } = req.params;
   try {
