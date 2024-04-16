@@ -10,6 +10,7 @@ const category = require('./categoryRoutes.js');
 const mail = require('./mailRoutes.js');
 const register = require('./register.js');
 const specialty = require('./specialtyRoutes.js');
+const profesionalScore = require('./profesionalScoreRoutes.js');
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use('/register', register);
 router.use('/products', product);
 router.use('/category', category);
 router.use('/mail', mail);
+router.use('/profesional_score', profesionalScore);
 
 module.exports = router;
