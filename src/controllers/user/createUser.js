@@ -31,10 +31,8 @@ const createUser = async (req, res) => {
         newImage,
         userUploadOptions,
       );
-
       urlImage = url;
       public_id_prueba = public_id;
-
       const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
       await fs.unlink(routeImageDelete);
     }

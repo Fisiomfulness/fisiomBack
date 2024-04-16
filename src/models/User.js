@@ -30,24 +30,8 @@ const User = new Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'user', 'profesional'],
+      enum: ['admin', 'user'],
       default: 'user',
-    },
-    curriculum: {
-      type: String,
-      default: null,
-    },
-    license: {
-      type: String,
-      default: null,
-    },
-    stars: {
-      type: Number,
-      default: 0,
-    },
-    token: {
-      type: String,
-      default: '',
     },
     confirm: {
       type: Boolean,
