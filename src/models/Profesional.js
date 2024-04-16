@@ -3,7 +3,7 @@ const { DEFAULT_USER_IMAGE } = require('../config/envConfig');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-const User = new Schema(
+const Profesional = new Schema(
   {
     _id: {
       type: String,
@@ -35,17 +35,32 @@ const User = new Schema(
     },
     role: {
       type: String,
-      default: 'user',
+      default: 'profesional',
     },
-    // interests: {
-    //   type: Array,
-    //   default: [],
-    // },
     gender: {
       type: String,
       Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
       required: true,
     },
+    curriculum: {
+      type: String,
+      default: null,
+      required: true,
+    },
+    license: {
+      type: String,
+      default: null,
+    },
+    // stars: {
+    //   type: Number,
+    //   default: 0,
+    // },
+    profesionalScore: [
+      {
+        type: ObjectId,
+        ref: 'ProfesionalScore',
+      },
+    ],
     confirmEmail: {
       type: Boolean,
       default: false,
@@ -54,6 +69,10 @@ const User = new Schema(
       type: String,
       default: '',
       required: true,
+    },
+    experience: {
+      type: Array,
+      default: [],
     },
     latitud: {
       type: Number,
@@ -79,4 +98,4 @@ const User = new Schema(
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
 );
 
-module.exports = model('User', User);
+module.exports = model('Profesional', Profesional);
