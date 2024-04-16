@@ -1,20 +1,21 @@
 const { Router } = require('express');
 const {
   createUser,
-  getUser,
+  getUsers,
   getDetail,
   updateUser,
   statusUser,
   deleteUser,
+  getUserById,
 } = require('../controllers/index');
 const { upload } = require('../config/multerConfig');
 const { getAllUsers } = require('../controllers/user/getAllUsers');
 
 const router = Router();
 
-router.get('/', getUser);
-router.get('/users', getAllUsers);
-
+router.post('/create', upload, createUser);
+router.get('/', getUsers);
+router.get('/:id', getUserById);
 router.get('/detail/:id', getDetail);
 
 router.post('/create', upload, createUser);

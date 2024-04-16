@@ -5,31 +5,24 @@ const {
   getBlogDetail,
   removeBlog,
   statusBlog,
-  updateBlog 
-} = require("./blog/index")
-
+  updateBlog,
+} = require('./blog/index');
 
 const {
   createCategory,
   deleteCategory,
   getCategoryById,
-  getCategorys 
-} = require("./category/index")
-
+  getCategorys,
+} = require('./category/index');
 
 const {
   createComment,
   deleteComment,
   getComment,
-  getCommentBlog 
-} = require("./comment/index")
+  getCommentBlog,
+} = require('./comment/index');
 
-
-const {
-  login,
-  recoverAccount 
-} = require("./login/index")
-
+const { login, recoverAccount } = require('./login/index');
 
 const {
   createProduct,
@@ -38,32 +31,27 @@ const {
   getProductDetail,
   removeProduct,
   statusProduct,
-  updateProduct
-} = require("./product/index")
-
+  updateProduct,
+} = require('./product/index');
 
 const {
   createType,
   deleteType,
   getTypeById,
-  getTypes
-} = require("./type/index")
-
+  getTypes,
+} = require('./type/index');
 
 const {
   createUser,
   deleteUser,
   getDetail,
-  getUser,
+  getUsers,
+  getUserById,
   statusUser,
-  updateUser
-} = require("./user/index")
+  updateUser,
+} = require('./user/index');
 
-
-const {
-  sendEmail
-} = require("./mail/index")
-
+const { sendEmail } = require('./mail/index');
 
 module.exports = {
   createBlog,
@@ -97,8 +85,9 @@ module.exports = {
   createUser,
   deleteUser,
   getDetail,
-  getUser,
+  getUsers,
+  getUserById,
   statusUser,
   updateUser,
-  sendEmail
-}
+  sendEmail,
+};
