@@ -16,8 +16,8 @@ const Comment = new Schema(
     },
     rating: {
       type: Number,
-      min: 1,
-      max: 5,
+      min: [1, 'must be at least 1, got {VALUE}'],
+      max: [5, 'no more than 5 of rating, got {VALUE}'],
       required: true,
     },
     status: {
