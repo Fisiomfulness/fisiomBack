@@ -18,6 +18,10 @@ const specialtySchema = new Schema(
       required: true,
       unique: true,
     },
+    users: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User' // Nombre del modelo de usuario
+    }]
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
