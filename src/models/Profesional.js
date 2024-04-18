@@ -91,7 +91,10 @@ const Profesional = new Schema(
       default: 'does not have image id',
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
+  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }  
+  },
 );
 
 Profesional.virtual('stars').get(function () {

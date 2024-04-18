@@ -13,7 +13,7 @@ const createProfessional = async (req, res) => {
     } else {
       const hashedPass = await hashData(password);
 
-      if (!moment(dateOfBirth, 'YYYY-MM-DD', true).isValid()) {
+      if (!moment(dateOfBirth,'YYYY-MM-DD', true).isValid()) {
         res.status(401).json({
           message:
             'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
