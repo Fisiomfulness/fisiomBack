@@ -26,9 +26,12 @@ const Product = new Schema(
       type: String,
       required: true,
     },
+    gallery: {
+      type: Array,
+    },
     stock: {
       type: Number,
-      required: true,
+      default: 1,
     },
     status: {
       type: Boolean,
@@ -42,10 +45,10 @@ const Product = new Schema(
       type: String,
       required: true,
     },
-    amount: {
-      type: Number,
-      default: 1
-    }
+    // amount: {
+    //   type: Number,
+    //   default: 1
+    // }
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
 );
