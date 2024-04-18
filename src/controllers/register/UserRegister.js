@@ -9,31 +9,32 @@ const UserRegister = async (req, res) => {
     const emailVerify = await User.findOne({ email });
 
     if (emailVerify) {
-      res.status(401).json({ message: 'este email ya existe' });
+      res.status(401).send('este email ya existe');
     } else {
       const hashedPass = await hashData(password);
 
       if (!moment(dateOfBirth, 'YYYY-MM-DD', true).isValid()) {
-        res.status(401).json({
-          message:
+        res
+          .status(401)
+          .send(
             'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
-        });
+          );
       } else {
         const today = moment();
         const birthDate = moment(dateOfBirth);
         const age = today.diff(birthDate, 'years', true);
 
         if (age < 18) {
-          res.status(401).json({
-            message: 'Necesitas tener 18 años o mas para registrarte.',
-          });
+          res
+            .status(401)
+            .send('Necesitas tener 18 años o mas para registrarte.');
         } else {
           restData.password = hashedPass;
           restData.birthDate = dateOfBirth;
           restData.email = email;
 
           await User.create(restData);
-          res.status(201).json({ message: 'creado con exito' });
+          res.status(201).send('creado con exito');
         }
       }
     }

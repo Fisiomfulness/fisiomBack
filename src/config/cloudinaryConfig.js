@@ -23,6 +23,13 @@ const uploadOptions = {
   overwrite: true,
 };
 
+const uploadOptionsFile = {
+  resource_type: 'auto',
+  use_filename: true,
+  unique_filename: false,
+  overwrite: true,
+};
+
 const productsUploadOptions = {
   ...uploadOptions,
   tags: ['product'],
@@ -41,10 +48,17 @@ const userUploadOptions = {
   folder: FOLDER_USERS,
 };
 
+const curriculumUploadOptions = {
+  ...uploadOptionsFile,
+  tags: ['curriculum'],
+  folder: FOLDER_USERS,
+};
+
 module.exports = {
   cloudinary,
   cloudinaryCredentials,
   productsUploadOptions,
   blogsUploadOptions,
   userUploadOptions,
+  curriculumUploadOptions,
 };
