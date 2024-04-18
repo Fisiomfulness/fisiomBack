@@ -21,8 +21,6 @@ const getProfessionals = async (req, res) => {
       { status: true }
     ] };
 
-    //let sortOptions = {};
-
     if (search.trim() !== '') {
       query.$and.push({ $or: [
         { name: { $regex: new RegExp(search, 'i') }},

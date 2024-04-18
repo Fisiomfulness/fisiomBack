@@ -17,11 +17,7 @@ router.post('/create', upload, createUser);
 router.get('/', getUsers);
 router.get('/:id', getUserById);
 router.get('/detail/:id', getDetail);
-
-router.post('/create', upload, createUser);
-
 router.put('/update/:id', upload, updateUser);
-
 router.patch('/status/:id', statusUser);
 
 // Ruta para eliminar usuarios creados por error o por otros motivos, no borrar

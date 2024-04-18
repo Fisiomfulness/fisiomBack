@@ -51,10 +51,6 @@ const Profesional = new Schema(
       type: String,
       default: null,
     },
-    // stars: {
-    //   type: Number,
-    //   default: 0,
-    // },
     profesionalScore: [
       {
         type: ObjectId,
@@ -98,4 +94,14 @@ const Profesional = new Schema(
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
 );
 
+Profesional.virtual('stars').get(function () {
+  if (this.profesionalScore && this.profesionalScore.length > 0) {
+    const totalScore = this.profesionalScore.reduce((acc, score) => acc + score.score, 0);
+    return totalScore / this.profesionalScore.length;
+  } else {
+    return 0;
+  }
+});
+
 module.exports = model('Profesional', Profesional);
+
