@@ -1,3 +1,4 @@
+// @ts-check
 const { Router } = require('express');
 
 const user = require('./userRoutes.js');
@@ -11,10 +12,12 @@ const mail = require('./mailRoutes.js');
 const register = require('./register.js');
 const specialty = require('./specialtyRoutes.js');
 const profesionalScore = require('./profesionalScoreRoutes.js');
+const userSpecialtyRoutes = require('./userSpecialtyRoutes.js');
 const professional = require('./professionalRoutes.js');
 
 const router = Router();
 
+router.use('/user_specialty', userSpecialtyRoutes);
 router.use('/specialty', specialty);
 router.use('/users', user);
 router.use('/blogs', blog);
