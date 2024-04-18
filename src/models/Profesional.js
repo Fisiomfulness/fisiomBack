@@ -97,7 +97,7 @@ const Profesional = new Schema(
   },
 );
 
-Profesional.virtual('stars').get(function () {
+Profesional.virtual('avgScore').get(function () {
   if (this.profesionalScore && this.profesionalScore.length > 0) {
     const totalScore = this.profesionalScore.reduce((acc, score) => acc + score.score, 0);
     return totalScore / this.profesionalScore.length;
