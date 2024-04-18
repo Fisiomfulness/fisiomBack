@@ -1,6 +1,7 @@
+// @ts-check
 const { Router } = require('express');
-const Specialty = require('../models/Specialty');
-const status = require('http-status');
+const Specialty = require('#src/models/Specialty');
+const { errorHandler } = require('#src/util/errorHandler');
 
 const router = Router();
 
@@ -43,16 +44,6 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-const errorHandler = (err, _req, res, next) => {
-  if (res.headersSent) return next(err);
-
-  const error = status.INTERNAL_SERVER_ERROR;
-
-  console.log('\n\x1b[33m' + status[error], err.message + '\x1b[0m');
-  console.log('\n' + err.stack + '\n');
-
-  res.status(error).json({ message: status[error] });
-};
 router.use(errorHandler);
 
 module.exports = router;

@@ -7,8 +7,8 @@ const Blog = require('../../models/Blog');
 
 const updateBlog = async (req, res) => {
   const id = req.params.id;
-  const { text, title, type_id, createBy, id_image } = req.body;
-  //console.log({ type_id });
+  const { text, title, rating, user_id, type_id, id_image } = req.body;
+
   try {
     const hasFile = !!req.file;
     let newImage = undefined;
@@ -21,7 +21,7 @@ const updateBlog = async (req, res) => {
       await cloudinary.uploader.destroy(id_image);
       const { public_id, url } = await cloudinary.uploader.upload(
         newImageUrl,
-        blogsUploadOptions,
+        blogsUploadOptions
       );
 
       const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
@@ -34,10 +34,11 @@ const updateBlog = async (req, res) => {
       text,
       title,
       // image,
-      createBy,
-      type_id,
+      rating,
       image: newImage,
       id_image: newIdImage,
+      createdBy: user_id,
+      type: type_id,
     };
 
     const condition = await Blog.findByIdAndUpdate({ _id: id }, newData);

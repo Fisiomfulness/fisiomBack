@@ -2,7 +2,7 @@ const moment = require('moment');
 const User = require('../../models/User');
 const { hashData } = require('../../util/hashData');
 
-const register = async (req, res) => {
+const UserRegister = async (req, res) => {
   try {
     const { password, email, dateOfBirth, ...restData } = req.body;
 
@@ -40,8 +40,12 @@ const register = async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-  // Envío del correo electrónico de confirmación
-  /*
+};
+
+module.exports = UserRegister;
+
+// Envío del correo electrónico de confirmación
+/*
     const emailConfirmation = async (data) => {
         const transport = nodemailer.createTransport({
             host: E_HOST,
@@ -70,6 +74,3 @@ const register = async (req, res) => {
         email: newUser.email,
         token: newUser.token,
     });)*/
-};
-
-module.exports = { register };
