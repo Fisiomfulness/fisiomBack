@@ -51,6 +51,15 @@ const {
   updateUser,
 } = require('./user/index');
 
+const {
+  getProfessionals,
+  getProfessionalDetail,
+  createProfessional,
+  statusProfessional,
+  updateProfessional,
+  deleteProfessional
+} = require('./professional/index');
+
 const { sendEmail } = require('./mail/index');
 
 module.exports = {
@@ -89,5 +98,11 @@ module.exports = {
   getUserById,
   statusUser,
   updateUser,
+  getProfessionals,
+  createProfessional,
+  getProfessionalDetail,
+  statusProfessional,
+  updateProfessional,
+  deleteProfessional,
   sendEmail,
 };
