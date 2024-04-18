@@ -6,7 +6,7 @@ const getBlogDetail = async (req, res) => {
     const blog = await Blog.findById(id)
       .populate('createdBy', 'name image')
       .populate('type', 'name');
-    if (!blog) throw new Error('blog not found');
+    if (!blog) return res.status(404).json({ message: 'blog not found' });
     res.status(200).json({ blog });
   } catch (error) {
     res.status(400).json({ message: error.message });
