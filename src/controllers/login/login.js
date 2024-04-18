@@ -9,20 +9,21 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res.status(401).json({ message: 'Usuario no encontrado' });
+      res.status(401).send('Usuario no encontrado');
     } else {
       const coincidePass = await verifyHashedData(password, user.password);
 
       if (!coincidePass) {
-        res.status(401).json({ message: 'Password incorrecto' });
+        res.status(401).send('Password incorrecto');
       } else {
         let userForToken = { userId: user._id, role: user.role };
 
         const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: '1h' });
 
-        res.setHeader('Authorization', `Bearer ${token}`);
-
-        return res.status(201).json({ message: 'Sesión iniciada con éxito' });
+        return res.status(201).send({
+          token,
+          message: 'Sesión iniciada con éxito',
+        });
       }
     }
   } catch (error) {
