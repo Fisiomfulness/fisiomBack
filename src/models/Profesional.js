@@ -90,6 +90,19 @@ const Profesional = new Schema(
       type: String,
       default: 'does not have image id',
     },
+    consultationPrice: {
+      type: Number,
+      default: 0,
+    },
+    specialties: {
+      type: [
+        {
+          type: ObjectId, 
+          ref: 'Specialty',
+        }
+      ],
+      default: [],
+    },
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
     toObject: { virtuals: true },
