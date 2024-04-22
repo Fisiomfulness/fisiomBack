@@ -7,6 +7,7 @@ const getProfessionals = async (req, res) => {
       page = 1,
       limit = 6,
       search = '',
+      specialtyId = ''
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -15,20 +16,25 @@ const getProfessionals = async (req, res) => {
     if (!Number.isInteger(pageInt) || !Number.isInteger(limitInt)) {
       return res.status(400).json({ message: 'page and limit must be integers' });
     }
-
     const skipIndex = (pageInt - 1) * limitInt;
-    let query = { $and: [
+
+    let professionalQuery = { $and: [
       { status: true }
     ] };
 
     if (search.trim() !== '') {
-      query.$and.push({ $or: [
+      professionalQuery.$and.push({ $or: [
         { name: { $regex: new RegExp(search, 'i') }},
         { address: { $regex: new RegExp(search, 'i') }},
       ]});
     }
 
-    const professionals = await Profesional.find(query)
+    if (specialtyId !== '') {
+      professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
+    }
+
+    const professionals = await Profesional.find(professionalQuery)
+    .populate('specialties', 'name')
     .skip(skipIndex)
     .limit(limitInt)
     .populate({
@@ -36,9 +42,9 @@ const getProfessionals = async (req, res) => {
       options: {
         sort: { createdAt: -1 }
       }
-    })
+    });
 
-    const totalProfessionals = await Profesional.countDocuments(query);
+    const totalProfessionals = await Profesional.countDocuments(professionalQuery);
     const totalPages = Math.ceil(totalProfessionals / limitInt);
     return res.status(200).json({ professionals, page: pageInt, totalPages });
 
