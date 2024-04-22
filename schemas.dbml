@@ -20,18 +20,35 @@ Table user_specialty {
 
 Table user {
   id id [pk]
-  email string [unique]
-  firstname string
-  lastname string
   status status
-  // username string [unique, null]
+  email string [unique]
+  name string
   password string
+  birthDate string
   role enum
-  verified bool
+  gender enum
+  confirmEmail bool
   phone string
+  latitud number
+  longitud number
+  address string
+  image string
   created_date date
   update_date date
-  avatar string
+}
+
+Table professional {
+  id id [pk]
+  user_id id [ref: - user.id]
+  curriculum string
+  license string
+  professionalScore string
+  experience number
+}
+
+Table admin {
+  id id [pk]
+  user_id id [ref: - user.id]
 }
 
 Table section {
