@@ -7,6 +7,7 @@ const getProfessionals = async (req, res) => {
       page = 1,
       limit = 6,
       search = '',
+      specialtyId = ''
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -26,6 +27,10 @@ const getProfessionals = async (req, res) => {
         { name: { $regex: new RegExp(search, 'i') }},
         { address: { $regex: new RegExp(search, 'i') }},
       ]});
+    }
+
+    if (specialtyId !== '') {
+      professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
     }
 
     const professionals = await Profesional.find(professionalQuery)
