@@ -5,6 +5,7 @@ const getProfessionalDetail = async (req, res) => {
   try {
     const { id } = req.params;
     const professional = await Profesional.findById(id)
+    .populate('specialties', 'name')
     .populate({
       path: 'profesionalScore',
       options: {
