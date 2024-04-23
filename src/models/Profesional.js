@@ -42,6 +42,10 @@ const Profesional = new Schema(
       Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
       required: true,
     },
+    resume: {
+      type: String,
+      default: "",
+    },
     curriculum: {
       type: String,
       default: null,
