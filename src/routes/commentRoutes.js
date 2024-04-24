@@ -5,13 +5,20 @@ const {
   getCommentBlog,
   deleteComment,
 } = require('../controllers/index');
+const { asyncHandler } = require('../util/asyncHandler');
+const { errorMiddleware } = require('../middleware/errorMiddleware');
+const { validationMiddleware } = require('../middleware/validationMiddleware');
+const { commentSchema } = require('../util/validationSchemas');
 
 const router = Router();
 
-router.post('/create', createComment);
-router.get('/', getComment);
-router.get('/blog/:id', getCommentBlog);
+router.get('/', asyncHandler(getComment));
+router.get('/blog/:id', asyncHandler(getCommentBlog));
 
-router.delete('/delete/:id', deleteComment);
+router.post('/create', validationMiddleware(commentSchema), asyncHandler(createComment));
+
+router.delete('/delete/:id', asyncHandler(deleteComment));
+
+router.use(errorMiddleware);
 
 module.exports = router;

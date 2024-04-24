@@ -1,12 +1,8 @@
 const Comment = require('../../models/Comment');
 
 const getComment = async (req, res) => {
-  try {
-    const comments = await Comment.find().populate('sender', 'name image');
-    return res.status(200).json({ comments });
-  } catch (error) {
-    return res.status(404).json({ message: error.message });
-  }
+  const comments = await Comment.find().populate('sender', 'name image');
+  res.status(200).json({ comments });
 };
 
 module.exports = {
