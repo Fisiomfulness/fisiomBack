@@ -9,7 +9,7 @@ const getProfessionalDetail = async (req, res) => {
     .populate({
       path: 'profesionalScore',
       options: {
-        sort: { createdAt: -1 }
+        sort: { createdDate: -1 }
       }
     })
 
