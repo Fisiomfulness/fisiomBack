@@ -51,12 +51,17 @@ const Profesional = new Schema(
       type: String,
       default: null,
     },
-    profesionalScore: [
+    professionalScore: [
       {
         type: ObjectId,
-        ref: 'ProfesionalScore',
+        ref: 'ProfessionalScore',
       },
     ],
+    averageScore: {
+      average: { type: Number, default: 0 },
+      totalComments: { type: Number, default: 0 },
+      totalScore: { type: Number, default: 0 },
+    },
     confirmEmail: {
       type: Boolean,
       default: false,
@@ -91,20 +96,23 @@ const Profesional = new Schema(
       default: 'does not have image id',
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
+  {
+    timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
     toObject: { virtuals: true },
-    toJSON: { virtuals: true }  
+    toJSON: { virtuals: true },
   },
 );
 
 Profesional.virtual('avgScore').get(function () {
-  if (this.profesionalScore && this.profesionalScore.length > 0) {
-    const totalScore = this.profesionalScore.reduce((acc, score) => acc + score.score, 0);
-    return totalScore / this.profesionalScore.length;
+  if (this.professionalScore && this.professionalScore.length > 0) {
+    const totalScore = this.professionalScore.reduce(
+      (acc, score) => acc + score.score,
+      0,
+    );
+    return totalScore / this.professionalScore.length;
   } else {
     return 0;
   }
 });
 
 module.exports = model('Profesional', Profesional);
-
