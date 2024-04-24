@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const routes = require('./routes/index');
 const cookieParser = require('cookie-parser');
 const { optionCors } = require('./config/corsConfig');
+const { errorHandler } = require('./util/errorHandler');
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/', routes);
+
+app.use(errorHandler);
 
 require('./db');
 
