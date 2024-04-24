@@ -36,7 +36,7 @@ const Blog = new Schema(
     },
     createdBy: {
       type: ObjectId,
-      ref: 'User',
+      ref: 'Profesional',
       required: true,
     },
     type: {
