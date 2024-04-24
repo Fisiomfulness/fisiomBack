@@ -50,6 +50,8 @@ const profesionalRegister = async (req, res) => {
 
           await Profesional.create(restData);
 
+          await fs.unlink(file);
+
           res.status(201).send('creado con exito');
         }
       }
