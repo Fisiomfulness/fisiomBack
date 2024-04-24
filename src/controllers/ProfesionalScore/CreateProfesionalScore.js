@@ -3,9 +3,9 @@ const ProfesionalScore = require('../../models/ProfesionalScore');
 
 const CreateProfesionalScore = async (req, res) => {
   const { _user, _profesional, name, description, score } = req.body;
-  const profesional = await Profesional.findById(_profesional);
-
+  
   try {
+    const profesional = await Profesional.findById(_profesional);
     const newProfesionalScore = new ProfesionalScore({
       _profesional,
       _user,
