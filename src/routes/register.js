@@ -5,7 +5,7 @@ const { uploadCurriculum } = require('../config/multerConfig');
 
 const router = Router();
 
-router.post('/profesional', uploadCurriculum, ProfesionalRegister);
+router.post('/professional', uploadCurriculum, ProfesionalRegister);
 router.post('/user', UserRegister);
 
 module.exports = router;
