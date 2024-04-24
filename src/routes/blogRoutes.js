@@ -2,6 +2,7 @@ const { Router } = require('express');
 const {
   createBlog,
   getAllBlogs,
+  getProfessionalBlogs,
   getBlogDetail,
   updateBlog,
   statusBlog,
@@ -9,19 +10,32 @@ const {
   removeBlog,
 } = require('../controllers/index');
 const { upload } = require('../config/multerConfig.js');
+const { asyncHandler } = require('../util/asyncHandler');
 /* const authAll = require('../middleware/authAll'); */
 const { adminAuthMiddleware } = require('../middleware/adminMiddleware.js');
+const { errorMiddleware } = require('../middleware/errorMiddleware');
+const { validationMiddleware } = require('../middleware/validationMiddleware');
+const { blogSchema } = require('../util/validationSchemas');
 
 const router = Router();
 
-// router.post('/create', adminAuthMiddleware, upload, createBlog);
-router.post('/create', upload, createBlog);
-router.get('/', getAllBlogs);
-router.get('/detail/:id', getBlogDetail);
-router.put('/update/:id', adminAuthMiddleware, upload, updateBlog);
-router.patch('/status/:id', adminAuthMiddleware, statusBlog);
+router.get('/', asyncHandler(getAllBlogs));
+router.get('/:professionalId', asyncHandler(getProfessionalBlogs));
+router.get('/detail/:id', asyncHandler(getBlogDetail));
+router.get('/removed', asyncHandler(removeBlog));
 
-router.delete('/delete/:id', adminAuthMiddleware, deleteBlog);
-router.get('/removed', removeBlog);
+// router.post('/create', adminAuthMiddleware, upload, createBlog);
+router.post('/create', validationMiddleware(blogSchema), asyncHandler(createBlog));
+
+// router.put('/update/:id', adminAuthMiddleware, validationMiddleware(blogSchema), asyncHandler(updateBlog));
+router.put('/update/:id', validationMiddleware(blogSchema, 'update'), asyncHandler(updateBlog));
+
+// router.patch('/status/:id', adminAuthMiddleware, asyncHandler(statusBlog));
+router.patch('/status/:id', asyncHandler(statusBlog));
+
+// router.delete('/delete/:id', adminAuthMiddleware, asyncHandler(deleteBlog));
+router.delete('/delete/:id', asyncHandler(deleteBlog));
+
+router.use(errorMiddleware);
 
 module.exports = router;

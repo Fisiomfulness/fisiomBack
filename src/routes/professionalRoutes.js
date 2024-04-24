@@ -5,7 +5,9 @@ const {
   getProfessionalDetail,
   statusProfessional,
   updateProfessional,
-  deleteProfessional
+  deleteProfessional,
+  addSpecialty,
+  removeSpecialty
 } = require('../controllers/index');
 
 const router = Router();
@@ -22,5 +24,9 @@ router.patch('/status/:id', statusProfessional);
 
 // Ruta para eliminar profesionales creados por error o por otros motivos
 router.delete('/delete/:id', deleteProfessional);
+
+// rutas para agregar o quitar specialties
+router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
+router.delete('/:profesional_id/specialty/:specialty_id', removeSpecialty);
 
 module.exports = router;

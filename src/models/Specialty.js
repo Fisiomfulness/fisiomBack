@@ -13,6 +13,15 @@ const specialtySchema = new Schema(
       required: true,
       unique: true,
     },
+    professionals: {
+      type: [
+        {
+          type: Types.ObjectId,
+          ref: 'Profesional',
+        },
+      ],
+      default: [],
+    }
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },

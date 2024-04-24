@@ -2,6 +2,7 @@ const {
   createBlog,
   deleteBlog,
   getAllBlogs,
+  getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
   statusBlog,
@@ -57,7 +58,9 @@ const {
   createProfessional,
   statusProfessional,
   updateProfessional,
-  deleteProfessional
+  deleteProfessional,
+  addSpecialty,
+  removeSpecialty,
 } = require('./professional/index');
 
 const { sendEmail } = require('./mail/index');
@@ -66,6 +69,7 @@ module.exports = {
   createBlog,
   deleteBlog,
   getAllBlogs,
+  getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
   statusBlog,
@@ -104,5 +108,7 @@ module.exports = {
   statusProfessional,
   updateProfessional,
   deleteProfessional,
+  addSpecialty,
+  removeSpecialty,
   sendEmail,
 };

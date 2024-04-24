@@ -2,6 +2,7 @@
 const { Router } = require('express');
 const Specialty = require('#src/models/Specialty');
 const { errorHandler } = require('#src/util/errorHandler');
+const { matching } = require('#src/util/criteria');
 
 const router = Router();
 
@@ -35,9 +36,32 @@ router.patch('/', async (req, res, next) => {
   }
 });
 
-router.get('/', async (_req, res, next) => {
+/**
+ * @typedef {import('#src/util/criteria').Criteria} Criteria
+ * @typedef {import('#src/util/criteria').Filter} Filter
+ * @typedef {import('#src/util/criteria').Order["orderType"]} OrderType
+ */
+
+router.get('/', async (req, res, next) => {
+  const { query: queryParams } = req;
+  // NOTE: usar `https://github.com/ljharb/qs` para pasar el filters desde el front
+  // qs.stringify({ filters: [{ field: 'name', operator: 'CONTAINS', value: 'a$' }] })
+  const { filters, orderBy, order, limit, offset } = queryParams;
+
   try {
-    const response = await Specialty.find();
+    /** @type {Criteria} */
+    const query = {
+      filters: filters ? /** @type {Filter[]} */ (filters) : [],
+      order: {
+        orderBy: orderBy ? /** @type {string} */ (orderBy) : '',
+        orderType: orderBy ? /** @type {OrderType} */ (order) : 'none',
+      },
+      limit: Number(limit),
+      offset: Number(offset),
+    };
+
+    const response = await matching(query, 'Specialty');
+
     res.json(response);
   } catch (error) {
     next(error);
