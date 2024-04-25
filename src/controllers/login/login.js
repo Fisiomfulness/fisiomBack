@@ -20,6 +20,8 @@ const login = async (req, res) => {
 
         const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: '1h' });
 
+        res.setHeader('Authorization', `Bearer ${token}`);
+
         return res.status(201).send({
           id: user._id,
           role: user.role,
