@@ -37,12 +37,12 @@ const getProfessionals = async (req, res) => {
     .populate('specialties', 'name')
     .skip(skipIndex)
     .limit(limitInt)
-    .populate({
-      path: 'profesionalScore',
-      options: {
-        sort: { createdDate: -1 }
-      }
-    });
+    // .populate({
+    //   path: 'profesionalScore',
+    //   options: {
+    //     sort: { createdDate: -1 }
+    //   }
+    // });
 
     const totalProfessionals = await Profesional.countDocuments(professionalQuery);
     const totalPages = Math.ceil(totalProfessionals / limitInt);

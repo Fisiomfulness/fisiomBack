@@ -4,6 +4,8 @@ const { getProfessionalDetail } = require('./getProfessionalDetail');
 const { statusProfessional } = require('./statusProfessional');
 const { updateProfessional } = require('./updateProfessional');
 const { deleteProfessional } = require('./deleteProfessional');
+const { createProfessionalScore } = require('./createProfessionalScore');
+const { getProfessionalScore } = require('./getProfessionalScore');
 const { addSpecialty } = require('./addSpecialty');
 const { removeSpecialty } = require('./removeSpecialty');
 
@@ -15,6 +17,8 @@ module.exports = {
   statusProfessional,
   updateProfessional,
   deleteProfessional,
+  createProfessionalScore,
+  getProfessionalScore,
   addSpecialty,
   removeSpecialty
 };
