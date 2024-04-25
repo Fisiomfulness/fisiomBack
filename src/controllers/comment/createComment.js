@@ -10,7 +10,7 @@ const createComment = async (req, res) => {
   await newComment.populate('sender', 'name image');
 
   // * update avg_rating of the blog
-  const blogComments = await Comment.find({ blog: blog_id });
+  const blogComments = await Comment.find({ blog: blog_id, status: true });
   let sum = 0;
   blogComments.forEach((c) => (sum += c.rating));
   let avg = sum / blogComments.length;
