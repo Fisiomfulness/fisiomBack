@@ -2,11 +2,21 @@ const { JWT_SECRET } = require('../../config/envConfig');
 const { verifyHashedData } = require('../../util/hashData');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
+const Profesional = require('#src/models/Profesional');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const users = await User.findOne({ email });
+    const professionals = await Profesional.findOne({ email });
+
+    let user = undefined;
+
+    users
+      ? (user = users)
+      : professionals
+        ? (user = professionals)
+        : (user = false);
 
     if (!user) {
       res.status(401).send('Usuario no encontrado');
