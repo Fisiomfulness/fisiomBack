@@ -12,7 +12,6 @@ const getProfessionals = async (req, res) => {
         .status(400)
         .json({ message: 'page and limit must be integers' });
     }
-
     const skipIndex = (pageInt - 1) * limitInt;
     let query = { $and: [{ status: true }] };
 
@@ -35,7 +34,8 @@ const getProfessionals = async (req, res) => {
         },
       });
 
-    const totalProfessionals = await Profesional.countDocuments(query);
+    const totalProfessionals =
+      await Profesional.countDocuments(professionalQuery);
     const totalPages = Math.ceil(totalProfessionals / limitInt);
     return res.status(200).json({ professionals, page: pageInt, totalPages });
   } catch (error) {

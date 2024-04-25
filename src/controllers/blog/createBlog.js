@@ -1,36 +1,14 @@
-const fs = require('node:fs/promises');
-const {
-  blogsUploadOptions,
-  cloudinary,
-} = require('../../config/cloudinaryConfig');
+const { NotFoundError } = require('#src/util/errors');
 const Blog = require('../../models/Blog');
 
 const createBlog = async (req, res) => {
-  const { title, text, image, user_id, type_id } = req.body;
+  const { professional_id, type_id } = req.validatedBody;
 
-  try {
-    // const newImage = req.file.path;
-    // const nameImageDelete = req.file.filename;
-    // const { public_id, url } = await cloudinary.uploader.upload(
-    //   newImage,
-    //   blogsUploadOptions
-    // );
-    const newBlog = {
-      text,
-      title,
-      createdBy: user_id,
-      type: type_id,
-      image,
-      // id_image: public_id,
-    };
-    // const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
-    // await fs.unlink(routeImageDelete);
-    const blog = new Blog(newBlog);
-    await blog.save();
-    res.status(200).json({ blog });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+  const newData = { ...req.validatedBody, createdBy: professional_id, type: type_id };
+  const blog = new Blog(newData);
+  await blog.save();
+
+  res.status(201).json({ blog, message: 'blog created successfully' });
 };
 
 module.exports = {

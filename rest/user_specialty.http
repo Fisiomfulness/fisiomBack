@@ -40,9 +40,24 @@ Content-Type: application/json
 
 # specialty
 
-
 ### obtener especialidades
 GET {{url}}/specialty
+### limit
+GET {{url}}/specialty?limit=2
+### offset
+GET {{url}}/specialty?offset=6
+### orderBy
+GET {{url}}/specialty?orderBy=createdDate
+### order, necesita orderBy
+GET {{url}}/specialty?orderBy=id&order=desc
+### obtener especialidades desde la posicion 3 con un limite de 4 y ordenarlas por la fecha de creacion
+GET {{url}}/specialty?orderBy=createdDate&order=asc&offset=3&limit=4
+### filters
+GET {{url}}/specialty?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=Médico clínico
+### filters con expresion, traera las especialidades que terminen con 'a'
+GET {{url}}/specialty?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=a$
+### filters con expresion, traera las especialidades que contengan 'a'
+GET {{url}}/specialty?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=a
 
 ### crear una nueva especialidad
 POST {{url}}/specialty

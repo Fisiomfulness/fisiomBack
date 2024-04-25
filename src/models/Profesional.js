@@ -42,6 +42,10 @@ const Profesional = new Schema(
       Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
       required: true,
     },
+    resume: {
+      type: String,
+      default: "",
+    },
     curriculum: {
       type: String,
       default: null,
@@ -94,6 +98,19 @@ const Profesional = new Schema(
     id_image: {
       type: String,
       default: 'does not have image id',
+    },
+    consultationPrice: {
+      type: Number,
+      default: 0,
+    },
+    specialties: {
+      type: [
+        {
+          type: ObjectId, 
+          ref: 'Specialty',
+        }
+      ],
+      default: [],
     },
   },
   {
