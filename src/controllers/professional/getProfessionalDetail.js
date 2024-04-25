@@ -7,7 +7,7 @@ const getProfessionalDetail = async (req, res) => {
     const professional = await Profesional.findById(id)
     .populate('specialties', 'name')
     .populate({
-      path: 'profesionalScore',
+      path: 'professionalScore',
       options: {
         sort: { createdDate: -1 }
       }

@@ -55,7 +55,7 @@ const Profesional = new Schema(
       type: String,
       default: null,
     },
-    profesionalScore: [
+    professionalScore: [
       {
         type: ObjectId,
         ref: 'ProfessionalScore',
