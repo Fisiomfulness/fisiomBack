@@ -44,7 +44,7 @@ const Profesional = new Schema(
     },
     resume: {
       type: String,
-      default: "",
+      default: '',
     },
     curriculum: {
       type: String,
@@ -58,6 +58,7 @@ const Profesional = new Schema(
     professionalScore: [
       {
         type: ObjectId,
+        ref: 'ProfessionalScore',
         ref: 'ProfessionalScore',
       },
     ],
@@ -106,30 +107,16 @@ const Profesional = new Schema(
     specialties: {
       type: [
         {
-          type: ObjectId, 
+          type: ObjectId,
           ref: 'Specialty',
-        }
+        },
       ],
       default: [],
     },
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true },
   },
 );
-
-Profesional.virtual('avgScore').get(function () {
-  if (this.professionalScore && this.professionalScore.length > 0) {
-    const totalScore = this.professionalScore.reduce(
-      (acc, score) => acc + score.score,
-      0,
-    );
-    return totalScore / this.professionalScore.length;
-  } else {
-    return 0;
-  }
-});
 
 module.exports = model('Profesional', Profesional);

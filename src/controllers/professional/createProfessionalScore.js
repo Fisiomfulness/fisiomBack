@@ -43,4 +43,4 @@ const createProfessionalScore = async (req, res) => {
   }
 };
 
-module.exports = createProfessionalScore;
+module.exports = { createProfessionalScore };

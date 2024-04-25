@@ -16,4 +16,4 @@ const getProfessionalScore = async (req, res) => {
   }
 };
 
-module.exports = getProfessionalScore;
+module.exports = { getProfessionalScore };

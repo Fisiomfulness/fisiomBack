@@ -59,6 +59,8 @@ const {
   statusProfessional,
   updateProfessional,
   deleteProfessional,
+  createProfessionalScore,
+  getProfessionalScore,
   addSpecialty,
   removeSpecialty,
 } = require('./professional/index');
@@ -108,6 +110,8 @@ module.exports = {
   statusProfessional,
   updateProfessional,
   deleteProfessional,
+  createProfessionalScore,
+  getProfessionalScore,
   addSpecialty,
   removeSpecialty,
   sendEmail,
