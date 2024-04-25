@@ -1,5 +1,5 @@
-const Comment = require('../../models/Comment');
-const Blog = require('../../models/Blog');
+const Blog = require('#src/models/Blog');
+const Comment = require('#src/models/Comment');
 
 const LIMIT_COMMENTS = 30;
 
@@ -13,7 +13,9 @@ const getCommentBlog = async (req, res) => {
   const limitInt = parseInt(limit);
 
   if (!Number.isInteger(offsetInt) || !Number.isInteger(limitInt))
-    return res.status(400).json({ message: 'offset and limit must be integers' });
+    return res
+      .status(400)
+      .json({ message: 'offset and limit must be integers' });
 
   if (limitInt > LIMIT_COMMENTS)
     return res.status(400).json({ message: 'limit exceeded' });

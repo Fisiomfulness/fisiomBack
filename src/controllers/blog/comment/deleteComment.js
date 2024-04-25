@@ -1,5 +1,4 @@
-const Comment = require('../../models/Comment');
-
+const Comment = require('#src/models/Comment');
 
 const deleteComment = async (req, res) => {
   const { id } = req.params;
@@ -11,8 +10,8 @@ const deleteComment = async (req, res) => {
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
-}
+};
 
 module.exports = {
-  deleteComment
-}
+  deleteComment,
+};

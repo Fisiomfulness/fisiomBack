@@ -1,11 +1,11 @@
 const moment = require('moment');
 const fs = require('node:fs/promises');
-const { hashData } = require('../../util/hashData');
-const Profesional = require('../../models/Profesional');
+const { hashData } = require('#src/util/hashData');
+const Profesional = require('#src/models/Profesional');
 const {
   cloudinary,
   curriculumUploadOptions,
-} = require('../../config/cloudinaryConfig');
+} = require('#src/config/cloudinaryConfig');
 
 const profesionalRegister = async (req, res) => {
   try {

@@ -20,7 +20,7 @@ const {
   deleteComment,
   getComment,
   getCommentBlog,
-} = require('./comment/index');
+} = require('./blog/comment/index');
 
 const { login, recoverAccount } = require('./login/index');
 
@@ -57,7 +57,7 @@ const {
   createProfessional,
   statusProfessional,
   updateProfessional,
-  deleteProfessional
+  deleteProfessional,
 } = require('./professional/index');
 
 const { sendEmail } = require('./mail/index');

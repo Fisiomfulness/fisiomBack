@@ -1,6 +1,6 @@
 const moment = require('moment');
-const User = require('../../models/User');
-const { hashData } = require('../../util/hashData');
+const User = require('#src/models/User');
+const { hashData } = require('#src/util/hashData');
 
 const UserRegister = async (req, res) => {
   try {
