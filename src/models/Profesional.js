@@ -55,12 +55,17 @@ const Profesional = new Schema(
       type: String,
       default: null,
     },
-    profesionalScore: [
+    professionalScore: [
       {
         type: ObjectId,
-        ref: 'ProfesionalScore',
+        ref: 'ProfessionalScore',
       },
     ],
+    averageScore: {
+      average: { type: Number, default: 0 },
+      totalComments: { type: Number, default: 0 },
+      totalScore: { type: Number, default: 0 },
+    },
     confirmEmail: {
       type: Boolean,
       default: false,
@@ -74,17 +79,14 @@ const Profesional = new Schema(
       type: Array,
       default: [],
     },
-    latitud: {
-      type: Number,
-      default: 0,
-    },
-    longitud: {
-      type: Number,
-      default: 0,
-    },
     address: {
       type: String,
       default: '',
+    },
+    coordinates: {
+      type: [Number], // long, lat
+      default: [0, 0],
+      index: '2d'
     },
     image: {
       type: String,
@@ -108,20 +110,11 @@ const Profesional = new Schema(
       default: [],
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true }  
+  { 
+    timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
   },
 );
 
-Profesional.virtual('avgScore').get(function () {
-  if (this.profesionalScore && this.profesionalScore.length > 0) {
-    const totalScore = this.profesionalScore.reduce((acc, score) => acc + score.score, 0);
-    return totalScore / this.profesionalScore.length;
-  } else {
-    return 0;
-  }
-});
 
 module.exports = model('Profesional', Profesional);
 
