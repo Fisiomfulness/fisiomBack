@@ -1,3 +1,4 @@
+// @ts-check
 const { Schema, model, Types } = require('mongoose');
 
 const specialtySchema = new Schema(
@@ -33,4 +34,55 @@ const specialtySchema = new Schema(
   },
 );
 
-module.exports = model('Specialty', specialtySchema);
+/**
+ * @typedef
+ *   {import('mongoose').InferSchemaType<typeof specialtySchema>}
+ * InferSchemaTest
+ */
+
+/**
+ * NOTE: `professionals` debe tiparse desde el modelo `Profesional` incluyendo
+ * los campos `createdDate` y `updatedDate` como opcionales, lo mismo debe
+ * hacerse con `professionalScore`
+ *
+ * @typedef {{
+ *   _id: string,
+ *   name: string,
+ *   is_deleted: boolean,
+ *   createdDate?: Date,
+ *   updatedDate?: Date
+ * }} ISpecialtyDocument
+ *
+ * @typedef {import('mongoose').Model<ISpecialtyDocument, {}, {}>} ISpecialtyModel
+ *
+ * @type {ReturnType<typeof model<ISpecialtyDocument, ISpecialtyModel>>}
+ */
+// @ts-ignore
+const SpecialtyModel = model('Specialty', specialtySchema);
+
+class Specialty {
+  /**
+   * @param {{
+   *   id: string,
+   *   name: string,
+   * }} values
+   */
+  constructor({ id, name }) {
+    /** @readonly @type {string} */
+    this.id = id;
+    /** @readonly @type {string} */
+    this.name = name;
+  }
+}
+
+/**
+ * @typedef {{
+ *   count: number,
+ *   results: Specialty[]
+ * }} SpecialtyResponse
+ */
+
+module.exports = {
+  SpecialtyModel,
+  Specialty,
+};
