@@ -6,12 +6,6 @@ const getProfessionalDetail = async (req, res) => {
     const { id } = req.params;
     const professional = await Profesional.findById(id)
     .populate('specialties', 'name')
-    .populate({
-      path: 'professionalScore',
-      options: {
-        sort: { createdDate: -1 }
-      }
-    })
 
     if (!professional) throw new Error('professional not found');
 

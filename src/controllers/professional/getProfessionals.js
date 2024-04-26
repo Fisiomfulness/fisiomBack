@@ -19,7 +19,10 @@ const getProfessionals = async (req, res) => {
     const skipIndex = (pageInt - 1) * limitInt;
 
     let professionalQuery = { $and: [
-      { status: true }
+      { coordinates: {
+        $near: [-12.057822374374036, -77.06708360541617]
+      }},
+      { status: true },
     ] };
 
     if (search.trim() !== '') {
@@ -38,7 +41,10 @@ const getProfessionals = async (req, res) => {
     .skip(skipIndex)
     .limit(limitInt)
 
-    const totalProfessionals = await Profesional.countDocuments(professionalQuery);
+    const queryWithoutNear = { ...professionalQuery }
+    queryWithoutNear.$and.shift()
+    
+    const totalProfessionals = await Profesional.countDocuments(queryWithoutNear);
     const totalPages = Math.ceil(totalProfessionals / limitInt);
     return res.status(200).json({ professionals, page: pageInt, totalPages });
 

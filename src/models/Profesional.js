@@ -79,17 +79,14 @@ const Profesional = new Schema(
       type: Array,
       default: [],
     },
-    latitud: {
-      type: Number,
-      default: 0,
-    },
-    longitud: {
-      type: Number,
-      default: 0,
-    },
     address: {
       type: String,
       default: '',
+    },
+    coordinates: {
+      type: [Number], // long, lat
+      default: [0, 0],
+      index: '2d'
     },
     image: {
       type: String,
@@ -117,6 +114,7 @@ const Profesional = new Schema(
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
   },
 );
+
 
 module.exports = model('Profesional', Profesional);
 
