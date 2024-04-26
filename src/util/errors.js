@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 
+class InvalidArgumentError extends Error {}
+
 // ? Blueprint for our errors, don't throw it
 class ApiError extends Error {
   constructor(message, statusCode, name) {
@@ -53,6 +55,7 @@ class ServiceError extends ApiError {
 }
 
 module.exports = {
+  InvalidArgumentError,
   ApiError,
   SemanticError,
   BadRequestError,

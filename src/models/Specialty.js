@@ -21,7 +21,11 @@ const specialtySchema = new Schema(
         },
       ],
       default: [],
-    }
+    },
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
