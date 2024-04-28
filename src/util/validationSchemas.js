@@ -1,5 +1,5 @@
 const { z } = require('zod');
-const { validateId } = require('../util/helpers');
+const { validateId, countHtmlCharacters } = require('../util/helpers');
 
 const blogSchema = z.object({
   title: z
@@ -8,8 +8,8 @@ const blogSchema = z.object({
     .max(100, 'no more than 100 characters'),
   text: z
     .string()
-    .min(300, 'minimum of 300 characters')
-    .max(8000, 'no more than 8000 characters'),
+    .refine((value) => countHtmlCharacters(value) >= 300, 'minimum of 300 characters')
+    .refine((value) => countHtmlCharacters(value) <= 8000, 'no more than 8000 characters'),
   image: z.string().url('not a valid url'),
   professional_id: z
     .string()

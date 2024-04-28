@@ -1,10 +1,10 @@
 const { BadRequestError, NotFoundError } = require('../../util/errors');
 const { validateId } = require('../../util/helpers');
 const Blog = require('../../models/Blog');
+const Comment = require('../../models/Comment');
 
 const LIMIT_BLOGS = 30;
 
-// ! TODO = OBTENER CONTEO DE LOS COMMENTARIOS DE CADA BLOG
 const getProfessionalBlogs = async (req, res, next) => {
   const { professionalId } = req.params;
   const { page = 1, limit = LIMIT_BLOGS } = req.query;
@@ -26,12 +26,23 @@ const getProfessionalBlogs = async (req, res, next) => {
     .sort({ createdDate: -1 })
     .skip(skipIndex)
     .limit(limitInt)
-    .populate('type', 'name');
+    .populate('type', 'name')
+
+  const activeCommentsCounts = await Comment.aggregate([
+    { $match: { status: true } },
+    { $group: { _id: '$blog', count: { $sum: 1 } } },
+  ]);
+
+  // ? add the field activeComments to the professional blogs
+  const blogsWithActiveCommentsCount = blogs.map((blog) => {
+    const count = activeCommentsCounts.find((item) => item._id.toString() === blog._id.toString())?.count || 0;
+    return { ...blog._doc, activeComments: count };
+  });
 
   const totalBlogs = await Blog.countDocuments(query);
   const totalPages = Math.ceil(totalBlogs / limitInt);
 
-  res.status(200).json({ blogs, page: pageInt, totalPages });
+  res.status(200).json({ blogs: blogsWithActiveCommentsCount, page: pageInt, totalPages });
 };
 
 module.exports = {
