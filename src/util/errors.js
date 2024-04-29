@@ -26,6 +26,12 @@ class UnauthorizedError extends ApiError {
   }
 }
 
+class ForbiddenError extends ApiError {
+  constructor(message) {
+    super(message, httpStatus.FORBIDDEN, 'ForbiddenError');
+  }
+}
+
 // ? Not found.
 class NotFoundError extends ApiError {
   constructor(message) {
@@ -59,6 +65,7 @@ module.exports = {
   ApiError,
   SemanticError,
   BadRequestError,
+  ForbiddenError,
   NotFoundError,
   ConflictError,
   ServiceError,

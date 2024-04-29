@@ -9,32 +9,58 @@ const {
   deleteBlog,
   removeBlog,
 } = require('../controllers/index');
-const { upload } = require('../config/multerConfig.js');
 const { asyncHandler } = require('../util/asyncHandler');
-/* const authAll = require('../middleware/authAll'); */
-const { adminAuthMiddleware } = require('../middleware/adminMiddleware.js');
 const { errorMiddleware } = require('../middleware/errorMiddleware');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { blogSchema } = require('../util/validationSchemas');
 
+const roles = require('../util/roles');
+const authAll = require('../middleware/authAll');
+const permit = require('../middleware/rolesMiddleware');
+
 const router = Router();
 
 router.get('/', asyncHandler(getAllBlogs));
-router.get('/:professionalId', asyncHandler(getProfessionalBlogs));
 router.get('/detail/:id', asyncHandler(getBlogDetail));
-router.get('/removed', asyncHandler(removeBlog));
 
-// router.post('/create', adminAuthMiddleware, upload, createBlog);
-router.post('/create', validationMiddleware(blogSchema), asyncHandler(createBlog));
+// ? Routes below are authenticated
+router.use(authAll);
 
-// router.put('/update/:id', adminAuthMiddleware, validationMiddleware(blogSchema), asyncHandler(updateBlog));
-router.put('/update/:id', validationMiddleware(blogSchema, 'update'), asyncHandler(updateBlog));
+router.get(
+  '/:professionalId',
+  permit(roles.USER, roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
+  asyncHandler(getProfessionalBlogs)
+);
+router.get(
+  '/removed',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  asyncHandler(removeBlog)
+);
 
-// router.patch('/status/:id', adminAuthMiddleware, asyncHandler(statusBlog));
-router.patch('/status/:id', asyncHandler(statusBlog));
+router.post(
+  '/create',
+  permit(roles.PROFESSIONAL, roles.SUPER_ADMIN),
+  asyncHandler(createBlog)
+);
 
-// router.delete('/delete/:id', adminAuthMiddleware, asyncHandler(deleteBlog));
-router.delete('/delete/:id', asyncHandler(deleteBlog));
+router.put(
+  '/update/:id',
+  permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
+  validationMiddleware(blogSchema, 'update'),
+  asyncHandler(updateBlog)
+);
+
+router.patch(
+  '/status/:id',
+  permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
+  asyncHandler(statusBlog)
+); // ? Logical delete
+
+router.delete(
+  '/delete/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  asyncHandler(deleteBlog)
+); // ? Permanent delete
 
 router.use(errorMiddleware);
 

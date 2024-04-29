@@ -35,7 +35,7 @@ const Profesional = new Schema(
     },
     role: {
       type: String,
-      default: 'profesional',
+      default: 'professional',
     },
     gender: {
       type: String,

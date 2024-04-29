@@ -35,6 +35,7 @@ const User = new Schema(
     },
     role: {
       type: String,
+      enum: ['user', 'admin', 'super_admin'],
       default: 'user',
     },
     // interests: {
@@ -73,7 +74,7 @@ const User = new Schema(
       default: 'does not have image id',
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
+  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
 );
 
 module.exports = model('User', User);
