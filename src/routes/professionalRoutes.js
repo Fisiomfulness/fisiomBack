@@ -35,4 +35,7 @@ router.get('/professional_score/:id', getProfessionalScore);
 router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
 router.delete('/:profesional_id/specialty/:specialty_id', removeSpecialty);
 
+// ruta de prueba de geo-loc
+
+
 module.exports = router;
