@@ -3,6 +3,7 @@
 ### GET ALL PROFESSIONALS
 GET {{url}}/professionals/
 
+
 ### POST PROFESSIONAL
 POST {{url}}/professionals/create
 Content-Type: application/json
