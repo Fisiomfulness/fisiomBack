@@ -23,6 +23,7 @@ const login = async (req, res) => {
         return res.status(201).send({
           id: user._id,
           role: user.role,
+          coordinates: user.coordinates,
           token,
           message: 'Sesión iniciada con éxito',
         });

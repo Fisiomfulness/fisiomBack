@@ -1,0 +1,44 @@
+@url = http://localhost:3000
+
+### GET ALL PROFESSIONALS
+GET {{url}}/professionals
+
+### POST PROFESSIONAL
+POST {{url}}/professionals/create
+Content-Type: application/json
+
+{
+   "email": "newDoc@gmail.com",
+   "name": "Camilo Lopez", 
+   "password": "camilolopez",
+   "dateOfBirth": "1987-05-12",
+   "gender": "Masculino",
+   "resume": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin.",
+   "curriculum": "https://res.cloudinary.com/do6ra4oau/image/upload/v1714055789/FisiumFulness/users/1714055787309-pdfpruebafisiomfulness.pdf",
+   "license": "M12554",
+   "phone": "555 159753",
+   "address": "Dorrego 520, Rosario, Santa Fe, Argentina",
+   "image": "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*",
+   "coordinates": [-32.94122327359541, -60.64865600392955]
+}
+
+### GET USERS
+GET {{url}}/users/662a9dce3ac9256327142bf5
+
+### UPDATE USER
+PUT {{url}}/users/update/662a9dce3ac9256327142bf5
+Content-Type: application/json
+
+{
+    "coordinates": [-32.93203966214841, -60.651035445557014],
+    "address": "Rivadavia 2250, Rosario, Argentina"
+}
+
+### logear usuario normal
+POST {{url}}/login
+Content-Type: application/json
+
+{			
+	"email": "john@user.com",
+	"password": "User0303456"
+}
