@@ -7,7 +7,8 @@ const getProfessionals = async (req, res) => {
       page = 1,
       limit = 6,
       search = '',
-      specialtyId = ''
+      specialtyId = '',
+      pos = '-12.057822374374036,-77.06708360541617'
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -18,12 +19,20 @@ const getProfessionals = async (req, res) => {
     }
     const skipIndex = (pageInt - 1) * limitInt;
 
+    const coords = pos.split(',');
+    const lat = parseFloat(coords[0]);
+    const lng = parseFloat(coords[1]);
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return res.status(400).json({ message: 'lat and lng must be valid coordinates' });
+    }
+ 
     let professionalQuery = { $and: [
       { coordinates: {
-        $near: [-12.057822374374036, -77.06708360541617]
+        $near: [lat, lng]
       }},
       { status: true },
     ] };
+
 
     if (search.trim() !== '') {
       professionalQuery.$and.push({ $or: [
