@@ -14,8 +14,8 @@ const updateUser = async (req, res) => {
     password,
     username,
     phone,
-    latitud,
-    longitud,
+    coordinates,
+    address,
     id_image,
   } = req.body;
 
@@ -46,8 +46,8 @@ const updateUser = async (req, res) => {
       password,
       username,
       phone,
-      latitud,
-      longitud,
+      coordinates,
+      address,
       image: newImage,
       id_image: newIdImage,
     };

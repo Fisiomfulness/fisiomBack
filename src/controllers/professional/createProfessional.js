@@ -16,7 +16,7 @@ const createProfessional = async (req, res) => {
       if (!moment(dateOfBirth,'YYYY-MM-DD', true).isValid()) {
         res.status(401).json({
           message:
-            'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
+            'Formato de fecha de nacimiento no válido. Por favor usa YYYY-MM-DD.',
         });
       } else {
         const today = moment();

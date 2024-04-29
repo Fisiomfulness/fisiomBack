@@ -84,7 +84,7 @@ const Profesional = new Schema(
       default: '',
     },
     coordinates: {
-      type: [Number], // long, lat
+      type: [Number], // lat, lng
       default: [0, 0],
       index: '2d'
     },
