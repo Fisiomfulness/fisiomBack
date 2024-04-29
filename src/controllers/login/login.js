@@ -8,26 +8,26 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (!user) {
-      res.status(401).send('Usuario no encontrado');
-    } else {
-      const coincidePass = await verifyHashedData(password, user.password);
+    if (!user) return res.status(401).send('Usuario no encontrado');
 
-      if (!coincidePass) {
-        res.status(401).send('Password incorrecto');
-      } else {
-        let userForToken = { userId: user._id, role: user.role };
+    const coincidePass = await verifyHashedData(password, user.password);
+    if (!coincidePass) return res.status(401).send('Password incorrecto');
 
-        const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: '1h' });
+    let userForToken = { userId: user._id, role: user.role };
+    const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: '2d' });
 
-        return res.status(201).send({
-          id: user._id,
-          role: user.role,
-          token,
-          message: 'Sesión iniciada con éxito',
-        });
-      }
-    }
+    res.cookie('accessToken', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 2, // ? 2 days
+      httpOnly: true,
+      secure: true,
+    });
+
+    res.status(200).send({
+      id: user._id,
+      role: user.role,
+      token,
+      message: 'Sesión iniciada con éxito',
+    });
   } catch (error) {
     res.status(500).send(error.message);
   }
