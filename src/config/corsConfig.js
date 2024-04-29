@@ -1,6 +1,7 @@
 const optionCors = {
   // origin: 'http://localhost:5173',
-  origin: '*',
+  // ? To work with cookies needs a fix origin
+  origin: 'http://localhost:3001',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
