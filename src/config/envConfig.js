@@ -15,4 +15,6 @@ module.exports = {
   CLOUDINARY_SECRET: process.env.api_secret,
 
   JWT_SECRET: process.env.JWT_secret,
+
+  OPEN_CAGE: process.env.OPEN_CAGE
 };
