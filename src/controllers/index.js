@@ -23,7 +23,7 @@ const {
   getCommentBlog,
 } = require('./blog/comment/index');
 
-const { login, recoverAccount } = require('./login/index');
+const { login } = require('./login/index');
 
 const {
   createProduct,
@@ -85,7 +85,6 @@ module.exports = {
   getComment,
   getCommentBlog,
   login,
-  recoverAccount,
   createProduct,
   deleteProduct,
   getAllProduct,
