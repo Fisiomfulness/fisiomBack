@@ -41,7 +41,11 @@ const login = async (req, res) => {
         res.status(401).json({ message: 'Password incorrecto' });
       } else {
         //crear token
-        let payload = { userId: userResult._id, role: userResult.role };
+        let payload = {
+          userId: userResult._id,
+          role: userResult.role,
+          coordinates: userResult.coordinates,
+        };
 
         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
