@@ -1,11 +1,15 @@
 const moment = require('moment');
 const fs = require('node:fs/promises');
-const { hashData } = require('#src/util/hashData');
+const jwt = require('jsonwebtoken');
+
 const Profesional = require('#src/models/Profesional');
+const { hashData } = require('#src/util/hashData');
 const {
   cloudinary,
   curriculumUploadOptions,
 } = require('#src/config/cloudinaryConfig');
+const { FRONT_URL, JWT_SECRET } = require('#src/config/envConfig');
+const { sendEmailNodemailer } = require('#src/util/nodemailer');
 
 const profesionalRegister = async (req, res) => {
   try {
@@ -16,17 +20,16 @@ const profesionalRegister = async (req, res) => {
 
     if (emailVerify) {
       await fs.unlink(file);
-      res.status(401).send('este email ya existe');
+      res.status(401).json({ message: 'este email ya existe' });
     } else {
       const hashedPass = await hashData(password);
 
       if (!moment(dateOfBirth, 'YYYY-MM-DD', true).isValid()) {
         await fs.unlink(file);
-        res
-          .status(401)
-          .send(
+        res.status(401).json({
+          message:
             'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
-          );
+        });
       } else {
         const today = moment();
         const birthDate = moment(dateOfBirth);
@@ -34,9 +37,9 @@ const profesionalRegister = async (req, res) => {
 
         if (age < 18) {
           await fs.unlink(file);
-          res
-            .status(401)
-            .send('Necesitas tener 18 años o mas para registrarte.');
+          res.status(401).json({
+            message: 'Necesitas tener 18 años o mas para registrarte.',
+          });
         } else {
           const { secure_url } = await cloudinary.uploader.upload(
             file,
@@ -48,16 +51,34 @@ const profesionalRegister = async (req, res) => {
           restData.email = email;
           restData.curriculum = secure_url;
 
-          await Profesional.create(restData);
+          const newProfesional = await Profesional.create(restData);
 
           await fs.unlink(file);
+          let payload = {
+            userId: newProfesional._id,
+          };
 
-          res.status(201).send('creado con exito');
+          const tokenEmailConfirm = jwt.sign(payload, JWT_SECRET);
+
+          //crear email de confirmacion
+          const url = `${FRONT_URL}/confirmar_email/${tokenEmailConfirm}`;
+
+          sendEmailNodemailer({
+            to: newProfesional.email,
+            subject: 'Confirmacion de cuenta - Fisium Fulness',
+            html: `
+          <p> Hola! ${newProfesional.name}, confirma la creacion de tu cuenta de Fisium Fulness</p>
+          <p> Has click en este enlace para confirmar tu cuenta:
+          <a href=${url} target="_blank"> Confirmar mi cuenta...</a></p>
+          <p> Si tu no hiciste esta peticion, ignora este mensaje.</p>`,
+          });
+
+          res.status(201).json({ message: 'creado con exito' });
         }
       }
     }
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ message: error.message });
   }
 };
 

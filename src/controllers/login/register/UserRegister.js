@@ -1,6 +1,9 @@
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
+
 const User = require('#src/models/User');
 const { hashData } = require('#src/util/hashData');
+const { JWT_SECRET, FRONT_URL } = require('#src/config/envConfig');
 
 const UserRegister = async (req, res) => {
   try {
@@ -9,32 +12,51 @@ const UserRegister = async (req, res) => {
     const emailVerify = await User.findOne({ email });
 
     if (emailVerify) {
-      res.status(401).send('este email ya existe');
+      res.status(401).json({ message: 'este email ya existe' });
     } else {
       const hashedPass = await hashData(password);
 
       if (!moment(dateOfBirth, 'YYYY-MM-DD', true).isValid()) {
-        res
-          .status(401)
-          .send(
+        res.status(401).json({
+          message:
             'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
-          );
+        });
       } else {
         const today = moment();
         const birthDate = moment(dateOfBirth);
         const age = today.diff(birthDate, 'years', true);
 
         if (age < 18) {
-          res
-            .status(401)
-            .send('Necesitas tener 18 años o mas para registrarte.');
+          res.status(401).json({
+            message: 'Necesitas tener 18 años o mas para registrarte.',
+          });
         } else {
           restData.password = hashedPass;
           restData.birthDate = dateOfBirth;
           restData.email = email;
 
-          await User.create(restData);
-          res.status(201).send('creado con exito');
+          const newUser = await User.create(restData);
+
+          let payload = {
+            userId: newUser._id,
+          };
+
+          const tokenEmailConfirm = jwt.sign(payload, JWT_SECRET);
+
+          //crear email de confirmacion
+          const url = `${FRONT_URL}/confirmar_email/${tokenEmailConfirm}`;
+
+          sendEmailNodemailer({
+            to: newUser.email,
+            subject: 'Confirmacion de cuenta - Fisium Fulness',
+            html: `
+          <p> Hola! ${newUser.name}, confirma la creacion de tu cuenta de Fisium Fulness</p>
+          <p> Has click en este enlace para confirmar tu cuenta:
+          <a href=${url} target="_blank"> Confirmar mi cuenta...</a></p>
+          <p> Si tu no hiciste esta peticion, ignora este mensaje.</p>`,
+          });
+
+          res.status(201).json({ message: 'creado con exito' });
         }
       }
     }
@@ -44,34 +66,3 @@ const UserRegister = async (req, res) => {
 };
 
 module.exports = UserRegister;
-
-// Envío del correo electrónico de confirmación
-/*
-    const emailConfirmation = async (data) => {
-        const transport = nodemailer.createTransport({
-            host: E_HOST,
-            port: E_PORT,
-            auth: {
-                user: E_USER,
-                pass: E_PASSWORD,
-            },
-        });
-        const { username, email, token } = data;
-        await transport.sendMail({
-            from: "fisiumfulness",
-            to: email,
-            subject: "Confirm account",
-            text: "Confirm account",
-            html: `
-        <p> Hi! ${username}, confirm account in Fisium Fulness </p>
-        <p> Confirm your account in the link :
-        <a href="http://localhost:5173/confirm/${token}"> Confirm Account </a></p>
-        <p> If you didn't create the account, ignore it</p>`,
-        });
-    };
-
-    emailConfirmation({
-        username: newUser.username,
-        email: newUser.email,
-        token: newUser.token,
-    });)*/
