@@ -6,7 +6,12 @@ const getProfessionalScore = async (req, res) => {
   try {
     const findProfesional = await Profesional.findById(id)
       .select('professionalScore')
-      .populate('professionalScore');
+      .populate({
+        path: 'professionalScore',
+        options: {
+          sort: { createdDate: -1 }
+        }
+      })
 
     return findProfesional
       ? res.status(200).json({ findProfesional })

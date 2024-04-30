@@ -16,5 +16,7 @@ module.exports = {
 
   JWT_SECRET: process.env.JWT_secret,
 
+  OPEN_CAGE: process.env.OPEN_CAGE,
+
   FRONT_URL: process.env.FRONT_URL,
 };

@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 
+class InvalidArgumentError extends Error {}
+
 // ? Blueprint for our errors, don't throw it
 class ApiError extends Error {
   constructor(message, statusCode, name) {
@@ -21,6 +23,12 @@ class BadRequestError extends ApiError {
 class UnauthorizedError extends ApiError {
   constructor(message) {
     super(message, httpStatus.UNAUTHORIZED, 'UnauthorizedError');
+  }
+}
+
+class ForbiddenError extends ApiError {
+  constructor(message) {
+    super(message, httpStatus.FORBIDDEN, 'ForbiddenError');
   }
 }
 
@@ -53,9 +61,11 @@ class ServiceError extends ApiError {
 }
 
 module.exports = {
+  InvalidArgumentError,
   ApiError,
   SemanticError,
   BadRequestError,
+  ForbiddenError,
   NotFoundError,
   ConflictError,
   ServiceError,

@@ -35,6 +35,7 @@ const User = new Schema(
     },
     role: {
       type: String,
+      enum: ['user', 'admin', 'super_admin'],
       default: 'user',
     },
     // interests: {
@@ -55,13 +56,10 @@ const User = new Schema(
       default: '',
       required: true,
     },
-    latitud: {
-      type: Number,
-      default: 0,
-    },
-    longitud: {
-      type: Number,
-      default: 0,
+    coordinates: {
+      type: [Number], // lat, lng
+      default: [0, 0],
+      index: '2d'
     },
     address: {
       type: String,
@@ -76,7 +74,7 @@ const User = new Schema(
       default: 'does not have image id',
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
+  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
 );
 
 module.exports = model('User', User);

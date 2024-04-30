@@ -2,7 +2,13 @@ const Profesional = require('../../models/Profesional');
 
 const getProfessionals = async (req, res) => {
   try {
-    const { page = 1, limit = 6, search = '' } = req.query;
+    const {
+      page = 1,
+      limit = 6,
+      search = '',
+      specialtyId = '',
+      pos = '-12.057822374374036,-77.06708360541617',
+    } = req.query;
 
     const pageInt = parseInt(page);
     const limitInt = parseInt(limit);
@@ -13,7 +19,26 @@ const getProfessionals = async (req, res) => {
         .json({ message: 'page and limit must be integers' });
     }
     const skipIndex = (pageInt - 1) * limitInt;
-    let query = { $and: [{ status: true }] };
+
+    const coords = pos.split(',');
+    const lat = parseFloat(coords[0]);
+    const lng = parseFloat(coords[1]);
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return res
+        .status(400)
+        .json({ message: 'lat and lng must be valid coordinates' });
+    }
+
+    let professionalQuery = {
+      $and: [
+        {
+          coordinates: {
+            $near: [lat, lng],
+          },
+        },
+        { status: true },
+      ],
+    };
 
     if (search.trim() !== '') {
       query.$and.push({
@@ -28,15 +53,12 @@ const getProfessionals = async (req, res) => {
       .populate('specialties', 'name')
       .skip(skipIndex)
       .limit(limitInt);
-    // .populate({
-    //   path: 'profesionalScore',
-    //   options: {
-    //     sort: { createdDate: -1 }
-    //   }
-    // });
+
+    const queryWithoutNear = { ...professionalQuery };
+    queryWithoutNear.$and.shift();
 
     const totalProfessionals =
-      await Profesional.countDocuments(professionalQuery);
+      await Profesional.countDocuments(queryWithoutNear);
     const totalPages = Math.ceil(totalProfessionals / limitInt);
     return res.status(200).json({ professionals, page: pageInt, totalPages });
   } catch (error) {
