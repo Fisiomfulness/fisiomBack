@@ -44,6 +44,7 @@ router.get(
 router.post(
   '/create',
   permit(roles.PROFESSIONAL, roles.SUPER_ADMIN),
+  validationMiddleware(blogSchema),
   asyncHandler(createBlog),
 );
 

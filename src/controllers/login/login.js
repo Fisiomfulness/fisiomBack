@@ -49,18 +49,21 @@ const login = async (req, res) => {
 
         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
+        res.cookie('accessToken', token, {
+          maxAge: 1000 * 60 * 60 * 24 * 2, // ? 2 days
+          httpOnly: true,
+          secure: true,
+        });
+
         res.setHeader('Authorization', `Bearer ${token}`);
 
-        return res.status(201).send({
-          id: userResult._id,
-          role: userResult.role,
-          token,
-          message: 'Sesión iniciada con éxito',
-        });
+        return res
+          .status(201)
+          .send({ ...payload, message: 'Logeado con exito!' });
       }
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, message2: 'error' });
   }
 };
 

@@ -18,7 +18,6 @@ const activateConfirmEmail = async (req, res) => {
   var userResult = null;
   try {
     const decodedToken = jwt.verify(token, JWT_SECRET);
-    console.log('🚀 ~ activateConfirmEmail ~ decodedToken:', decodedToken);
     //tiene que buscar en user y profesionals
     await Promise.allSettled([
       User.findOne({ _id: decodedToken.userId }),
