@@ -44,7 +44,7 @@ const Profesional = new Schema(
     },
     resume: {
       type: String,
-      default: "",
+      default: '',
     },
     curriculum: {
       type: String,
@@ -58,6 +58,7 @@ const Profesional = new Schema(
     professionalScore: [
       {
         type: ObjectId,
+        ref: 'ProfessionalScore',
         ref: 'ProfessionalScore',
       },
     ],
@@ -103,18 +104,17 @@ const Profesional = new Schema(
     specialties: {
       type: [
         {
-          type: ObjectId, 
+          type: ObjectId,
           ref: 'Specialty',
-        }
+        },
       ],
       default: [],
     },
   },
-  { 
+  {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
   },
 );
 
 
 module.exports = model('Profesional', Profesional);
-

@@ -23,13 +23,6 @@ const uploadOptions = {
   overwrite: true,
 };
 
-const uploadOptionsFile = {
-  resource_type: 'auto',
-  use_filename: true,
-  unique_filename: false,
-  overwrite: true,
-};
-
 const productsUploadOptions = {
   ...uploadOptions,
   tags: ['product'],
@@ -49,7 +42,7 @@ const userUploadOptions = {
 };
 
 const curriculumUploadOptions = {
-  ...uploadOptionsFile,
+  ...uploadOptions,
   tags: ['curriculum'],
   folder: FOLDER_USERS,
 };

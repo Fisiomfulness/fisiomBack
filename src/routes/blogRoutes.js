@@ -9,6 +9,7 @@ const {
   deleteBlog,
   removeBlog,
 } = require('../controllers/index');
+const comment = require('./commentRoutes.js');
 const { asyncHandler } = require('../util/asyncHandler');
 const { errorMiddleware } = require('../middleware/errorMiddleware');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
@@ -19,6 +20,9 @@ const authAll = require('../middleware/authAll');
 const permit = require('../middleware/rolesMiddleware');
 
 const router = Router();
+
+//comments
+router.use('/comments', comment);
 
 router.get('/', asyncHandler(getAllBlogs));
 router.get('/detail/:id', asyncHandler(getBlogDetail));

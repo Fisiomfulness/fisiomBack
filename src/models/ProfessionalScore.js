@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-const ProfessionalScore = new Schema({
+const ProfessionalScore = new Schema(
+  {
     _id: {
       type: String,
       default: function () {
@@ -25,8 +26,8 @@ const ProfessionalScore = new Schema({
     },
   },
   {
-    timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' }
-  }
+    timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
+  },
 );
 
 module.exports = model('ProfessionalScore', ProfessionalScore);

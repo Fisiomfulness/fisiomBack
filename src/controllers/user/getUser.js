@@ -19,7 +19,7 @@ const getUserById = async (req, res) => {
   try {
     const findUser = await User.findById(id);
     const findProfesional =
-      await Profesional.findById(id).populate('profesionalScore');
+      await Profesional.findById(id).populate('professionalScore');
 
     return findUser
       ? res.status(200).json({ findUser })
