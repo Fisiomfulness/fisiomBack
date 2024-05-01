@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const fs = require('node:fs/promises');
 const {
   MAIL_PORT,
   MAIL_HOST,
@@ -31,7 +32,7 @@ const sendEmail = async (req, res) => {
         <li>Teléfono: ${phone}</li>
         <li>Correo Electrónico: ${email}</li>
       </ul>
-      <p>Texto adicional:</p>
+      <p>Mensaje:</p>
       <p>${message}</p>
     `;
 
@@ -52,39 +53,42 @@ const sendEmail = async (req, res) => {
 
     await transporter.sendMail(mailToUserOptions);
 
-    const htmlAdmin = `
-      <p>Se recibio una nueva postulacion a FisiomFulness.</p>
-      <p>A continuación, los detalles:</p>
-      <ul>
-        <li>DNI: ${dniNumber}</li>
-        <li>Teléfono: ${phone}</li>
-        <li>Correo Electrónico: ${email}</li>
-      </ul>
-      <p>Texto adicional:</p>
-      <p>${message}</p>
-    `;
+    // ! TODO: PUT REAL CREDENTIALS ADMIN -> ENV
+    // const htmlAdmin = `
+    //   <p>Se recibio una nueva postulacion a FisiomFulness.</p>
+    //   <p>A continuación, los detalles:</p>
+    //   <ul>
+    //     <li>DNI: ${dniNumber}</li>
+    //     <li>Teléfono: ${phone}</li>
+    //     <li>Correo Electrónico: ${email}</li>
+    //   </ul>
+    //   <p>Mensaje:</p>
+    //   <p>${message}</p>
+    // `;
 
-    const mailToAdminOptions = {
-      from: email,
-      to: MAIL_USER,
-      subject: 'Nueva postulacion a FisiomFulness',
-      html: htmlAdmin,
-      attachments: cvFile
-        ? [
-            {
-              filename: cvFile.originalname,
-              path: cvFile.path,
-            },
-          ]
-        : [],
-    };
+    // const mailToAdminOptions = {
+    //   from: email,
+    //   to: MAIL_USER,
+    //   subject: 'Nueva postulacion a FisiomFulness',
+    //   html: htmlAdmin,
+    //   attachments: cvFile
+    //     ? [
+    //         {
+    //           filename: cvFile.originalname,
+    //           path: cvFile.path,
+    //         },
+    //       ]
+    //     : [],
+    // };
 
-    await transporter.sendMail(mailToAdminOptions);
+    // await transporter.sendMail(mailToAdminOptions);
 
     res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
     res.status(400).json({ message: 'Error sending email' });
   }
+
+  if (cvFile) await fs.unlink(cvFile.path); // ? Always deletes the generated file
 };
 
 module.exports = {
