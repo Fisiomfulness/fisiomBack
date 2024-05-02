@@ -41,12 +41,16 @@ const getProfessionals = async (req, res) => {
     };
 
     if (search.trim() !== '') {
-      query.$and.push({
+      professionalQuery.$and.push({
         $or: [
           { name: { $regex: new RegExp(search, 'i') } },
           { address: { $regex: new RegExp(search, 'i') } },
         ],
       });
+    }
+
+    if (specialtyId !== '') {
+      professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
     }
 
     const professionals = await Profesional.find(professionalQuery)
