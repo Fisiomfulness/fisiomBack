@@ -9,7 +9,7 @@ const {
   createProfessionalScore,
   getProfessionalScore,
   addSpecialty,
-  removeSpecialty
+  removeSpecialty,
 } = require('../controllers/index');
 const { addressMiddleware } = require('../middleware/addressMiddleware');
 

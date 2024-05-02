@@ -9,6 +9,7 @@ const {
   deleteBlog,
   removeBlog,
 } = require('../controllers/index');
+const comment = require('./commentRoutes.js');
 const { asyncHandler } = require('../util/asyncHandler');
 const { errorMiddleware } = require('../middleware/errorMiddleware');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
@@ -20,6 +21,9 @@ const permit = require('../middleware/rolesMiddleware');
 
 const router = Router();
 
+//comments
+router.use('/comments', comment);
+
 router.get('/', asyncHandler(getAllBlogs));
 router.get('/detail/:id', asyncHandler(getBlogDetail));
 
@@ -29,37 +33,38 @@ router.use(authAll);
 router.get(
   '/:professionalId',
   permit(roles.USER, roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(getProfessionalBlogs)
+  asyncHandler(getProfessionalBlogs),
 );
 router.get(
   '/removed',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(removeBlog)
+  asyncHandler(removeBlog),
 );
 
 router.post(
   '/create',
   permit(roles.PROFESSIONAL, roles.SUPER_ADMIN),
-  asyncHandler(createBlog)
+  validationMiddleware(blogSchema),
+  asyncHandler(createBlog),
 );
 
 router.put(
   '/update/:id',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   validationMiddleware(blogSchema, 'update'),
-  asyncHandler(updateBlog)
+  asyncHandler(updateBlog),
 );
 
 router.patch(
   '/status/:id',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(statusBlog)
+  asyncHandler(statusBlog),
 ); // ? Logical delete
 
 router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(deleteBlog)
+  asyncHandler(deleteBlog),
 ); // ? Permanent delete
 
 router.use(errorMiddleware);

@@ -1,11 +1,14 @@
 const Profesional = require('../../models/Profesional');
 
 const getProfessionalDetail = async (req, res) => {
-  
   try {
     const { id } = req.params;
-    const professional = await Profesional.findById(id)
-    .populate('specialties', 'name')
+    const professional = await Profesional.findById(id).populate({
+      path: 'professionalScore',
+      options: {
+        sort: { createdAt: -1 },
+      },
+    });
 
     if (!professional) throw new Error('professional not found');
 
@@ -16,5 +19,5 @@ const getProfessionalDetail = async (req, res) => {
 };
 
 module.exports = {
-    getProfessionalDetail
+  getProfessionalDetail,
 };

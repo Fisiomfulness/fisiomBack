@@ -12,19 +12,19 @@ const adminAuthMiddleware = (req, res, next) => {
   if (authorization && authorization.toLowerCase().startsWith('bearer')) {
     token = authorization.split(' ')[1];
   } else {
-    return res.status(401).json({ message: 'Token missing or invalid' });
+    return res.status(401).json({ message: 'Falta el token o no es válido' });
   }
 
   if (!token) {
-    return res.status(401).json({ message: 'Token missing' });
+    return res.status(401).json({ message: 'Falta el token' });
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: 'Invalid token or expirated' });
+      return res.status(401).json({ message: 'Token invalido o expirado' });
     }
     if (decoded.role != 'admin') {
-      return res.status(403).json({ message: 'User without permissions' });
+      return res.status(403).json({ message: 'Usuario sin permisos' });
     }
     next();
   });

@@ -1,12 +1,9 @@
 const { Router } = require('express');
 
-
-const { sendEmail } = require("../controllers/index")
-
+const { sendEmail, recoverAccount } = require('../controllers/index');
 
 const router = Router();
 
-
-router.post('/', sendEmail);
+router.post('/', recoverAccount);
 
 module.exports = router;
