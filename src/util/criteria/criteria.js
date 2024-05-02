@@ -1,69 +1,45 @@
 // @ts-check
-const { model } = require('mongoose');
-const { orderFromValues } = require('./order');
-const { filtersFromValues } = require('./filters');
-const { criteriaConverter } = require('./converter');
+const { Filter } = require('./filter');
+const { Order } = require('./order');
 
-/**
- * @typedef {import('./order').Order} Order
- * @typedef {import('./filters').Filter} Filter
- *
- * @typedef {{
- *   filters: Filter[],
- *   order: Order,
- *   limit?: number,
- *   offset?: number,
- * }} Criteria
- */
+class Criteria {
+  /**
+   * @param {Filter[]} filters
+   * @param {Order} order
+   * @param {number=} limit
+   * @param {number=} offset
+   */
+  constructor(filters, order, limit, offset) {
+    /** @readonly @type {Filter[]} */
+    this.filters = filters;
+    /** @readonly @type {Order} */
+    this.order = order;
+    /** @readonly @type {number=} */
+    this.limit = limit;
+    /** @readonly @type {number=} */
+    this.offset = offset;
+  }
+}
 
-/**
- * @param {any[]} filters
- * @param {string} [orderBy]
- * @param {string} [orderType]
- * @param {number} [limit]
- * @param {number} [offset]
- * @returns {Criteria}
- */
-const createCriteriaQuery = (filters, orderBy, orderType, limit, offset) => {
-  const parseFilters = filters ? filters : [];
-
-  return {
-    filters: filtersFromValues(parseFilters),
-    order: orderFromValues(orderBy, orderType),
-    limit: limit,
-    offset: offset,
-  };
-};
-
-/**
- * @param {Criteria} criteria
- * @param {string} collectionName
- * @returns {Promise<{
- *   count: number,
- *   results: import('mongoose').HydratedDocument<import('mongoose').Document>[]
- * }>}
- */
-async function matching(criteria, collectionName) {
-  const query = criteriaConverter(criteria);
-
-  const count = await model(collectionName).countDocuments({
-    ...query.filter,
-    is_deleted: false,
-  });
-
-  const results = await model(collectionName)
-    .find({ ...query.filter, is_deleted: false }, {})
-    .sort(query.sort)
-    .skip(query.skip)
-    .limit(query.limit);
-
-  return {
-    count,
-    results,
-  };
+class CriteriaQuery extends Criteria {
+  /**
+   * @param {any[]} filters
+   * @param {string=} orderBy
+   * @param {string=} orderType
+   * @param {number=} limit
+   * @param {number=} offset
+   */
+  constructor(filters, orderBy, orderType, limit, offset) {
+    super(
+      filters.map(Filter.fromValues),
+      Order.fromValues(orderBy, orderType),
+      limit,
+      offset,
+    );
+  }
 }
 
 module.exports = {
-  createCriteriaQuery,
-  matching,
+  Criteria,
+  CriteriaQuery,
 };
