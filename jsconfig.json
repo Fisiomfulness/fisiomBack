@@ -6,10 +6,12 @@
     "resolveJsonModule": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "baseUrl": "./src",
     "paths": {
-      "#src/*": ["src/*"]
+      "#src/*": ["./*"]
     }
   },
-  "include": ["src"],
+  "include": ["src/**/*.js", "tests/**/*.js"],
   "exclude": ["node_modules"]
 }

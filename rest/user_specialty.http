@@ -64,7 +64,7 @@ POST {{url}}/specialty
 Content-Type: application/json
 
 {
-  "name": "especialidad nueva"
+  "name": "especialidad nueva4"
 }
 
 ### renombrar una especialidad
@@ -72,8 +72,8 @@ PATCH {{url}}/specialty
 Content-Type: application/json
 
 {
-  "id": "{{specialty1}}",
-  "new_name": "testing working"
+  "id": "6632db4494f49670c3607bd7",
+  "name": "testing working2"
 }
 
 ### eliminar una especialidad
@@ -81,5 +81,5 @@ DELETE {{url}}/specialty
 Content-Type: application/json
 
 {
-  "id": "662a6e7ed9b92088750976e3"
+  "id": "6632db4494f49670c3607bd7"
 }
