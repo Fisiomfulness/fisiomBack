@@ -54,7 +54,6 @@ const User = new Schema(
     phone: {
       type: String,
       default: '',
-      required: true,
     },
     coordinates: {
       type: [Number], // lat, lng
