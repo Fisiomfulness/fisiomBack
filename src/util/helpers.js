@@ -13,4 +13,26 @@ const countHtmlCharacters = (htmlString) => {
   return text.length;
 }
 
-module.exports = { validateId, countHtmlCharacters };
+const isDateOnRange = (value, minYearsAgo, maxYearsAgo) => {
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!value || typeof value !== "string" || !isoDateRegex.test(value)) return false;
+
+  const currentDate = new Date();
+  const dateISO = new Date(value);
+
+  const minDate = new Date(
+    currentDate.getFullYear() - maxYearsAgo,
+    currentDate.getMonth(),
+    currentDate.getDate()
+  );
+
+  const maxDate = new Date(
+    currentDate.getFullYear() - minYearsAgo,
+    currentDate.getMonth(),
+    currentDate.getDate()
+  );
+
+  return dateISO >= minDate && dateISO <= maxDate;
+};
+
+module.exports = { validateId, countHtmlCharacters, isDateOnRange };
