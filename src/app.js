@@ -19,6 +19,4 @@ app.use('/', routes);
 
 app.use(errorHandler);
 
-require('./db');
-
 module.exports = { app };

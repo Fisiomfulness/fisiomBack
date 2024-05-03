@@ -1,52 +1,64 @@
 // @ts-check
 const { InvalidArgumentError } = require('#src/util/errors');
 
-const OrderTypes = Object.freeze({
+/** @enum {"asc" | "desc" | "none"} */
+const OrderType = Object.freeze({
   ASC: 'asc',
   DESC: 'desc',
   NONE: 'none',
+  /**
+   * @param {string} value
+   * @returns {OrderType}
+   */
+  fromValue: function (value) {
+    for (const orderType of Object.values(this)) {
+      if (value === orderType) {
+        return value;
+      }
+    }
+
+    throw new InvalidArgumentError(`El tipo de orden '${value}' es invalido`);
+  },
 });
 
-/**
- * @typedef {OrderTypes[keyof OrderTypes]} OrderType
- * @typedef {{
- *   orderBy: string,
- *   orderType: OrderType
- * }} Order
- */
+class Order {
+  /**
+   * @param {string} orderBy
+   * @param {OrderType} orderType
+   */
+  constructor(orderBy, orderType) {
+    /** @readonly @type {string} */
+    this.orderBy = orderBy;
+    /** @readonly @type {OrderType} */
+    this.orderType = orderType;
+  }
 
-/**
- * @param {string} value
- * @returns {OrderType}
- */
-const orderTypeFromValue = (value) => {
-  for (const orderType of Object.values(OrderTypes)) {
-    if (value === orderType) {
-      return value;
+  /**
+   * @param {string} [orderBy]
+   * @param {string} [orderType]
+   */
+  static fromValues(orderBy, orderType) {
+    if (!orderBy) {
+      return Order.none();
     }
+
+    return new Order(orderBy, OrderType.fromValue(orderType || OrderType.ASC));
   }
 
-  throw new InvalidArgumentError(`El tipo de orden '${value}' es invalido`);
-};
-
-/**
- * @param {string} [orderBy]
- * @param {string} [orderType]
- * @returns {Order}
- */
-const orderFromValues = (orderBy, orderType) => {
-  if (!orderBy) {
-    return { orderBy: '', orderType: OrderTypes.NONE };
+  static none() {
+    return new Order('', OrderType.NONE);
   }
 
-  return {
-    orderBy: orderBy,
-    orderType: orderTypeFromValue(orderType || OrderTypes.ASC),
-  };
-};
+  isAsc() {
+    return this.orderType === OrderType.ASC;
+  }
+
+  hasOrder() {
+    return this.orderType !== OrderType.NONE;
+  }
+}
 
 module.exports = {
-  OrderTypes,
-  orderTypeFromValue,
-  orderFromValues,
+  Order,
+  OrderType,
 };

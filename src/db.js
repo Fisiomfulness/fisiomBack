@@ -1,11 +1,10 @@
-const { DB_SERVER } = require('./config/envConfig');
+const { MONGODB_URL } = require('./config/envConfig');
 const mongoose = require('mongoose');
 
-mongoose
-  .connect(DB_SERVER)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
-  });
+const mongoClientConnect = async () => {
+  const mongoClient = await mongoose.connect(MONGODB_URL);
+
+  console.log('Connected to MongoDB');
+};
+
+module.exports = { mongoClientConnect };
