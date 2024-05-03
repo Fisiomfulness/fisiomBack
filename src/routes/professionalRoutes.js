@@ -19,6 +19,7 @@ router.post('/create', addressMiddleware, createProfessional);
 router.get('/', getProfessionals);
 router.get('/detail/:id', getProfessionalDetail);
 
+
 // ojo estamos usando PUT pero ejecuta un PATCH, no requiere todos los campos ni crea uno si no existe
 router.put('/update/:id', addressMiddleware, updateProfessional);
 
@@ -28,7 +29,7 @@ router.patch('/status/:id', statusProfessional);
 // Ruta para eliminar profesionales creados por error o por otros motivos
 router.delete('/delete/:id', deleteProfessional);
 
-// Rutas para crear y obtener professional_scores
+// Rutas para crear y obtener professional_scores (rank, comentario)
 router.post('/professional_score', createProfessionalScore);
 router.get('/professional_score/:id', getProfessionalScore);
 

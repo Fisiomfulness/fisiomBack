@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { DEFAULT_USER_IMAGE } = require('../config/envConfig');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -76,6 +75,10 @@ const Profesional = new Schema(
       default: '',
       required: true,
     },
+    professionalDescription: {
+      type: String,
+      default: '',
+    },
     experience: {
       type: Array,
       default: [],
@@ -91,7 +94,7 @@ const Profesional = new Schema(
     },
     image: {
       type: String,
-      default: DEFAULT_USER_IMAGE,
+      default: ''
     },
     id_image: {
       type: String,
