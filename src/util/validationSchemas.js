@@ -1,39 +1,128 @@
 const { z } = require('zod');
-const { validateId, countHtmlCharacters } = require('../util/helpers');
+const {
+  nameRegex,
+  phoneRegExp,
+  cityRegex,
+  numericRegex,
+} = require('../util/regExp');
+const {
+  validateId,
+  countHtmlCharacters,
+  isDateOnRange,
+} = require('../util/helpers');
+
+const acceptedYears = { min: 18, max: 100 };
+
+const userSchema = z.object({
+  name: z
+    .string()
+    .regex(nameRegex, 'debe contener solo letras')
+    .min(3, 'el nombre debe tener al menos 3 caracteres')
+    .max(30, 'no mas de 30 caracteres'),
+  phone: z.string().regex(phoneRegExp, 'no es un teléfono valido').optional(),
+  email: z.string().email('no es un email'),
+  dateOfBirth: z
+    .string()
+    .date('no es una fecha valida YYYY-MM-DD')
+    .refine(
+      (value) => isDateOnRange(value, acceptedYears.min, acceptedYears.max),
+      `debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`
+    ),
+  gender: z.enum(['Femenino', 'Masculino', 'Prefiero no responder'], {
+    message: 'Genero debe ser Femenino | Masculino | Prefiero no responder',
+  }),
+  password: z
+    .string()
+    .min(8, 'la contraseña debe tener al menos 8 caracteres')
+    .max(50, 'no mas de 50 caracteres'),
+});
+
+const professionalSchema = z.object({
+  name: z
+    .string()
+    .regex(nameRegex, 'debe contener solo letras')
+    .min(3, 'el nombre debe tener al menos 3 caracteres')
+    .max(30, 'no mas de 30 caracteres'),
+  phone: z
+    .string()
+    .regex(phoneRegExp, 'no es un teléfono valido (sin espacios)'),
+  email: z.string().email('no es un email'),
+  dateOfBirth: z
+    .string()
+    .date('no es una fecha valida YYYY-MM-DD')
+    .refine(
+      (value) => isDateOnRange(value, acceptedYears.min, acceptedYears.max),
+      `debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`
+    ),
+  password: z
+    .string()
+    .min(8, 'la contraseña debe tener al menos 8 caracteres')
+    .max(50, 'no mas de 50 caracteres'),
+  gender: z.enum(['Femenino', 'Masculino', 'Prefiero no responder']),
+  license: z
+    .string()
+    .min(3, 'el n° colegiado debe tener mas de 3 dígitos')
+    .max(10, 'el n° colegiado no puede tener mas de 10 dígitos')
+    .regex(numericRegex, 'el n° colegiado debe ser numérico')
+    .optional(),
+  city: z
+    .string()
+    .min(2, 'la ciudad debe contener al menos 2 caracteres')
+    .max(50, 'la ciudad no puede tener mas de 50 caracteres')
+    .regex(cityRegex, 'la ciudad solo puede contener letras y espacios'),
+});
 
 const blogSchema = z.object({
   title: z
     .string()
-    .min(3, 'minimum of 3 characters')
-    .max(100, 'no more than 100 characters'),
+    .min(3, 'el titulo debe tener mas de 3 caracteres')
+    .max(100, 'el titulo no puede tener mas de 100 caracteres'),
   text: z
     .string()
-    .refine((value) => countHtmlCharacters(value) >= 300, 'minimum of 300 characters')
-    .refine((value) => countHtmlCharacters(value) <= 8000, 'no more than 8000 characters'),
-  image: z.string().url('not a valid url'),
+    .refine(
+      (value) => countHtmlCharacters(value) >= 300,
+      'el texto del blog debe tener al menos 300 caracteres'
+    )
+    .refine(
+      (value) => countHtmlCharacters(value) <= 8000,
+      'el blog no puede tener mas de 8000 caracteres'
+    ),
+  image: z.string().url('no es una url valida'),
   professional_id: z
     .string()
     .refine(
       async (value) => await validateId(value, 'Profesional'),
-      'professional not found'
+      'profesional no encontrado'
     ),
   type_id: z
     .string()
-    .refine(async (value) => await validateId(value, 'Type'), 'type not found'),
+    .refine(
+      async (value) => await validateId(value, 'Type'),
+      'tipo de blog no encontrado'
+    ),
 });
 
 const commentSchema = z.object({
-  rating: z.number().min(1, 'minimum is 1').max(5, 'maximum is 5'),
+  rating: z
+    .number()
+    .min(1, 'el rating mínimo es 1')
+    .max(5, 'el rating máximo es de 5'),
   content: z
     .string()
-    .min(3, 'at least 3 characters')
-    .max(100, 'no more than 100 characters'),
+    .min(3, 'el comentario debe tener al menos 3 caracteres')
+    .max(100, 'el comentario no puede tener mas de 100 caracteres'),
   sender_id: z
     .string()
-    .refine(async (value) => await validateId(value, 'User'), 'user not found'),
+    .refine(
+      async (value) => await validateId(value, 'User'),
+      'usuario no encontrado'
+    ),
   blog_id: z
     .string()
-    .refine(async (value) => await validateId(value, 'Blog'), 'blog not found'),
+    .refine(
+      async (value) => await validateId(value, 'Blog'),
+      'blog no encontrado'
+    ),
 });
 
-module.exports = { blogSchema, commentSchema };
+module.exports = { userSchema, professionalSchema, blogSchema, commentSchema };
