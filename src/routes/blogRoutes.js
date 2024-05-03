@@ -33,38 +33,38 @@ router.use(authAll);
 router.get(
   '/:professionalId',
   permit(roles.USER, roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(getProfessionalBlogs),
+  asyncHandler(getProfessionalBlogs)
 );
 router.get(
   '/removed',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(removeBlog),
+  asyncHandler(removeBlog)
 );
 
 router.post(
   '/create',
-  permit(roles.PROFESSIONAL, roles.SUPER_ADMIN),
+  permit(roles.PROFESSIONAL),
   validationMiddleware(blogSchema),
-  asyncHandler(createBlog),
+  asyncHandler(createBlog)
 );
 
 router.put(
   '/update/:id',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   validationMiddleware(blogSchema, 'update'),
-  asyncHandler(updateBlog),
+  asyncHandler(updateBlog)
 );
 
 router.patch(
   '/status/:id',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(statusBlog),
+  asyncHandler(statusBlog)
 ); // ? Logical delete
 
 router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  asyncHandler(deleteBlog),
+  asyncHandler(deleteBlog)
 ); // ? Permanent delete
 
 router.use(errorMiddleware);

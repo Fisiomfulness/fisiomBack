@@ -1,67 +1,62 @@
-const moment = require('moment');
 const jwt = require('jsonwebtoken');
 
-const User = require('#src/models/User');
 const { hashData } = require('#src/util/hashData');
 const { JWT_SECRET, FRONT_URL } = require('#src/config/envConfig');
+const { sendEmailNodemailer } = require('#src/util/nodemailer');
+const User = require('#src/models/User');
+const Profesional = require('#src/models/Profesional');
 
 const UserRegister = async (req, res) => {
   try {
-    const { password, email, dateOfBirth, ...restData } = req.body;
+    const newData = req.validatedBody;
+    let userExist = null;
 
-    const emailVerify = await User.findOne({ email });
-
-    if (emailVerify) {
-      res.status(401).json({ message: 'este email ya existe' });
-    } else {
-      const hashedPass = await hashData(password);
-
-      if (!moment(dateOfBirth, 'YYYY-MM-DD', true).isValid()) {
-        res.status(401).json({
-          message:
-            'Formato de fecha de nacimiento no válido. Porfavor usa YYYY-MM-DD.',
-        });
-      } else {
-        const today = moment();
-        const birthDate = moment(dateOfBirth);
-        const age = today.diff(birthDate, 'years', true);
-
-        if (age < 18) {
-          res.status(401).json({
-            message: 'Necesitas tener 18 años o mas para registrarte.',
-          });
+    await Promise.allSettled([
+      User.findOne({ email: newData.email }),
+      Profesional.findOne({ email: newData.email }),
+    ]).then((settElements) => {
+      const usersMap = settElements.map((settElement, index) => {
+        if (settElement.status === 'fulfilled' && settElement.value) {
+          if (index === 0) {
+            return { user: settElement.value };
+          } else {
+            return { user: settElement.value };
+          }
         } else {
-          restData.password = hashedPass;
-          restData.birthDate = dateOfBirth;
-          restData.email = email;
+          return null;
+        }
+      });
+      const firstNonNullUser = usersMap.filter((user) => user)[0];
+      userExist = firstNonNullUser?.user || null; // Manejar el caso nulo
+    });
 
-          const newUser = await User.create(restData);
+    if (userExist) return res.status(400).json({ message: 'este email ya existe' });
 
-          let payload = {
-            userId: newUser._id,
-          };
+    const hashedPass = await hashData(newData.password);
+    const finalUser = {...newData, password: hashedPass, birthDate: newData.dateOfBirth }
+    const newUser = await User.create(finalUser);
 
-          const tokenEmailConfirm = jwt.sign(payload, JWT_SECRET);
+    let payload = {
+      userId: newUser._id,
+    };
 
-          //crear email de confirmacion
-          const url = `${FRONT_URL}/confirmar_email/${tokenEmailConfirm}`;
+    // * Crear email de confirmacion
+    const tokenEmailConfirm = jwt.sign(payload, JWT_SECRET);
+    const url = `${FRONT_URL}/confirmar_email/${tokenEmailConfirm}`;
 
-          sendEmailNodemailer({
-            to: newUser.email,
-            subject: 'Confirmacion de cuenta - Fisium Fulness',
-            html: `
+    sendEmailNodemailer({
+      to: newUser.email,
+      subject: 'Confirmacion de cuenta - Fisium Fulness',
+      html: `
           <p> Hola! ${newUser.name}, confirma la creacion de tu cuenta de Fisium Fulness</p>
           <p> Has click en este enlace para confirmar tu cuenta:
           <a href=${url} target="_blank"> Confirmar mi cuenta...</a></p>
           <p> Si tu no hiciste esta peticion, ignora este mensaje.</p>`,
-          });
+    });
 
-          res.status(201).json({ message: 'creado con exito' });
-        }
-      }
-    }
+    res.status(201).json({ message: 'creado con exito' });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ message: 'Algo fallo...', errorMessage: error.message });
   }
 };
 
