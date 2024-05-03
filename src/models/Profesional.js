@@ -42,9 +42,9 @@ const Profesional = new Schema(
       Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
       required: true,
     },
-    resume: {
+    city: {
       type: String,
-      default: '',
+      required: true,
     },
     curriculum: {
       type: String,
@@ -87,7 +87,7 @@ const Profesional = new Schema(
     coordinates: {
       type: [Number], // lat, lng
       default: [0, 0],
-      index: '2d'
+      index: '2d',
     },
     image: {
       type: String,
@@ -113,8 +113,7 @@ const Profesional = new Schema(
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-  },
+  }
 );
-
 
 module.exports = model('Profesional', Profesional);
