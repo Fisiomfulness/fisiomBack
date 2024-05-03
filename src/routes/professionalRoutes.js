@@ -15,10 +15,10 @@ const { addressMiddleware } = require('../middleware/addressMiddleware');
 
 const router = Router();
 
+router.post('/create', addressMiddleware, createProfessional);
 router.get('/', getProfessionals);
 router.get('/detail/:id', getProfessionalDetail);
 
-router.post('/create', addressMiddleware, createProfessional);
 
 // ojo estamos usando PUT pero ejecuta un PATCH, no requiere todos los campos ni crea uno si no existe
 router.put('/update/:id', addressMiddleware, updateProfessional);

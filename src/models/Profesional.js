@@ -75,6 +75,10 @@ const Profesional = new Schema(
       default: '',
       required: true,
     },
+    professionalDescription: {
+      type: String,
+      default: '',
+    },
     experience: {
       type: Array,
       default: [],
