@@ -7,9 +7,10 @@ const {
   statusUser,
   deleteUser,
   getUserById,
-} = require('../controllers/index');
-const { upload } = require('../config/multerConfig');
-const { addressMiddleware } = require('../middleware/addressMiddleware');
+} = require('#src/controllers/user/index');
+
+const { upload } = require('#src/config/multerConfig');
+const { addressMiddleware } = require('#src/middleware/addressMiddleware');
 
 const router = Router();
 

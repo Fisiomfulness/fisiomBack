@@ -7,11 +7,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitOverride": true,
-    "baseUrl": "./src",
+    "skipLibCheck": false,
     "paths": {
-      "#src/*": ["./*"]
+      "#src/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.js", "tests/**/*.js"],
+  "include": ["src/**/*.js", "src/**/*.d.ts", "tests/**/*.js"],
   "exclude": ["node_modules"]
 }
