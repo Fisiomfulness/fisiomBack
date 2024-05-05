@@ -1,12 +1,12 @@
-const Profesional = require('../../models/Profesional');
+const User = require('../../models/User');
 
-const getProfessionals = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 6,
+      limit = 10,
       search = '',
-      specialtyId = '',
+      interests = '',
       pos = '-12.057822374374036,-77.06708360541617',
     } = req.query;
 
@@ -14,11 +14,14 @@ const getProfessionals = async (req, res) => {
     const limitInt = parseInt(limit);
 
     if (!Number.isInteger(pageInt) || !Number.isInteger(limitInt)) {
-      return res
-        .status(400)
-        .json({ message: 'page and limit must be integers' });
+      return res.status(400).json({ message: 'page and limit must be integers' });
     }
     const skipIndex = (pageInt - 1) * limitInt;
+
+    let interestsArr = [];
+    if (interests !== '') {
+      interestsArr = interests.split(',');
+    }
 
     const coords = pos.split(',');
     const lat = parseFloat(coords[0]);
@@ -29,7 +32,7 @@ const getProfessionals = async (req, res) => {
         .json({ message: 'lat and lng must be valid coordinates' });
     }
 
-    let professionalQuery = {
+    let userQuery = {
       $and: [
         {
           coordinates: {
@@ -41,35 +44,36 @@ const getProfessionals = async (req, res) => {
     };
 
     if (search.trim() !== '') {
-      professionalQuery.$and.push({
+      userQuery.$and.push({
         $or: [
           { name: { $regex: new RegExp(search, 'i') } },
-          { address: { $regex: new RegExp(search, 'i') } },
+          // Uncomment to include address in query
+          //{ address: { $regex: new RegExp(search, 'i') } },
         ],
       });
     }
 
-    if (specialtyId !== '') {
-      professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
-    }
+    // Uncomment when interests are ready
+    // if (interestsArr.length) {
+    //   userQuery.$and.push({ specialties: { $in: [interestsId] }});
+    // }
 
-    const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name')
+    const users = await User.find(userQuery)
+      //.populate('interests', 'name')
       .skip(skipIndex)
       .limit(limitInt);
 
-    const queryWithoutNear = { ...professionalQuery };
+    const queryWithoutNear = { ...userQuery };
     queryWithoutNear.$and.shift();
 
-    const totalProfessionals =
-      await Profesional.countDocuments(queryWithoutNear);
-    const totalPages = Math.ceil(totalProfessionals / limitInt);
-    return res.status(200).json({ quantity: totalProfessionals, professionals, page: pageInt, totalPages });
+    const totalUsers = await User.countDocuments(queryWithoutNear);
+    const totalPages = Math.ceil(totalUsers / limitInt);
+    return res.status(200).json({ quantity: totalUsers, users, page: pageInt, totalPages });
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
 };
 
 module.exports = {
-  getProfessionals,
+  getUsers
 };

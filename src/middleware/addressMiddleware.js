@@ -5,6 +5,7 @@ const addressMiddleware = async (req, res, next) => {
         const { address } = req.body
         if (!address || !address.length) {
             next()
+            return;
         }
         const result = await geocoder.geocode(address)
         const bestResult = result[0]
