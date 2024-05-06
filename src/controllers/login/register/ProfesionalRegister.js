@@ -43,7 +43,7 @@ const profesionalRegister = async (req, res) => {
 
     if (userExists) {
       await fs.unlink(file);
-      return res.status(401).json({ message: 'este email ya existe' });
+      return res.status(401).json({ message: 'Email ya registrado' });
     }
 
     const { secure_url } = await cloudinary.uploader.upload(
@@ -79,7 +79,7 @@ const profesionalRegister = async (req, res) => {
     });
 
     await fs.unlink(file);
-    res.status(201).json({ message: 'creado con éxito' });
+    res.status(201).json({ message: 'Creado con éxito' });
   } catch (error) {
     await fs.unlink(file);
     res

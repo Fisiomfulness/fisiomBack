@@ -38,7 +38,7 @@ const login = async (req, res) => {
       );
 
       if (!coincidePass) {
-        res.status(401).json({ message: 'Password incorrecto' });
+        res.status(401).json({ message: 'Contraseña incorrecta' });
       } else {
         //crear token
         let payload = {
@@ -63,7 +63,7 @@ const login = async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).json({ message: error.message, message2: 'error' });
+    res.status(500).json({ message: error.message });
   }
 };
 

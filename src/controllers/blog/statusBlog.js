@@ -1,7 +1,7 @@
 const { NotFoundError, BadRequestError } = require('../../util/errors');
 const Blog = require('../../models/Blog');
 
-// * Logical delete for example
+// * Logical delete
 const statusBlog = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;

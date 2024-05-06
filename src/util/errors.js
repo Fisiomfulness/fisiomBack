@@ -46,6 +46,13 @@ class ConflictError extends ApiError {
   }
 }
 
+// ? Server doesn't recognize or refuses to accept the media file type 
+class UnsupportedMediaTypeError extends ApiError {
+  constructor(message) {
+    super(message, httpStatus.UNSUPPORTED_MEDIA_TYPE, 'UnsupportedMediaTypeError');
+  }
+}
+
 // ? User semantic error.
 class SemanticError extends ApiError {
   constructor(message) {
@@ -68,6 +75,7 @@ module.exports = {
   ForbiddenError,
   NotFoundError,
   ConflictError,
+  UnsupportedMediaTypeError,
   ServiceError,
   UnauthorizedError,
 };
