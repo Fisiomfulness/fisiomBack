@@ -2,6 +2,7 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
+const addressSchema = require('./addressSchema');
 
 const User = new Schema(
   {
@@ -39,7 +40,12 @@ const User = new Schema(
       default: 'user',
     },
     // interests: {
-    //   type: Array,
+    //   type: [
+    //     {
+    //       type: ObjectId,
+    //       ref: 'Interest',
+    //     },
+    //   ],
     //   default: [],
     // },
     gender: {
@@ -61,7 +67,7 @@ const User = new Schema(
       index: '2d'
     },
     address: {
-      type: String,
+      type: addressSchema,
       default: '',
     },
     image: {
