@@ -1,15 +1,22 @@
+const Profesional = require('../../models/Profesional');
 const User = require('../../models/User');
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, { password: 0 });
-    if (!users.length) throw new Error('No se encontró ningún usuario.');
+    let totalUsers = null;
+    await Promise.allSettled([
+      User.find({}),
+      Profesional.find({})
+    ]).then((settElements) => {
+      const usersMap = settElements.map((setElement) => setElement.value);
+      totalUsers = usersMap[0].concat(usersMap[1]);
+    })
 
-    return res.status(200).json({ users });
+    return res.status(200).json({ quantity: totalUsers.length, users: totalUsers });
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
-}
+};
 
 module.exports = {
   getAllUsers

@@ -65,11 +65,11 @@ const professionalSchema = z.object({
     .max(10, 'el n° colegiado no puede tener mas de 10 dígitos')
     .regex(numericRegex, 'el n° colegiado debe ser numérico')
     .optional(),
-  city: z
-    .string()
-    .min(2, 'la ciudad debe contener al menos 2 caracteres')
-    .max(50, 'la ciudad no puede tener mas de 50 caracteres')
-    .regex(cityRegex, 'la ciudad solo puede contener letras y espacios'),
+  // city: z
+  //   .string()
+  //   .min(2, 'la ciudad debe contener al menos 2 caracteres')
+  //   .max(50, 'la ciudad no puede tener mas de 50 caracteres')
+  //   .regex(cityRegex, 'la ciudad solo puede contener letras y espacios'),
 });
 
 const blogSchema = z.object({

@@ -3,10 +3,14 @@ const { geocoder } = require('../config/geocoderConfig');
 const addressMiddleware = async (req, res, next) => {
     try {
         const { address } = req.body
-        if (!address || !address.length) {
+        const { streetName, streetNumber, city, state, country } = address
+        if (!address || !streetName || !streetNumber || !city || !country) {
             next()
+            return;
         }
-        const result = await geocoder.geocode(address)
+
+        const oneLineAddress = `${streetName} ${streetNumber}, ${city}, ${state ? state + ", " : null}${country}`
+        const result = await geocoder.geocode(oneLineAddress)
         const bestResult = result[0]
 
         if (bestResult 
