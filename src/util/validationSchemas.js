@@ -13,6 +13,29 @@ const {
 
 const acceptedYears = { min: 18, max: 100 };
 
+const addressSchema = z.object({
+  streetName: z
+    .string()
+    .min(2, 'la calle debe tener al menos 2 caracteres')
+    .max(50, 'la calle no puede tener mas de 50 caracteres'),
+  streetNumber: z
+    .string()
+    .min(1, 'el n° de calle debe tener al menos 1 dígito')
+    .max(6, 'el n° de calle no puede tener mas de 5 dígitos'),
+  city: z
+    .string()
+    .min(2, 'la ciudad debe tener al menos 2 caracteres')
+    .max(50, 'la ciudad no puede tener mas de 50 caracteres'),
+  state: z
+    .string()
+    .max(50, 'el estado/provincia no puede tener mas de 50 caracteres')
+    .optional(),
+  country: z
+    .string()
+    .min(2, 'el pais debe tener al menos 2 caracteres')
+    .max(30, 'no mas de 30 caracteres')
+})
+
 const userSchema = z.object({
   name: z
     .string()
@@ -35,6 +58,7 @@ const userSchema = z.object({
     .string()
     .min(8, 'la contraseña debe tener al menos 8 caracteres')
     .max(50, 'no mas de 50 caracteres'),
+  address: addressSchema
 });
 
 const professionalSchema = z.object({
@@ -65,11 +89,7 @@ const professionalSchema = z.object({
     .max(10, 'el n° colegiado no puede tener mas de 10 dígitos')
     .regex(numericRegex, 'el n° colegiado debe ser numérico')
     .optional(),
-  // city: z
-  //   .string()
-  //   .min(2, 'la ciudad debe contener al menos 2 caracteres')
-  //   .max(50, 'la ciudad no puede tener mas de 50 caracteres')
-  //   .regex(cityRegex, 'la ciudad solo puede contener letras y espacios'),
+  address: addressSchema
 });
 
 const blogSchema = z.object({
@@ -124,5 +144,6 @@ const commentSchema = z.object({
       'blog no encontrado'
     ),
 });
+
 
 module.exports = { userSchema, professionalSchema, blogSchema, commentSchema };
