@@ -8,7 +8,7 @@ const addressMiddleware = async (req, res, next) => {
             return;
         }
 
-        const oneLineAddress = `${streetName} ${streetNumber}, ${city}, ${state ? state + ", " : null}${country}`
+        const oneLineAddress = `${streetName} ${streetNumber}, ${city}, ${state ? state + ", " : ""}${country}`
         const result = await geocoder.geocode(oneLineAddress)
         const bestResult = result[0]
 
