@@ -2,11 +2,14 @@ const { geocoder } = require('../config/geocoderConfig');
 
 const addressMiddleware = async (req, res, next) => {
     try {
-        const { address } = req.body
-        if (!address || !address.length) {
+        const { streetName, streetNumber, city, state, country, floorAppartment } = req.body
+        if (!streetName || !streetNumber || !city || !country) {
             next()
+            return;
         }
-        const result = await geocoder.geocode(address)
+
+        const oneLineAddress = `${streetName} ${streetNumber}, ${city}, ${state ? state + ", " : null}${country}`
+        const result = await geocoder.geocode(oneLineAddress)
         const bestResult = result[0]
 
         if (bestResult 
@@ -18,7 +21,17 @@ const addressMiddleware = async (req, res, next) => {
         && bestResult.latitude
         && bestResult.longitude) {
             req.body.coordinates = [bestResult.latitude, bestResult.longitude]
-        }   
+        }
+        
+        req.body.address = {
+            streetName,
+            streetNumber,
+            floorAppartment,
+            city,
+            state,
+            country
+        }
+
     } catch (err) {
     console.log('error in geocoding middleware')
     }
