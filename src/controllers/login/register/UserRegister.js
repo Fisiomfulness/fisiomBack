@@ -30,7 +30,7 @@ const UserRegister = async (req, res) => {
       userExist = firstNonNullUser?.user || null; // Manejar el caso nulo
     });
 
-    if (userExist) return res.status(400).json({ message: 'este email ya existe' });
+    if (userExist) return res.status(400).json({ message: 'Email ya registrado' });
 
     const hashedPass = await hashData(newData.password);
     const finalUser = {...newData, password: hashedPass, birthDate: newData.dateOfBirth }
@@ -54,7 +54,7 @@ const UserRegister = async (req, res) => {
           <p> Si tu no hiciste esta peticion, ignora este mensaje.</p>`,
     });
 
-    res.status(201).json({ message: 'creado con exito' });
+    res.status(201).json({ message: 'Creado con exito' });
   } catch (error) {
     res.status(500).send({ message: 'Algo fallo...', errorMessage: error.message });
   }

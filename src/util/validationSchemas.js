@@ -107,7 +107,6 @@ const blogSchema = z.object({
       (value) => countHtmlCharacters(value) <= 8000,
       'el blog no puede tener mas de 8000 caracteres'
     ),
-  image: z.string().url('no es una url valida'),
   professional_id: z
     .string()
     .refine(

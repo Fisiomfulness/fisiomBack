@@ -24,6 +24,7 @@ const Blog = new Schema(
     },
     id_image: {
       type: String,
+      required: true,
     },
     avg_rating: {
       type: Number,

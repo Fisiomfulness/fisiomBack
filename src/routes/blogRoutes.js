@@ -13,6 +13,7 @@ const comment = require('./commentRoutes.js');
 const { asyncHandler } = require('../util/asyncHandler');
 const { errorMiddleware } = require('../middleware/errorMiddleware');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
+const { upload } = require('#src/config/multerConfig');
 const { blogSchema } = require('../util/validationSchemas');
 
 const roles = require('../util/roles');
@@ -44,6 +45,7 @@ router.get(
 router.post(
   '/create',
   permit(roles.PROFESSIONAL),
+  upload,
   validationMiddleware(blogSchema),
   asyncHandler(createBlog)
 );
@@ -51,6 +53,7 @@ router.post(
 router.put(
   '/update/:id',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
+  upload,
   validationMiddleware(blogSchema, 'update'),
   asyncHandler(updateBlog)
 );
