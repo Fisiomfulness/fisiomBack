@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const { DEFAULT_USER_IMAGE } = require('../config/envConfig');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
+const addressSchema = require('./addressSchema');
 
 const Profesional = new Schema(
   {
@@ -42,13 +42,8 @@ const Profesional = new Schema(
       Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
       required: true,
     },
-    city: {
-      type: String,
-      required: true,
-    },
     curriculum: {
       type: String,
-      default: null,
       required: true,
     },
     license: {
@@ -58,7 +53,6 @@ const Profesional = new Schema(
     professionalScore: [
       {
         type: ObjectId,
-        ref: 'ProfessionalScore',
         ref: 'ProfessionalScore',
       },
     ],
@@ -76,13 +70,17 @@ const Profesional = new Schema(
       default: '',
       required: true,
     },
+    professionalDescription: {
+      type: String,
+      default: '',
+    },
     experience: {
       type: Array,
       default: [],
     },
     address: {
-      type: String,
-      default: '',
+      type: addressSchema,
+      required: true
     },
     coordinates: {
       type: [Number], // lat, lng
@@ -91,7 +89,7 @@ const Profesional = new Schema(
     },
     image: {
       type: String,
-      default: DEFAULT_USER_IMAGE,
+      default: ''
     },
     id_image: {
       type: String,

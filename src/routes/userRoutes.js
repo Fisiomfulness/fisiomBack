@@ -2,7 +2,7 @@ const { Router } = require('express');
 const {
   createUser,
   getUsers,
-  getDetail,
+  getAllUsers,
   updateUser,
   statusUser,
   deleteUser,
@@ -10,14 +10,13 @@ const {
 } = require('../controllers/index');
 const { upload } = require('../config/multerConfig');
 const { addressMiddleware } = require('../middleware/addressMiddleware');
-const { getAllUsers } = require('../controllers/user/getAllUsers');
 
 const router = Router();
 
 router.post('/create', upload, addressMiddleware, createUser);
 router.get('/', getUsers);
-router.get('/:id', getUserById);
-router.get('/detail/:id', getDetail);
+router.get('/all', getAllUsers);
+router.get('/detail/:id', getUserById);
 router.put('/update/:id', upload, addressMiddleware, updateUser);
 router.patch('/status/:id', statusUser);
 

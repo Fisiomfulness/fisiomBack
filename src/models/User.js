@@ -1,7 +1,8 @@
+const moment = require('moment');
 const mongoose = require('mongoose');
-const { DEFAULT_USER_IMAGE } = require('../config/envConfig');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
+const addressSchema = require('./addressSchema');
 
 const User = new Schema(
   {
@@ -39,7 +40,12 @@ const User = new Schema(
       default: 'user',
     },
     // interests: {
-    //   type: Array,
+    //   type: [
+    //     {
+    //       type: ObjectId,
+    //       ref: 'Interest',
+    //     },
+    //   ],
     //   default: [],
     // },
     gender: {
@@ -61,12 +67,12 @@ const User = new Schema(
       index: '2d'
     },
     address: {
-      type: String,
+      type: addressSchema,
       default: '',
     },
     image: {
       type: String,
-      default: DEFAULT_USER_IMAGE,
+      default: '',
     },
     id_image: {
       type: String,
@@ -75,5 +81,19 @@ const User = new Schema(
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
 );
+
+User.virtual('age').get(function () {
+  if (!this.birthDate) return null; // Return null if birthDate is not set
+  const today = moment();
+  const birthDate = moment(this.birthDate);
+
+  // Calculate the age using Moment.js
+  const age = today.diff(birthDate, 'years');
+
+  return age;
+});
+
+User.set('toObject', { virtuals: true });
+User.set('toJSON', { virtuals: true });
 
 module.exports = model('User', User);

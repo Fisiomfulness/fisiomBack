@@ -44,13 +44,9 @@ Content-Type: application/json
 }
 
 ### UPDATE PROFESSIONAL
-PUT {{url}}/professionals/update/6633e33fcd6e204ec206fedf
+PUT {{url}}/professionals/update/6633e20ecd6e204ec206fecd
 Content-Type: application/json
 
 {
-    "image": "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*",
-    "resume": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in vulputate eros. Nulla facilisi. Sed ut ex sit amet ligula tincidunt aliquet. Aliquam euismod, velit eu mollis scelerisque, ex justo feugiat nulla, id auctor magna felis non felis. Fusce bibendum leo et nisi vehicula, nec dapibus mauris eleifend. Vivamus eget justo vel quam varius pellentesque. Vestibulum auctor ornare metus, vel blandit dolor aliquet a.",
-    "consultationPrice": 120,
-    "address": "Güemes 1950, Rosario, Santa Fe, Argentina"
-
+    "professionalDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin."
 }
