@@ -11,12 +11,12 @@ const {
 
 const { upload } = require('#src/config/multerConfig');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
-const decodeId = require('#src/middleware/decodeId');
+const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
 
 const router = Router();
 
 router.post('/create', upload, addressMiddleware, createUser);
-router.get('/', decodeId, getUsers);
+router.get('/', decodeTokenUser, getUsers);
 router.get('/all', getAllUsers);
 router.get('/detail/:id', getUserById);
 router.put('/update/:id', upload, addressMiddleware, updateUser);

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config/envConfig');
 
-const decodeId = (req, res, next) => {
+const decodeTokenUser = (req, res, next) => {
   const token = req.cookies?.accessToken
 
   if (token) {
@@ -11,10 +11,10 @@ const decodeId = (req, res, next) => {
             res.clearCookie('accessToken');
         }
         // else save the userId in the request
-        req.userId = decoded.id;
+        req.tokenUser = decoded;
     });
   }
   next();
 };
 
-module.exports = decodeId;
+module.exports = { decodeTokenUser };
