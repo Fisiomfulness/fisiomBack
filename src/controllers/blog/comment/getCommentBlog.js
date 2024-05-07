@@ -22,7 +22,7 @@ const getCommentBlog = async (req, res) => {
 
   try {
     const totalComments = await Comment.countDocuments({ blog: blog_id });
-    const comments = await Comment.find({ blog: blog_id })
+    const comments = await Comment.find({ blog: blog_id, status: true })
       .sort({ createdDate: -1 })
       .skip(offsetInt)
       .limit(limitInt)

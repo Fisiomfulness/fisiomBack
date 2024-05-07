@@ -33,7 +33,7 @@ router.use(authAll);
 
 router.get(
   '/:professionalId',
-  permit(roles.USER, roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
+  permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   asyncHandler(getProfessionalBlogs)
 );
 router.get(
