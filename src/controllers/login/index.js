@@ -1,9 +1,10 @@
-const { login } = require("./login")
-const { recoverAccount } = require("./recoverAccount")
-
-
+const { activateConfirmEmail } = require('./confirmEmail');
+const { login } = require('./login');
+const { emailResetPassword, resetPassword } = require('./recoverAccount');
 
 module.exports = {
   login,
-  recoverAccount
-}
+  activateConfirmEmail,
+  emailResetPassword,
+  resetPassword,
+};
