@@ -15,12 +15,7 @@ const specialtySchema = new Schema(
       unique: true,
     },
     professionals: {
-      type: [
-        {
-          type: Types.ObjectId,
-          ref: 'Profesional',
-        },
-      ],
+      type: [{ type: Types.ObjectId, ref: 'Profesional' }],
       default: [],
     },
     is_deleted: {
