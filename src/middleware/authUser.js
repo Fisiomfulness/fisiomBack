@@ -21,9 +21,10 @@ const authUser = (req, res, next) => {
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
+      res.clearCookie('accessToken');
       return res.status(401).json({ message: 'Invalid token or expirated' });
     }
-    if (decoded.role != ('profesional', 'user')) {
+    if (decoded.role != ('professional', 'user')) {
       return res.status(403).json({ message: 'User without permissions' });
     }
     next();

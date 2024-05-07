@@ -35,20 +35,30 @@ const getUsers = async (req, res) => {
     let userQuery = {
       $and: [
         {
+          // sort by proximity to lat,lng
           coordinates: {
             $near: [lat, lng],
           },
         },
+        // bring only active users
         { status: true },
       ],
     };
 
+    // if user is logged don't bring himself
+    if (req.tokenUser) {
+      userQuery.$and.push({ _id: { $ne: req.tokenUser.id } });
+    }
+
+    // filter by search
     if (search.trim() !== '') {
       userQuery.$and.push({
         $or: [
           { name: { $regex: new RegExp(search, 'i') } },
           // Uncomment to include address in query
-          //{ address: { $regex: new RegExp(search, 'i') } },
+          //{ 'address.city': { $regex: new RegExp(search, 'i') } },
+          //{ 'address.state': { $regex: new RegExp(search, 'i') } },
+          //{ 'address.country': { $regex: new RegExp(search, 'i') } },
         ],
       });
     }

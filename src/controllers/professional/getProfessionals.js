@@ -40,11 +40,19 @@ const getProfessionals = async (req, res) => {
       ],
     };
 
+    // if user is logged don't bring himself
+    if (req.tokenUser) {
+      professionalQuery.$and.push({ _id: { $ne: req.tokenUser.id } });
+    }
+
     if (search.trim() !== '') {
       professionalQuery.$and.push({
         $or: [
           { name: { $regex: new RegExp(search, 'i') } },
-          { address: { $regex: new RegExp(search, 'i') } },
+          { 'address.streetName': { $regex: new RegExp(search, 'i') } },
+          { 'address.city': { $regex: new RegExp(search, 'i') } },
+          { 'address.state': { $regex: new RegExp(search, 'i') } },
+          { 'address.country': { $regex: new RegExp(search, 'i') } },
         ],
       });
     }
