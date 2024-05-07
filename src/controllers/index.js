@@ -23,8 +23,6 @@ const {
   getCommentBlog,
 } = require('./blog/comment/index');
 
-const { login } = require('./login/index');
-
 const {
   createProduct,
   deleteProduct,
@@ -41,16 +39,6 @@ const {
   getTypeById,
   getTypes,
 } = require('./type/index');
-
-const {
-  createUser,
-  deleteUser,
-  getUsers,
-  getAllUsers,
-  getUserById,
-  statusUser,
-  updateUser,
-} = require('./user/index');
 
 const {
   getProfessionals,
@@ -84,7 +72,6 @@ module.exports = {
   deleteComment,
   getComment,
   getCommentBlog,
-  login,
   createProduct,
   deleteProduct,
   getAllProduct,
@@ -96,13 +83,6 @@ module.exports = {
   deleteType,
   getTypeById,
   getTypes,
-  createUser,
-  deleteUser,
-  getUsers,
-  getAllUsers,
-  getUserById,
-  statusUser,
-  updateUser,
   getProfessionals,
   createProfessional,
   getProfessionalDetail,

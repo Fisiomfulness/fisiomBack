@@ -21,7 +21,8 @@ const validationMiddleware = (schema, mode="post") => {
       if (file) await fs.unlink(file.path); // ? If a file [multer] exists, delete it on error
       if (error instanceof ZodError) {
         const issue = error.issues[0];
-        errorToHandle = new BadRequestError(`${issue.path[0]} => ${issue.message}`);
+        const path = issue.path.join('.');
+        errorToHandle = new BadRequestError(`${path} => ${issue.message}`);
       }
       next(errorToHandle); // * sends any error to work errorMiddleware
     }

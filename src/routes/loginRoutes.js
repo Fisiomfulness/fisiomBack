@@ -1,11 +1,11 @@
 const { Router } = require('express');
-const { login } = require('../controllers/index');
 const register = require('./register.js');
 const {
+  login,
+  activateConfirmEmail,
   emailResetPassword,
   resetPassword,
-} = require('#src/controllers/login/recoverAccount');
-const { activateConfirmEmail } = require('#src/controllers/login/confirmEmail');
+} = require('#src/controllers/login/index');
 
 const router = Router();
 

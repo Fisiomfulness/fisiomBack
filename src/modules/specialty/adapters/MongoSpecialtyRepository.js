@@ -30,7 +30,9 @@ class MongoSpecialtyRepository {
    * @returns {Promise<Specialty>}
    */
   async delete(id) {
-    const response = await this.collection.findByIdAndUpdate(id, { is_deleted: true });
+    const response = await this.collection.findByIdAndUpdate(id, {
+      is_deleted: true,
+    });
 
     if (!response) {
       throw new Error('Specialty not found');

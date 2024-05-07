@@ -1,9 +1,8 @@
-const { JWT_SECRET, FRONT_URL } = require('../../config/envConfig');
-const { verifyHashedData } = require('../../util/hashData');
-const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('#src/config/envConfig');
+const { verifyHashedData } = require('#src/util/hashData');
+const User = require('#src/models/User');
 const Profesional = require('#src/models/Profesional');
-const { sendEmailNodemailer } = require('#src/util/nodemailer');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -42,7 +41,10 @@ const login = async (req, res) => {
       } else {
         //crear token
         let payload = {
-          userId: userResult._id,
+          id: userResult._id,
+          name: userResult.name,
+          email: userResult.email,
+          image: userResult.image,
           role: userResult.role,
           coordinates: userResult.coordinates,
         };

@@ -8,7 +8,7 @@ const { addressMiddleware } = require('../middleware/addressMiddleware');
 
 const router = Router();
 
-router.post('/professional', addressMiddleware, uploadCurriculum, validationMiddleware(professionalSchema), ProfesionalRegister);
+router.post('/professional', uploadCurriculum, addressMiddleware, validationMiddleware(professionalSchema), ProfesionalRegister);
 router.post('/user', addressMiddleware, validationMiddleware(userSchema), UserRegister);
 
 module.exports = router;
