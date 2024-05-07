@@ -13,6 +13,7 @@ const getAllBlogs = async (req, res) => {
     sortBy = 'createdDate',
     order = 'desc',
     search = '',
+    status, // ? undefined = all blogs
   } = req.query;
 
   const pageInt = parseInt(page);
@@ -24,9 +25,15 @@ const getAllBlogs = async (req, res) => {
   if (limitInt > LIMIT_BLOGS) throw new BadRequestError('limit exceeded');
 
   const skipIndex = (pageInt - 1) * limitInt;
-  let query = { status: true };
+  let query = {};
   let sortOptions = {};
 
+  if (status) {
+    if(status !== "true" && status !== "false") {
+      throw new BadRequestError('invalid received status - must be true or false');
+    }
+    query.status = status === "true"; // ? Return a boolean
+  }
   if (professionalId) query.createdBy = professionalId;
   if (search.trim() !== '') {
     query.title = { $regex: new RegExp(search, 'i') };
