@@ -12,11 +12,12 @@ const {
   removeSpecialty,
 } = require('../controllers/index');
 const { addressMiddleware } = require('../middleware/addressMiddleware');
+const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
 
 const router = Router();
 
 router.post('/create', addressMiddleware, createProfessional);
-router.get('/', getProfessionals);
+router.get('/', decodeTokenUser, getProfessionals);
 router.get('/detail/:id', getProfessionalDetail);
 
 
