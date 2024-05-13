@@ -4,6 +4,7 @@ const {
   phoneRegExp,
   cityRegex,
   numericRegex,
+  streetNameRegex,
 } = require('../util/regExp');
 const {
   validateId,
@@ -18,7 +19,7 @@ const addressSchema = z.object({
     .string()
     .min(2, 'la calle debe tener al menos 2 caracteres')
     .max(50, 'la calle no puede tener mas de 50 caracteres')
-    .regex(nameRegex, 'solo puede contener letras'),
+    .regex(streetNameRegex, 'solo letras y números (min: 2 letras)'),
   streetNumber: z
     .string()
     .min(1, 'el n° de calle debe tener al menos 1 dígito')
