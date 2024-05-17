@@ -6,13 +6,6 @@ const {
 } = require('#src/modules/specialty/adapters/MongoSpecialtyRepository');
 const { CriteriaQuery } = require('#src/util/criteria/criteria');
 
-/**
- * @typedef
- *   {import('#src/modules/specialty/models/SpecialtyRepository').SpecialtyRepository}
- * SpecialtyRepository
- */
-
-/** @type {SpecialtyRepository} */
 const specialtyRepository = new MongoSpecialtyRepository();
 
 const router = Router();
@@ -50,6 +43,7 @@ router.get('/', async (req, res) => {
    */
   const { filters, orderBy, order, limit, offset } = queryParams;
 
+  // TODO: validar los filtros
   const query = new CriteriaQuery(
     /** @type {any[]} */ (filters) || [],
     /** @type {string} */ (orderBy),
