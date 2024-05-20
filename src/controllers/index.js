@@ -53,7 +53,11 @@ const {
   removeSpecialty,
 } = require('./professional/index');
 
-const { getAllQuestions, createQuestion } = require('./question/index');
+const {
+  getAllQuestions,
+  createQuestion,
+  respondQuestion,
+} = require('./question/index');
 
 const { sendEmail } = require('./mail/index');
 
@@ -97,5 +101,6 @@ module.exports = {
   removeSpecialty,
   getAllQuestions,
   createQuestion,
+  respondQuestion,
   sendEmail,
 };
