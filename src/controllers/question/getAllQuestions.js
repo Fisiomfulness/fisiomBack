@@ -35,7 +35,8 @@ const getAllQuestions = async (req, res) => {
   const questions = await Question.find(query)
     .sort({ createdDate: 'desc' })
     .skip(offsetInt)
-    .limit(limitInt);
+    .limit(limitInt)
+    .populate('answer.professional', 'name image');
   const totalQuestions = await Question.countDocuments(query);
 
   res.status(200).json({ questions, totalQuestions });
