@@ -17,7 +17,11 @@ const respondQuestion = async (req, res) => {
       professional: professionalId,
     },
   };
-  const updatedQuestion = await Question.findOneAndUpdate({ _id: id }, newData, { new: true });
+  const updatedQuestion = await Question.findOneAndUpdate(
+    { _id: id },
+    newData,
+    { new: true }
+  ).populate('answer.professional', 'name image');
   if (!updatedQuestion) throw new NotFoundError('pregunta no encontrada');
 
   res.status(200).json({ updatedQuestion });
