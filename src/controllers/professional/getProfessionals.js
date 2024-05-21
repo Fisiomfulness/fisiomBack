@@ -7,7 +7,7 @@ const getProfessionals = async (req, res) => {
       limit = 6,
       search = '',
       specialtyId = '',
-      pos = '-12.057822374374036,-77.06708360541617',
+      pos = '',
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -46,15 +46,37 @@ const getProfessionals = async (req, res) => {
     }
 
     if (search.trim() !== '') {
-      professionalQuery.$and.push({
-        $or: [
-          { name: { $regex: new RegExp(search, 'i') } },
-          { 'address.streetName': { $regex: new RegExp(search, 'i') } },
-          { 'address.city': { $regex: new RegExp(search, 'i') } },
-          { 'address.state': { $regex: new RegExp(search, 'i') } },
-          { 'address.country': { $regex: new RegExp(search, 'i') } },
-        ],
-      });
+      const searchArray = search.split(',');
+      searchArray.forEach((s) => {
+        s = s.trim();
+        const ciudad = s.startsWith('ciudad:');
+        const estado = s.startsWith('estado:');
+        const pais = s.startsWith('pais:');
+
+        if (ciudad) {
+          professionalQuery.$and.push({
+            'address.city': { $regex: new RegExp(s.replace('ciudad:', ''), 'i') },
+          });
+        } else if (estado) {
+          professionalQuery.$and.push({
+            'address.state': { $regex: new RegExp(s.replace('estado:', ''), 'i') },
+          });
+        } else if (pais) {
+          professionalQuery.$and.push({
+            'address.country': { $regex: new RegExp(s.replace('pais:', ''), 'i') },
+          });
+        } else {
+          professionalQuery.$and.push({
+            $or: [
+              { name: { $regex: new RegExp(search, 'i') } },
+              { 'address.streetName': { $regex: new RegExp(search, 'i') } },
+              { 'address.city': { $regex: new RegExp(search, 'i') } },
+              { 'address.state': { $regex: new RegExp(search, 'i') } },
+              { 'address.country': { $regex: new RegExp(search, 'i') } },
+            ],
+          });
+        }
+      })
     }
 
     if (specialtyId !== '') {
