@@ -57,6 +57,7 @@ const {
   getAllQuestions,
   createQuestion,
   respondQuestion,
+  deleteQuestion,
 } = require('./question/index');
 
 const { sendEmail } = require('./mail/index');
@@ -102,5 +103,6 @@ module.exports = {
   getAllQuestions,
   createQuestion,
   respondQuestion,
+  deleteQuestion,
   sendEmail,
 };

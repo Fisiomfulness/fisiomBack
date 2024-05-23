@@ -11,6 +11,7 @@ const {
   getAllQuestions,
   createQuestion,
   respondQuestion,
+  deleteQuestion,
 } = require('../controllers/index');
 
 const router = Router();
@@ -32,9 +33,7 @@ router.put(
 );
 
 // ! TODO = SOLO ADMIN Y SUPERADMIN PUEDAN BORRAR PREGUNTAS
-router.delete('/:id', (req, res) => {
-  res.status(200).send('Ruta DELETE de questions');
-});
+router.delete('/:id', asyncHandler(deleteQuestion));
 
 router.use(errorMiddleware);
 
