@@ -7,6 +7,7 @@ const getProfessionals = async (req, res) => {
       limit = 6,
       search = '',
       specialtyId = '',
+      city = '',
       pos = '',
     } = req.query;
 
@@ -45,37 +46,23 @@ const getProfessionals = async (req, res) => {
       professionalQuery.$and.push({ _id: { $ne: req.tokenUser.id } });
     }
 
+    if (city.trim() !== '') {
+      professionalQuery.$and.push({ 'address.city': city });
+    }
+
     if (search.trim() !== '') {
       const searchArray = search.split(',');
       searchArray.forEach((s) => {
         s = s.trim();
-        const ciudad = s.startsWith('ciudad:');
-        const estado = s.startsWith('estado:');
-        const pais = s.startsWith('pais:');
-
-        if (ciudad) {
-          professionalQuery.$and.push({
-            'address.city': { $regex: new RegExp(s.replace('ciudad:', ''), 'i') },
-          });
-        } else if (estado) {
-          professionalQuery.$and.push({
-            'address.state': { $regex: new RegExp(s.replace('estado:', ''), 'i') },
-          });
-        } else if (pais) {
-          professionalQuery.$and.push({
-            'address.country': { $regex: new RegExp(s.replace('pais:', ''), 'i') },
-          });
-        } else {
-          professionalQuery.$and.push({
-            $or: [
-              { name: { $regex: new RegExp(search, 'i') } },
-              { 'address.streetName': { $regex: new RegExp(search, 'i') } },
-              { 'address.city': { $regex: new RegExp(search, 'i') } },
-              { 'address.state': { $regex: new RegExp(search, 'i') } },
-              { 'address.country': { $regex: new RegExp(search, 'i') } },
-            ],
-          });
-        }
+        professionalQuery.$and.push({
+          $or: [
+            { name: { $regex: new RegExp(s, 'i') } },
+            { 'address.streetName': { $regex: new RegExp(s, 'i') } },
+            { 'address.city': { $regex: new RegExp(s, 'i') } },
+            { 'address.state': { $regex: new RegExp(s, 'i') } },
+            { 'address.country': { $regex: new RegExp(s, 'i') } },
+          ],
+        });
       })
     }
 

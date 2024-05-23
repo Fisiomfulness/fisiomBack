@@ -50,3 +50,6 @@ Content-Type: application/json
 {
     "professionalDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin."
 }
+
+### GET PROFESSIONALS
+GET {{url}}/professionals/?search=&city=&specialtyId=&pos=-32.953808,-60.6401331&page=1
