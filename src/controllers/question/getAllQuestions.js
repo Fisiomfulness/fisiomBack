@@ -38,8 +38,9 @@ const getAllQuestions = async (req, res) => {
     .limit(limitInt)
     .populate('answer.professional', 'name image');
   const totalQuestions = await Question.countDocuments(query);
+  const hasMoreToLoad = totalQuestions > offsetInt + limitInt;
 
-  res.status(200).json({ questions, totalQuestions });
+  res.status(200).json({ questions, totalQuestions, hasMoreToLoad });
 };
 
 module.exports = {
