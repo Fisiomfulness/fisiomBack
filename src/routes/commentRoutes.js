@@ -8,7 +8,7 @@ const {
 const { asyncHandler } = require('../util/asyncHandler');
 const { errorMiddleware } = require('../middleware/errorMiddleware');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
-const { commentSchema } = require('../util/validationSchemas');
+const { commentSchema } = require('../util/validations');
 
 const roles = require('../util/roles');
 const authAll = require('../middleware/authAll');
