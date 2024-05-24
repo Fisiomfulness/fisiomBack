@@ -5,7 +5,7 @@ const { validationMiddleware } = require('../middleware/validationMiddleware');
 const {
   questionSchema,
   questionResponseSchema,
-} = require('../util/validationSchemas');
+} = require('../util/validations');
 
 const {
   getAllQuestions,
