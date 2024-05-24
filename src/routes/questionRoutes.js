@@ -15,25 +15,32 @@ const {
 } = require('../controllers/index');
 
 const router = Router();
+const authAll = require('../middleware/authAll');
+const permit = require('../middleware/rolesMiddleware');
+const roles = require('#src/util/roles');
 
 router.get('/', asyncHandler(getAllQuestions));
 
-// ! TODO = QUE SOLO USUARIOS REGISTRADOS PUEDAN HACER LAS PREGUNTAS NO IMPORTA EL ROL.
+router.use(authAll);
+
 router.post(
   '/create',
   validationMiddleware(questionSchema),
   asyncHandler(createQuestion)
 );
 
-// ! TODO = SOLO PROFESIONALES PUEDAN RESPONDER
 router.put(
   '/response/:id',
+  permit(roles.PROFESSIONAL),
   validationMiddleware(questionResponseSchema, 'update'),
   asyncHandler(respondQuestion)
 );
 
-// ! TODO = SOLO ADMIN Y SUPERADMIN PUEDAN BORRAR PREGUNTAS
-router.delete('/:id', asyncHandler(deleteQuestion));
+router.delete(
+  '/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  asyncHandler(deleteQuestion)
+);
 
 router.use(errorMiddleware);
 
