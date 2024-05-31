@@ -17,16 +17,19 @@
 
       const roomName = new URL(document.location.href).pathname.split("/")[2];
 
+      const USER_CONNECTED_EVENT = "user:connected";
+      const MESSAGE_SENDED_EVENT = "message:sended";
+
       const name = prompt("What is your name?");
       appendMessage("You joined");
-      socket.emit("new-user", { roomName, username: name });
+      socket.emit(USER_CONNECTED_EVENT, { roomName, username: name });
 
-      socket.on("chat-message", (data) => {
-        appendMessage(`${data.name}: ${data.message}`);
+      socket.on(USER_CONNECTED_EVENT, (name) => {
+        appendMessage(`${name} connected`);
       });
 
-      socket.on("user-connected", (name) => {
-        appendMessage(`${name} connected`);
+      socket.on("message:new", (data) => {
+        appendMessage(`${data.name}: ${data.message}`);
       });
 
       socket.on("user-disconnected", (name) => {
@@ -40,7 +43,7 @@
         if (!message) return;
 
         appendMessage(`You: ${message}`);
-        socket.emit("send-chat-message", {
+        socket.emit(MESSAGE_SENDED_EVENT, {
           room: roomName,
           message,
           sendBy: name,

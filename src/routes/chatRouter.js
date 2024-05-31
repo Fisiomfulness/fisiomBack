@@ -5,36 +5,37 @@ const {
 const {
   internalEventBus,
 } = require('#src/modules/event/models/InternalEventBus');
-const { rooms } = require('#src/state');
+const { newRooms } = require('#src/state');
 
 const Router = require('express-promise-router').default;
-
 const router = Router();
 
 router.get('/', (_req, res) => {
   res.sendFile(process.cwd() + '/index.html');
 });
 
+router.get('/rooms', (_, res) => {
+  return res.json({ newRooms: Object.fromEntries(newRooms) });
+});
+
 router.post('/room', (req, res) => {
-  console.log('body', req.body);
-  if (rooms[req.body.room] != null) {
+  const { room } = req.body;
+
+  if (newRooms.has(room)) {
     return res.json({ ok: false });
   }
 
-  rooms[req.body.room] = { users: {} };
-  console.log('Debug: chatRouter.js:18: rooms=', rooms);
-  // res.redirect('/chat/' + req.body.room);
+  newRooms.set(room, { users: {} });
 
-  internalEventBus.publish(
-    new PublicChatCreatedEvent({ roomName: req.body.room }),
-  );
+  internalEventBus.publish(new PublicChatCreatedEvent({ roomName: room }));
 
   res.json({ ok: true });
 });
 
 router.get('/:room', (req, res) => {
-  if (rooms[req.params.room] == null) {
-    return res.redirect('/chat');
+  const { room } = req.params;
+  if (!newRooms.has(room)) {
+    return res.json({ ok: false });
   }
 
   res.sendFile(process.cwd() + '/room.html');

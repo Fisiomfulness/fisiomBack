@@ -6,7 +6,7 @@ const {
   internalEventBus,
 } = require('#src/modules/event/models/InternalEventBus');
 const { SocketEventBus } = require('#src/modules/event/models/SocketEventBus');
-const { rooms } = require('#src/state');
+const { newRooms } = require('#src/state');
 const { Server: SocketServer } = require('socket.io');
 
 /** @typedef {import("node:http").Server} Server */
@@ -63,22 +63,36 @@ class SocketApplication {
 
         internalEventBus.unsubscribe(publicChatCreatedSubscriber);
 
-        Object.entries(rooms)
-          .reduce(
-            (names, [name, room]) => {
-              if (room.users[socket.id] != null) names.push(name);
-              return names;
-            },
-            /** @type {string[]} */ ([]),
-          )
-          .forEach((room) => {
-            socket.broadcast
-              .to(room)
-              .emit('user-disconnected', rooms[room].users[socket.id]);
-            delete rooms[room].users[socket.id];
-          });
+        const id = socket.id;
+        this.#getUserRooms(id).forEach((roomName) => {
+          const room = newRooms.get(roomName);
+          if (!room) return;
+
+          const users = room.users;
+
+          socket.broadcast.to(roomName).emit('user-disconnected', users[id]);
+          delete users[id];
+        });
       });
     });
+  }
+
+  /** @param {string} id */
+  #getUserRooms(id) {
+    /** @type {string[]} */
+    const res = [];
+    newRooms.forEach((value, key) => {
+      if (value.users[id]) res.push(key);
+    });
+    return res;
+
+    // return Object.entries(rooms).reduce(
+    //   (names, [name, room]) => {
+    //     if (room.users[socket.id] != null) names.push(name);
+    //     return names;
+    //   },
+    //   /** @type {string[]} */ ([]),
+    // );
   }
 }
 

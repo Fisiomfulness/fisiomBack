@@ -1,6 +1,6 @@
 // @ts-check
 const { PORT } = require('./config/envConfig');
-const { Server } = require('./Server');
+const { Server } = require('./server');
 const { mongoClientConnect } = require('./db');
 
 async function main() {
