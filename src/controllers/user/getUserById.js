@@ -1,22 +1,19 @@
+const { NotFoundError } = require('#src/util/errors');
 const Profesional = require('../../models/Profesional');
 const User = require('../../models/User');
 
 const getUserById = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        const findUser = await User.findById(id);
-        const findProfesional =
-        await Profesional.findById(id).populate('professionalScore');
+  const [user, professional] = await Promise.all([
+    User.findById(id),
+    Profesional.findById(id).populate('professionalScore'),
+  ]);
 
-        return findUser
-        ? res.status(200).json({ findUser })
-        : findProfesional
-            ? res.status(200).json({ findProfesional })
-            : res.status(404).send('Usuario no encontrado');
-    } catch (error) {
-        return res.status(500).json(error.message);
-    }
+  const foundUser = user || professional;
+  if (!foundUser) throw new NotFoundError('usuario no encontrado');
+
+  res.status(200).json({ foundUser });
 };
 
 module.exports = { getUserById };

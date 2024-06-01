@@ -1,4 +1,4 @@
-const { Router } = require('express');
+const Router = require('express-promise-router');
 const {
   createUser,
   getUsers,
@@ -12,6 +12,7 @@ const {
 const { upload } = require('#src/config/multerConfig');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
 const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
+const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 
 const router = Router();
 
@@ -24,5 +25,7 @@ router.patch('/status/:id', statusUser);
 
 // Ruta para eliminar usuarios creados por error o por otros motivos, no borrar
 router.delete('/delete/:id', deleteUser);
+
+router.use(errorMiddleware);
 
 module.exports = router;

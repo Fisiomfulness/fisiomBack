@@ -33,7 +33,10 @@ const UserRegister = async (req, res) => {
     if (userExist) return res.status(400).json({ message: 'Email ya registrado' });
 
     const hashedPass = await hashData(newData.password);
-    const finalUser = {...newData, password: hashedPass, birthDate: newData.dateOfBirth }
+    const finalUser = {
+      ...newData,
+      password: hashedPass,
+    };
     const newUser = await User.create(finalUser);
 
     let payload = {
@@ -56,7 +59,9 @@ const UserRegister = async (req, res) => {
 
     res.status(201).json({ message: 'Creado con exito' });
   } catch (error) {
-    res.status(500).send({ message: 'Algo fallo...', errorMessage: error.message });
+    res
+      .status(500)
+      .send({ message: 'Algo fallo...', errorMessage: error.message });
   }
 };
 

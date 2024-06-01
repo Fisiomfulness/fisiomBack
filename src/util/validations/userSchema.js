@@ -4,6 +4,7 @@ const { isDateOnRange } = require('../helpers');
 const addressSchema = require('./addressSchema');
 
 const acceptedYears = { min: 18, max: 100 };
+const MAX_PICTURE_SIZE = 1024 * 1024 * 3; // ? 3MB
 
 const userSchema = z.object({
   name: z
@@ -18,7 +19,7 @@ const userSchema = z.object({
     .regex(phoneRegExp, 'no es un teléfono valido')
     .optional(),
   email: z.string().trim().email('no es un email'),
-  dateOfBirth: z
+  birthDate: z
     .string()
     .date('no es una fecha valida YYYY-MM-DD')
     .refine(
@@ -34,6 +35,14 @@ const userSchema = z.object({
     .min(8, 'la contraseña debe tener al menos 8 caracteres')
     .max(50, 'no mas de 50 caracteres'),
   address: addressSchema,
+  image: z
+    .instanceof(File)
+    .refine((value) => value.type.startsWith('image/'), 'no es una imagen')
+    .refine(
+      (value) => value && value.size <= MAX_PICTURE_SIZE,
+      'tamaño de imagen máxima: 3MB'
+    )
+    .optional(),
 });
 
 module.exports = userSchema;
