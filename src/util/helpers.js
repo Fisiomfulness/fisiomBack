@@ -1,10 +1,20 @@
 const { NotFoundError } = require('./errors');
+const Profesional = require('#src/models/Profesional');
+const User = require('#src/models/User');
 const mongoose = require('mongoose');
 
 // * Returns a boolean value if document exist in db or not.
 const validateId = async (id, modelName) => {
   return !!(await mongoose.model(modelName).findById(id));
 };
+
+const verifyExistingEmail = async (email) => {
+  const [userExists, professionalExists] = await Promise.all([
+    User.exists({ email }),
+    Profesional.exists({ email }),
+  ]);
+  return userExists || professionalExists;
+}
 
 // * For blog content htmlString validation
 const countHtmlCharacters = (htmlString) => {
@@ -35,4 +45,4 @@ const isDateOnRange = (value, minYearsAgo, maxYearsAgo) => {
   return dateISO >= minDate && dateISO <= maxDate;
 };
 
-module.exports = { validateId, countHtmlCharacters, isDateOnRange };
+module.exports = { validateId, verifyExistingEmail, countHtmlCharacters, isDateOnRange };
