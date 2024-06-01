@@ -93,7 +93,7 @@ const Profesional = new Schema(
     },
     id_image: {
       type: String,
-      default: 'does not have image id',
+      default: '',
     },
     consultationPrice: {
       type: Number,

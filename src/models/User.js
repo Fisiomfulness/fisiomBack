@@ -76,7 +76,7 @@ const User = new Schema(
     },
     id_image: {
       type: String,
-      default: 'does not have image id',
+      default: '',
     },
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
