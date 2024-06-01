@@ -55,8 +55,6 @@ const updateUser = async (req, res) => {
       newIdImage = public_id;
     }
 
-    console.log(req.body);
-
     // ? Updating values
     for (const key of Object.keys(req.body)) {
       if (key in foundUser && key !== 'password') {
@@ -68,8 +66,6 @@ const updateUser = async (req, res) => {
       foundUser.id_image = newIdImage;
     }
     await foundUser.save();
-
-    console.log(foundUser);
 
     res.status(200).json({ updatedUser: foundUser, message: 'usuario actualizado' });
   } catch (err) {
