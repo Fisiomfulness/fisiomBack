@@ -32,11 +32,6 @@ const getProfessionals = async (req, res) => {
 
     let professionalQuery = {
       $and: [
-        {
-          coordinates: {
-            $near: [lat, lng],
-          },
-        },
         { status: true },
       ],
     };
@@ -71,15 +66,14 @@ const getProfessionals = async (req, res) => {
     }
 
     const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name')
-      .skip(skipIndex)
-      .limit(limitInt);
+    .populate('specialties', 'name')
+    .where('coordinates').near([lat, lng])
+    .skip(skipIndex)
+    .limit(limitInt);
 
-    const queryWithoutNear = { ...professionalQuery };
-    queryWithoutNear.$and.shift();
 
     const totalProfessionals =
-      await Profesional.countDocuments(queryWithoutNear);
+      await Profesional.countDocuments(professionalQuery);
     const totalPages = Math.ceil(totalProfessionals / limitInt);
     return res.status(200).json({ quantity: totalProfessionals, professionals, page: pageInt, totalPages });
   } catch (error) {
