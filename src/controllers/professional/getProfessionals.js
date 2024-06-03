@@ -8,7 +8,8 @@ const getProfessionals = async (req, res) => {
       search = '',
       specialtyId = '',
       city = '',
-      pos = '',
+      pos = '0,0',
+      bbox = '',
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -30,13 +31,23 @@ const getProfessionals = async (req, res) => {
         .json({ message: 'lat and lng must be valid coordinates' });
     }
 
+    let polygonQuery;
+    if (bbox !== '') {
+      const bboxArray = bbox.split(',').map(parseFloat);
+      const southwest = [bboxArray[1], bboxArray[0]];
+      const northeast = [bboxArray[3], bboxArray[2]];
+      const box = [southwest, northeast];
+      polygonQuery = { box };
+      console.log(polygonQuery);
+    }
+
     let professionalQuery = {
       $and: [
         { status: true },
       ],
     };
 
-    // if user is logged don't bring himself
+    // If user is logged don't bring himself
     if (req.tokenUser) {
       professionalQuery.$and.push({ _id: { $ne: req.tokenUser.id } });
     }
@@ -65,17 +76,28 @@ const getProfessionals = async (req, res) => {
       professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
     }
 
-    const professionals = await Profesional.find(professionalQuery)
-    .populate('specialties', 'name')
-    .where('coordinates').near([lat, lng])
-    .skip(skipIndex)
-    .limit(limitInt);
+    if (polygonQuery) {
+      const professionals = await Profesional.find(professionalQuery)
+      .populate('specialties', 'name')
+      .where('coordinates').within(polygonQuery)
+      .sort({'averageScore.average': -1})
+      .limit(limitInt);
 
+      return res.status(200).json({ quantity: professionals.length, professionals, page: 1, totalPages: 1 });
 
-    const totalProfessionals =
-      await Profesional.countDocuments(professionalQuery);
-    const totalPages = Math.ceil(totalProfessionals / limitInt);
-    return res.status(200).json({ quantity: totalProfessionals, professionals, page: pageInt, totalPages });
+    } else {
+      const professionals = await Profesional.find(professionalQuery)
+      .populate('specialties', 'name')
+      .where('coordinates').near([lat, lng])
+      .skip(skipIndex)
+      .limit(limitInt);
+  
+      const totalProfessionals =
+        await Profesional.countDocuments(professionalQuery);
+      const totalPages = Math.ceil(totalProfessionals / limitInt);
+
+      return res.status(200).json({ quantity: totalProfessionals, professionals, page: pageInt, totalPages });
+    }
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
