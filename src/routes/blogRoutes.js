@@ -14,7 +14,7 @@ const { asyncHandler } = require('../util/asyncHandler');
 const { errorMiddleware } = require('../middleware/errorMiddleware');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { upload } = require('#src/config/multerConfig');
-const { blogSchema } = require('../util/validationSchemas');
+const { blogSchema } = require('../util/validations');
 
 const roles = require('../util/roles');
 const authAll = require('../middleware/authAll');

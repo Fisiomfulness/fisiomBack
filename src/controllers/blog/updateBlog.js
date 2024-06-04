@@ -8,7 +8,6 @@ const {
   BadRequestError,
   UnsupportedMediaTypeError,
 } = require('../../util/errors');
-const { blogSchema } = require('../../util/validationSchemas');
 const Blog = require('../../models/Blog');
 
 const updateBlog = async (req, res) => {

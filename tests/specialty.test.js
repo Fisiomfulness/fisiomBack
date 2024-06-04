@@ -1,11 +1,9 @@
 // @ts-check
 const { default: mongoose } = require('mongoose');
-const { app } = require('#src/app');
 const request = require('supertest');
 const qs = require('qs');
 const { z } = require('zod');
-
-const PORT = 3002;
+const { Server } = require('#src/Server');
 
 const mongoClientConnect = async () => {
   // NOTE: usar base de datos local, no la de produccion
@@ -15,19 +13,24 @@ const mongoClientConnect = async () => {
   console.log('Conectado localmente a MongoDB');
 };
 
-const createServer = async () => {
-  const server = await app.listen(PORT);
+const PORT = 3002;
+/** @type {Server} */
+let server;
+/** @type {import('supertest').Agent} */
+let agent;
 
-  console.log(`Ejecutando servidor en el puerto ${PORT}`);
-
+beforeAll(async () => {
+  /**
+   * NOTE: asegurar que la conexion a la base de datos se realize antes de
+   * ejecutar el servidor
+   */
   await mongoClientConnect();
 
-  return server;
-};
+  server = new Server(PORT);
+  server.start();
 
-const server = createServer();
-
-const agent = request(app);
+  agent = request(server.expressServer);
+});
 
 const specialtyResult = z.object({
   name: z.string(),
@@ -55,7 +58,8 @@ afterAll(async () => {
 
   await mongoose.disconnect();
   mongoose.connection.close();
-  (await server).close();
+
+  server.stop();
 });
 
 describe('POST /specialty', () => {
