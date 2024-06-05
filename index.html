@@ -12,9 +12,9 @@
       // NOTE: nueva conexión
       const socket = io();
 
-      const PUBLIC_CHAT_CREATED_EVENT = "chat:created";
+      const EVENT_PUBLIC_CHAT_CREATED = "chat:created";
 
-      socket.on(PUBLIC_CHAT_CREATED_EVENT, (data) => {
+      socket.on(EVENT_PUBLIC_CHAT_CREATED, (data) => {
         alert(JSON.stringify(data, null, 2));
       });
     </script>

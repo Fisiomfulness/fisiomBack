@@ -1,17 +1,14 @@
 // @ts-check
 const { DomainEvent } = require('#src/modules/event/models/DomainEvent');
 const {
-  PUBLIC_CHAT_CREATED_EVENT,
+  EVENT_PUBLIC_CHAT_CREATED,
 } = require('#src/modules/event/models/EventSymbols');
 
 class PublicChatCreatedEvent extends DomainEvent {
-  /** @override */
-  static EVENT_NAME = PUBLIC_CHAT_CREATED_EVENT;
-
   /** @param {{ roomName: string }} params */
   constructor({ roomName }) {
     super({
-      eventName: PublicChatCreatedEvent.EVENT_NAME,
+      eventName: EVENT_PUBLIC_CHAT_CREATED,
       aggregateId: '123',
     });
 

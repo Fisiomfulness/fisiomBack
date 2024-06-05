@@ -1,20 +1,21 @@
 // @ts-check
-const { v4: uuid } = require('uuid');
 const {
-  MessageSendedSubscriber,
-} = require('#src/modules/chat/models/MessageSendedSubscriber');
-const {
-  UserConnectedSubscriber,
-} = require('#src/modules/chat/models/UserConnectedSubscriber');
+  EVENT_USER_CONNECTED,
+  EVENT_MESSAGE_SENDED,
+} = require('./EventSymbols');
+const { newRooms } = require('#src/state');
+const { DomainEvent } = require('./DomainEvent');
 
 /**
  * @typedef {import("./IEventBus").IEventBus} IEventBus
- * @typedef {import('./IEventSubscriber').IEventSubscriber} IEventSubscriber
- * @typedef {import('./DomainEvent').DomainEvent} DomainEvent
  * @typedef {import('socket.io').Socket} Socket
+ * @typedef {import(
+ *   '#src/modules/chat/models/UserConnectedEvent').UserConnectedEvent
+ * } UserConnectedEvent
+ * @typedef {import(
+ *   '#src/modules/chat/models/MessageSendedEvent').MessageSendedEvent
+ * } MessageSendedEvent
  */
-
-// TODO: el binding se debe implementar en cada subscriber
 
 /** @implements {IEventBus} */
 class SocketEventBus {
@@ -29,28 +30,70 @@ class SocketEventBus {
     this.socket.emit(event.eventName, event);
   }
 
-  /** @param {IEventSubscriber} subscriber */
-  subscribe(subscriber) {
-    this.socket.on(subscriber.subscribedTo.EVENT_NAME, (event) => {
-      const { eventId, occurredOn } = event;
-
-      // TODO: generar id y fecha si no lo incluye el cliente
-      if (!eventId) event.eventId = uuid();
-      if (!occurredOn) event.occurredOn = new Date();
-
-      subscriber.on(event);
-    });
+  /**
+   * @param {string} name
+   * @param {(data: DomainEvent) => void} handler
+   */
+  subscribe(name, handler) {
+    this.socket.on(name, handler);
   }
 
-  /** @param {IEventSubscriber} subscriber */
-  unsubscribe(subscriber) {
-    this.socket.off(subscriber.subscribedTo.EVENT_NAME, subscriber.on);
+  /**
+   * @param {string} name
+   * @param {(data: DomainEvent) => void} handler
+   */
+  unsubscribe(name, handler) {
+    this.socket.off(name, handler);
   }
 
   registerEvents() {
-    this.subscribe(new UserConnectedSubscriber(this.socket));
-    this.subscribe(new MessageSendedSubscriber(this.socket));
+    // TODO: refactorizar los manejadores
+    this.subscribe(EVENT_USER_CONNECTED, this.#handleUserConnected);
+    this.subscribe(EVENT_MESSAGE_SENDED, this.#handleMessageSended);
   }
+
+  // NOTE: https://github.com/tc39/proposal-private-methods/issues/11
+  /** @param {UserConnectedEvent | *} event */
+  #handleUserConnected = (event) => {
+    const { username, roomName, eventId, eventName } = event;
+
+    const room = newRooms.get(roomName);
+
+    if (!room) {
+      return console.log(`room: ${roomName} no existe`);
+    }
+
+    const { socket } = this;
+    const id = socket.id;
+
+    socket.join(roomName);
+    room.users[id] = username;
+    socket.broadcast.to(roomName).emit(eventName, username);
+
+    console.log(`ID: ${eventId} - ${username} conectado a ${roomName}`);
+  };
+
+  /** @param {MessageSendedEvent | *} event */
+  #handleMessageSended = (event) => {
+    const { message, sendBy, room, eventId } = event;
+
+    const existingRoom = newRooms.get(room);
+
+    if (!existingRoom) {
+      return console.log(`room: ${room} no existe`);
+    }
+
+    const { socket } = this;
+    const id = socket.id;
+
+    // TODO: separar eventos `sended` and `new`
+    socket.broadcast.to(room).emit('message:new', {
+      message: message,
+      name: existingRoom.users[id],
+    });
+
+    console.log(`ID: ${eventId} - ${sendBy}: ${message}`);
+  };
 }
 
 module.exports = { SocketEventBus };

@@ -1,13 +1,10 @@
 // @ts-check
 const { DomainEvent } = require('#src/modules/event/models/DomainEvent');
 const {
-  USER_CONNECTED_EVENT,
+  EVENT_USER_CONNECTED,
 } = require('#src/modules/event/models/EventSymbols');
 
 class UserConnectedEvent extends DomainEvent {
-  /** @override */
-  static EVENT_NAME = USER_CONNECTED_EVENT;
-
   /**
    * @param {{
    *   username: string,
@@ -16,7 +13,7 @@ class UserConnectedEvent extends DomainEvent {
    */
   constructor({ username, roomName }) {
     super({
-      eventName: UserConnectedEvent.EVENT_NAME,
+      eventName: EVENT_USER_CONNECTED,
       aggregateId: '123',
     });
 
