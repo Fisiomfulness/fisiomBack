@@ -2,7 +2,7 @@
 const {
   MessageSendedEvent,
 } = require('#src/modules/chat/models/MessageSendedEvent');
-const { rooms } = require('#src/state');
+const { newRooms } = require('#src/state');
 
 // const { createClient } = require('@libsql/client');
 // (async () => await db.execute(`
@@ -34,15 +34,23 @@ class MessageSendedSubscriber {
 
   /** @param {MessageSendedEvent} event */
   on(event) {
-    console.log(event);
-
     const { message, sendBy, room, eventId } = event;
+
+    const existingRoom = newRooms.get(room);
+
+    if (!existingRoom) {
+      return console.log(`room: ${room} no existe`);
+    }
 
     // #saveToDb(message);
 
-    this.socket.broadcast.to(room).emit('chat-message', {
+    const { socket } = this;
+    const id = socket.id;
+
+    // TODO: separar eventos `sended` and `new`
+    socket.broadcast.to(room).emit('message:new', {
       message: message,
-      name: rooms[room].users[this.socket.id],
+      name: existingRoom.users[id],
     });
 
     console.log(`ID: ${eventId} - ${sendBy}: ${message}`);

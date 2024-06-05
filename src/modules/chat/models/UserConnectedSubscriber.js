@@ -1,5 +1,5 @@
 // @ts-check
-const { rooms } = require('#src/state');
+const { newRooms } = require('#src/state');
 const { UserConnectedEvent } = require('./UserConnectedEvent');
 
 /**
@@ -23,18 +23,20 @@ class UserConnectedSubscriber {
 
   /** @param {UserConnectedEvent} event */
   on(event) {
-    console.log(event);
-
     const { username, roomName, eventId } = event;
 
-    const roomNameExists = rooms[roomName] != null;
-    if (!roomNameExists) {
+    const room = newRooms.get(roomName);
+
+    if (!room) {
       return console.log(`room: ${roomName} no existe`);
     }
 
-    this.socket.join(roomName);
-    rooms[roomName].users[this.socket.id] = username;
-    this.socket.broadcast.to(roomName).emit('user-connected', username);
+    const { socket } = this;
+    const id = socket.id;
+
+    socket.join(roomName);
+    room.users[id] = username;
+    socket.broadcast.to(roomName).emit(this.subscribedTo.EVENT_NAME, username);
 
     console.log(`ID: ${eventId} - ${username} conectado a ${roomName}`);
   }
