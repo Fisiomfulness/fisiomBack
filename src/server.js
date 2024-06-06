@@ -1,17 +1,37 @@
-const { app } = require('./app');
-const { PORT } = require('./config/envConfig');
-const { mongoClientConnect } = require('./db');
+// @ts-check
+const { createServer } = require('node:http');
+const { SocketApplication } = require('./models/SocketApplication');
+const { ExpressApplication } = require('./models/ExpressApplication');
 
-const createServer = async () => {
-  const server = await app.listen(PORT);
+/** @typedef {import('express').Express} Express */
 
-  console.log(`Server listening on port ${PORT}`);
+class Server {
+  /** @param {number} port */
+  constructor(port) {
+    /** @readonly @type {number} */
+    this.port = port;
 
-  await mongoClientConnect();
+    /** @readonly @type {Express} */
+    this.expressServer = new ExpressApplication(this.port).express;
 
-  return server;
-};
+    const httpServer = createServer(this.expressServer);
+    /** @readonly @type {SocketApplication} */
+    this.socketApplication = new SocketApplication(httpServer, this.port);
+  }
 
-const server = createServer();
+  async start() {
+    this.configureEventBus();
 
-module.exports = { server };
+    await this.socketApplication.start();
+  }
+
+  stop() {
+    if (this.socketApplication) {
+      this.socketApplication.stop();
+    }
+  }
+
+  configureEventBus() {}
+}
+
+module.exports = { Server };

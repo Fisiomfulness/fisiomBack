@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Chat App</title>
+
+    <script type="module">
+      import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+
+      const socket = io();
+
+      const messageContainer = document.getElementById("message-container");
+      const messageForm = document.getElementById("send-container");
+      const messageInput = document.getElementById("message-input");
+
+      const roomName = new URL(document.location.href).pathname.split("/")[2];
+
+      const EVENT_USER_CONNECTED = "user:connected";
+      const EVENT_MESSAGE_SENDED = "message:sended";
+
+      const name = prompt("What is your name?");
+      appendMessage("You joined");
+      socket.emit(EVENT_USER_CONNECTED, { roomName, username: name });
+
+      socket.on(EVENT_USER_CONNECTED, (name) => {
+        appendMessage(`${name} connected`);
+      });
+
+      socket.on("message:new", (data) => {
+        appendMessage(`${data.name}: ${data.message}`);
+      });
+
+      socket.on("user-disconnected", (name) => {
+        appendMessage(`${name} disconnected`);
+      });
+
+      messageForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const message = messageInput.value;
+        if (!message) return;
+
+        appendMessage(`You: ${message}`);
+        socket.emit(EVENT_MESSAGE_SENDED, {
+          room: roomName,
+          message,
+          sendBy: name,
+        });
+
+        messageInput.value = "";
+      });
+
+      function appendMessage(message) {
+        const messageElement = document.createElement("div");
+        messageElement.innerText = message;
+        messageContainer.append(messageElement);
+      }
+    </script>
+
+    <style>
+      html {
+        background: white;
+        color: black;
+        filter: invert(1);
+      }
+
+      body {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      #message-container {
+        width: 80%;
+        max-width: 1200px;
+      }
+
+      #message-container div {
+        background-color: #ccc;
+        padding: 5px;
+      }
+
+      #message-container div:nth-child(2n) {
+        background-color: #fff;
+      }
+
+      #send-container {
+        position: fixed;
+        padding-bottom: 30px;
+        bottom: 0;
+        background-color: white;
+        max-width: 1200px;
+        width: 80%;
+        display: flex;
+      }
+
+      #message-input {
+        flex-grow: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message-container"></div>
+    <form id="send-container">
+      <input type="text" id="message-input" />
+      <button type="submit">Send</button>
+    </form>
+  </body>
+</html>

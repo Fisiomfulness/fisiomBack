@@ -1,12 +1,36 @@
 // @ts-check
 const { default: mongoose } = require('mongoose');
-const { server } = require('#src/server');
-const { app } = require('#src/app');
 const request = require('supertest');
 const qs = require('qs');
 const { z } = require('zod');
+const { Server } = require('#src/server');
 
-const agent = request(app);
+const mongoClientConnect = async () => {
+  // NOTE: usar base de datos local, no la de produccion
+  await mongoose.connect(
+    'mongodb://localhost:27017/test-backend-fisiomfulness',
+  );
+  console.log('Conectado localmente a MongoDB');
+};
+
+const PORT = 3002;
+/** @type {Server} */
+let server;
+/** @type {import('supertest').Agent} */
+let agent;
+
+beforeAll(async () => {
+  /**
+   * NOTE: asegurar que la conexion a la base de datos se realize antes de
+   * ejecutar el servidor
+   */
+  await mongoClientConnect();
+
+  server = new Server(PORT);
+  server.start();
+
+  agent = request(server.expressServer);
+});
 
 const specialtyResult = z.object({
   name: z.string(),
@@ -27,18 +51,43 @@ const specialtyResponse = z.object({
  */
 
 afterAll(async () => {
+  const collections = mongoose.connection.collections;
+  await Promise.all(
+    Object.values(collections).map((collection) => collection.deleteMany({})),
+  );
+
+  await mongoose.disconnect();
   mongoose.connection.close();
-  (await server).close();
+
+  server.stop();
 });
 
-describe('GET /specialty', () => {
-  /**
-   * @typedef {Omit<Response, 'body'> & {
-   *   body: Omit<SpecialtyResponse, "results"> & {
-   *   results: SpecialtyResult[],
-   * }}} ResponseData
-   */
+describe('POST /specialty', () => {
+  it('deberia crear especialidades', async () => {
+    await agent.post('/specialty').send({ name: 'Pediatra' });
+    await agent.post('/specialty').send({ name: 'Médico Clínico' });
+    await agent.post('/specialty').send({ name: 'Traumatólogo' });
+    await agent.post('/specialty').send({ name: 'Nutricionista' });
 
+    const response = await agent.get('/specialty');
+
+    expect(response.body.results).toHaveLength(4);
+    expect(response.body.results).toMatchObject([
+      { name: 'Nutricionista' },
+      { name: 'Traumatólogo' },
+      { name: 'Médico Clínico' },
+      { name: 'Pediatra' },
+    ]);
+  });
+});
+
+/**
+ * @typedef {Omit<Response, 'body'> & {
+ *   body: Omit<SpecialtyResponse, "results"> & {
+ *   results: SpecialtyResult[],
+ * }}} ResponseData
+ */
+describe('GET /specialty', () => {
   /** @type {ResponseData} */
   let responseData;
 
@@ -46,10 +95,6 @@ describe('GET /specialty', () => {
     const response = await agent.get('/specialty');
     responseData = response;
   }, 10000);
-
-  it('deberia responder con un codigo de estado 200', async () => {
-    expect(responseData.statusCode).toBe(200);
-  });
 
   it('deberia retornar count y results', async () => {
     expect(() => specialtyResponse.parse(responseData.body)).not.toThrow();
@@ -66,8 +111,7 @@ describe('GET /specialty', () => {
     const response = await agent.get(`/specialty?limit=${limit}`);
     const length = response.body.results.length;
 
-    expect(length).toBeGreaterThanOrEqual(0);
-    expect(length).toBeLessThanOrEqual(limit);
+    expect(length).toEqual(limit);
   });
 
   it('deberia desplazar los resultados', async () => {
@@ -167,5 +211,35 @@ describe('GET /specialty', () => {
       'id',
       responseTest.body.results[1].id,
     );
+  });
+});
+
+describe('PATCH /specialty', () => {
+  it('deberia actualizar una especialidad', async () => {
+    const data = await agent.get('/specialty?limit=1');
+    const id = data.body.results[0].id;
+
+    await agent.patch('/specialty').send({ id: id, name: 'Test' });
+
+    /** @type {ResponseData} */
+    const response = await agent.get('/specialty');
+    const verify = response.body.results.find((item) => item.name === 'Test');
+
+    expect(verify).toHaveProperty('name', 'Test');
+  });
+});
+
+describe('DELETE /specialty', () => {
+  it('deberia borrar una especialidad', async () => {
+    const data = await agent.get('/specialty?limit=1');
+    const id = data.body.results[0].id;
+
+    await agent.delete('/specialty').send({ id: id });
+
+    /** @type {ResponseData} */
+    const response = await agent.get('/specialty');
+    const verify = response.body.results.find((item) => item.id === id);
+
+    expect(verify).toBeUndefined();
   });
 });
