@@ -1,18 +1,10 @@
 // @ts-check
 const { v4: uuid } = require('uuid');
 
-/**
- * @typedef {string} DomainEventName
- * @typedef {{
- *   EVENT_NAME: DomainEventName
- * }} DomainEventStatic
- */
+// TODO: evaluar si es necesario que todos los eventos incluyan `aggregateId`
 
 /** @abstract */
 class DomainEvent {
-  /** @type {DomainEventName} */
-  static EVENT_NAME = 'domain.event';
-
   /** @readonly @type {Date} */
   occurredOn = new Date();
   /** @readonly @type {string} */
@@ -20,12 +12,12 @@ class DomainEvent {
 
   /**
    * @param {{
-   *   eventName: DomainEventName,
+   *   eventName: string,
    *   aggregateId: string
    * }} params
    */
   constructor({ eventName, aggregateId }) {
-    /** @readonly @type {DomainEventName} */
+    /** @readonly @type {string} */
     this.eventName = eventName;
     /** @readonly @type {string} */
     this.aggregateId = aggregateId;

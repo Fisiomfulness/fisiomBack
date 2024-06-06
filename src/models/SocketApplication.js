@@ -1,7 +1,8 @@
 // @ts-check
+const { DomainEvent } = require('#src/modules/event/models/DomainEvent');
 const {
-  PublicChatCreatedSubscriber,
-} = require('#src/modules/chat/models/PublicChatCreatedSubscriber');
+  EVENT_PUBLIC_CHAT_CREATED,
+} = require('#src/modules/event/models/EventSymbols');
 const {
   internalEventBus,
 } = require('#src/modules/event/models/InternalEventBus');
@@ -49,19 +50,46 @@ class SocketApplication {
     this.io.on('connection', (socket) => {
       console.log('new connection');
 
+      // HACK: esto adapta los eventos que vengan del exterior
+      socket.use((packet, next) => {
+        const name = packet[0];
+        const data = packet.pop();
+        const { eventId, occurredOn, eventName, aggregateId, ...safeEvent } =
+          data;
+
+        packet.push(
+          new (class extends DomainEvent {
+            constructor() {
+              super({ eventName: name, aggregateId: aggregateId });
+              Object.assign(this, safeEvent);
+            }
+          })(),
+        );
+
+        next();
+      });
+
       const externalEventBus = new SocketEventBus(socket);
       externalEventBus.registerEvents();
 
-      const publicChatCreatedSubscriber = new PublicChatCreatedSubscriber(
-        externalEventBus,
-      );
+      /** @param {*} event */
+      const handlePublicChatCreated = (event) => {
+        externalEventBus.publish(event);
+        console.log(event.eventName, 'enviado al `event bus` externo');
+      };
 
-      internalEventBus.subscribe(publicChatCreatedSubscriber);
+      internalEventBus.subscribe(
+        EVENT_PUBLIC_CHAT_CREATED,
+        handlePublicChatCreated,
+      );
 
       socket.on('disconnect', () => {
         console.log('disconnect');
 
-        internalEventBus.unsubscribe(publicChatCreatedSubscriber);
+        internalEventBus.unsubscribe(
+          EVENT_PUBLIC_CHAT_CREATED,
+          handlePublicChatCreated,
+        );
 
         const id = socket.id;
         this.#getUserRooms(id).forEach((roomName) => {

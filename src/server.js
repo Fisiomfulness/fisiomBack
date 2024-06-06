@@ -31,9 +31,7 @@ class Server {
     }
   }
 
-  configureEventBus() {
-    // internalEventBus.subscribe(new MessageSendedSubscriber());
-  }
+  configureEventBus() {}
 }
 
 module.exports = { Server };
