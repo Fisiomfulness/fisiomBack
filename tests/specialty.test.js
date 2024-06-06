@@ -3,7 +3,7 @@ const { default: mongoose } = require('mongoose');
 const request = require('supertest');
 const qs = require('qs');
 const { z } = require('zod');
-const { Server } = require('#src/Server');
+const { Server } = require('#src/server');
 
 const mongoClientConnect = async () => {
   // NOTE: usar base de datos local, no la de produccion

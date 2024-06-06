@@ -12,15 +12,11 @@
       // NOTE: nueva conexión
       const socket = io();
 
-      socket.on("test.event", (data) => {
-        console.log(data);
+      const PUBLIC_CHAT_CREATED_EVENT = "chat:created";
+
+      socket.on(PUBLIC_CHAT_CREATED_EVENT, (data) => {
         alert(JSON.stringify(data, null, 2));
       });
-
-      // socket.on("disconnect", (data) => {
-      //   console.log(data);
-      //   alert(JSON.stringify(data, null, 2));
-      // });
     </script>
 
     <style>

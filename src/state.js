@@ -1,2 +1,4 @@
-/** @type {Record<string, any>} */
-module.exports.rooms = {};
+module.exports.newRooms = new Map(
+  /** @type {Array<[string, { users: Record<string, string> }] >} */
+  ([]),
+);

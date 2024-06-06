@@ -23,9 +23,8 @@ class PublicChatCreatedSubscriber {
 
   /** @param {PublicChatCreatedEvent} event */
   on(event) {
-    console.log(event);
     this.externalEventBus.publish(event);
-    console.log('evento enviado al `event bus` externo');
+    console.log(this.subscribedTo.name, 'enviado al `event bus` externo');
   }
 }
 
