@@ -1,13 +1,10 @@
 // @ts-check
 const { DomainEvent } = require('#src/modules/event/models/DomainEvent');
 const {
-  MESSAGE_SENDED_EVENT,
+  EVENT_MESSAGE_SENDED,
 } = require('#src/modules/event/models/EventSymbols');
 
 class MessageSendedEvent extends DomainEvent {
-  /** @override */
-  static EVENT_NAME = MESSAGE_SENDED_EVENT;
-
   /**
    * @param {{
    *   aggregateId: string,
@@ -17,7 +14,7 @@ class MessageSendedEvent extends DomainEvent {
    * }} params
    */
   constructor({ aggregateId, message, sendBy, room }) {
-    super({ eventName: MessageSendedEvent.EVENT_NAME, aggregateId });
+    super({ eventName: EVENT_MESSAGE_SENDED, aggregateId });
 
     /** @readonly @type {string} */
     this.message = message;
