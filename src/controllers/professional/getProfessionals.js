@@ -38,7 +38,6 @@ const getProfessionals = async (req, res) => {
       const northeast = [bboxArray[3], bboxArray[2]];
       const box = [southwest, northeast];
       polygonQuery = { box };
-      console.log(polygonQuery);
     }
 
     let professionalQuery = {
