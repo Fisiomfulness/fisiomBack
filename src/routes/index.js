@@ -12,6 +12,7 @@ const specialty = require('./specialtyRoutes.js');
 const userSpecialtyRoutes = require('./userSpecialtyRoutes.js');
 const professional = require('./professionalRoutes.js');
 const question = require('./questionRoutes.js');
+const interest = require('./interestRoutes.js');
 const chatRouter = require('./chatRouter.js');
 
 const router = Router();
@@ -28,6 +29,7 @@ router.use('/category', category);
 router.use('/mail', mail);
 router.use('/professionals', professional);
 router.use('/questions', question);
+router.use('/interests', interest);
 router.use('/chat', chatRouter);
 
 router.get('/logout', (req, res) => {
