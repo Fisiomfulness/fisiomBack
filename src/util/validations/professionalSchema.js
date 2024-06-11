@@ -39,6 +39,10 @@ const professionalSchema = z.object({
     .regex(numericRegex, 'el n° colegiado debe ser numérico')
     .optional(),
   address: addressSchema,
+  coordinates: z
+    .array(z.number())
+    .length(2, 'debe tener el formato => [number, number]')
+    .optional(),
   image: z
     .instanceof(File)
     .refine((value) => value.type.startsWith('image/'), 'no es una imagen')
