@@ -35,9 +35,28 @@ const userSchema = z.object({
     .min(8, 'la contraseña debe tener al menos 8 caracteres')
     .max(50, 'no mas de 50 caracteres'),
   address: addressSchema,
+  coordinates: z
+    .array(z.number())
+    .length(2, 'debe tener el formato => [number, number]')
+    .optional(),
+  interests: z.preprocess((value) => {
+    // ? FormData solo acepta strings/archivos [key value], asi que esto viene puede venir con un JSON.stringify
+    // ? por lo tanto de ser asi debemos parsearlo antes de hacer la validación.
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        return value;
+      }
+    }
+    return value;
+  }, z.array(z.string()).max(5, 'No puede elegir mas de 5 intereses').optional().or(z.literal([]))),
   image: z
     .instanceof(File)
-    .refine((value) => value.type.startsWith('image/'), 'no es una imagen')
+    .refine(
+      (value) => value.type.startsWith('image/'),
+      'el archivo enviado no es una imagen'
+    )
     .refine(
       (value) => value && value.size <= MAX_PICTURE_SIZE,
       'tamaño de imagen máxima: 3MB'
