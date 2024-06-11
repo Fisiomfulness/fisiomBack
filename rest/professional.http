@@ -44,11 +44,11 @@ Content-Type: application/json
 }
 
 ### UPDATE PROFESSIONAL
-PUT {{url}}/professionals/update/6633e20ecd6e204ec206fecd
+PUT {{url}}/professionals/update/663822474296b1639d4cb8ba
 Content-Type: application/json
 
 {
-    "professionalDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin."
+    "calendlyLink": "https://calendly.com/bsarti-lacapital/consulta-profesional"
 }
 
 ### GET PROFESSIONALS
