@@ -1,80 +1,62 @@
-const {
-  NotFoundError,
-  UnauthorizedError,
-  BadRequestError,
-} = require('#src/util/errors');
+const { userUploadOptions } = require('#src/config/cloudinaryConfig');
+const { BadRequestError, NotFoundError } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
-const { verifyExistingEmail } = require('#src/util/helpers');
 const {
-  cloudinary,
-  userUploadOptions,
-} = require('../../config/cloudinaryConfig');
-const fs = require('node:fs/promises');
-const User = require('../../models/User');
-const Profesional = require('../../models/Profesional');
+  verifyExistingEmail,
+  updateUserData,
+} = require('#src/services/userService');
+const {
+  uploadImage,
+  deleteLocalFile,
+} = require('#src/services/cloudinaryService');
+const User = require('#src/models/User')
+
+const roles = require('#src/util/roles');
+const admins = [roles.ADMIN, roles.SUPER_ADMIN]
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { email, password } = req.body;
+  const { email, password } = req.validatedBody;
   const hasFile = !!req.file;
 
   try {
     let newImage = undefined;
     let newIdImage = undefined;
 
-    const [user, professional] = await Promise.all([
-      User.findById(id),
-      Profesional.findById(id),
-    ]);
-    const foundUser = user || professional;
-    if (!foundUser) throw new NotFoundError('usuario no encontrado');
+    const user = await User.findById(id);
+    if(!user) throw new NotFoundError('usuario no encontrado');
 
-    if (email) {
+    if(email && email !== user.email) {
       const emailExists = await verifyExistingEmail(email);
-      if (!emailExists) {
-        throw new BadRequestError('Email enviado ya existe...');
-      }
+      if (emailExists) throw new BadRequestError('El email enviado ya esta registrado');
     }
-    
-    const isCorrectPassword = await verifyHashedData(req.body.password, foundUser.password);
-    if (!isCorrectPassword) {
-      throw new UnauthorizedError('La contraseña que has introducido es incorrecta');
+
+    // ? Si es admin puede actualizar los demás datos de un usuario sin sus credenciales
+    if(!admins.includes(req.user.role)){
+      if (!password) throw new BadRequestError('La contraseña es necesaria para actualizar los datos');
+      const passwordMatches = await verifyHashedData(password, user.password)
+      if (!passwordMatches) throw new BadRequestError('La contraseña enviada es incorrecta')
     }
 
     if (hasFile) {
-      const newImageUrl = req.file.path;
-
-      if (foundUser.id_image)
-        await cloudinary.uploader.destroy(foundUser.id_image);
-      const { public_id, url } = await cloudinary.uploader.upload(
-        newImageUrl,
-        userUploadOptions
-      );
-
+      const { public_id, url } = await uploadImage(req.file, userUploadOptions, user.id_image);
       newImage = url;
       newIdImage = public_id;
     }
 
-    // ? Updating values
-    for (const key of Object.keys(req.body)) {
-      if (key in foundUser && key !== 'password') {
-        foundUser[key] = req.body[key];
-      }
-    }
-    if (newImage && newIdImage) {
-      foundUser.image = newImage;
-      foundUser.id_image = newIdImage;
-    }
-    await foundUser.save();
+    const newData = {
+      ...req.validatedBody,
+      image: newImage,
+      id_image: newIdImage,
+    };
+    
+    await updateUserData(user, newData);
 
-    res.status(200).json({ updatedUser: foundUser, message: 'usuario actualizado' });
+    res.status(200).json({ updated: user, message: 'usuario actualizado' });
   } catch (err) {
     throw err;
   } finally {
-    if (hasFile) {
-      const routeImageDelete = `uploads\\${req.file.filename}`;
-      await fs.unlink(routeImageDelete);
-    }
+    if (hasFile) await deleteLocalFile(req.file.filename);
   }
 };
 
