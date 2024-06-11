@@ -39,15 +39,15 @@ const User = new Schema(
       enum: ['user', 'admin', 'super_admin'],
       default: 'user',
     },
-    // interests: {
-    //   type: [
-    //     {
-    //       type: ObjectId,
-    //       ref: 'Interest',
-    //     },
-    //   ],
-    //   default: [],
-    // },
+    interests: {
+      type: [
+        {
+          type: ObjectId,
+          ref: 'Interest',
+        },
+      ],
+      default: [],
+    },
     gender: {
       type: String,
       Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
@@ -64,7 +64,7 @@ const User = new Schema(
     coordinates: {
       type: [Number], // lat, lng
       default: [0, 0],
-      index: '2d'
+      index: '2d',
     },
     address: {
       type: addressSchema,
