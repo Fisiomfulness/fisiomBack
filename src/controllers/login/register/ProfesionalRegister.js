@@ -55,7 +55,6 @@ const profesionalRegister = async (req, res) => {
     const finalProfessional = {
       ...newData,
       password: hashedPass,
-      birthDate: newData.dateOfBirth,
       curriculum: secure_url,
     };
     const newProfesional = await Profesional.create(finalProfessional);
