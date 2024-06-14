@@ -8,6 +8,12 @@ const EventEmitter = require('node:events');
 
 /** @implements {IEventBus} */
 class InternalEventBus extends EventEmitter {
+  constructor() {
+    super();
+    // WARN: comente la siguiente linea para debugear problemas de memoria
+    this.setMaxListeners(0);
+  }
+
   /** @param {DomainEvent} event */
   publish(event) {
     this.emit(event.eventName, event);
