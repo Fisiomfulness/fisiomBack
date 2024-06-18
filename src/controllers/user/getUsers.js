@@ -55,21 +55,20 @@ const getUsers = async (req, res) => {
       userQuery.$and.push({
         $or: [
           { name: { $regex: new RegExp(search, 'i') } },
-          // Uncomment to include address in query
-          //{ 'address.city': { $regex: new RegExp(search, 'i') } },
-          //{ 'address.state': { $regex: new RegExp(search, 'i') } },
-          //{ 'address.country': { $regex: new RegExp(search, 'i') } },
+          { 'address.city': { $regex: new RegExp(search, 'i') } },
+          { 'address.state': { $regex: new RegExp(search, 'i') } },
+          { 'address.country': { $regex: new RegExp(search, 'i') } },
         ],
       });
     }
 
     // Uncomment when interests are ready
-    // if (interestsArr.length) {
-    //   userQuery.$and.push({ specialties: { $in: [interestsId] }});
-    // }
+    if (interestsArr.length) {
+      userQuery.$and.push({ interests: { $in: interestsArr }});
+    }
 
     const users = await User.find(userQuery)
-      //.populate('interests', 'name')
+      .populate('interests', 'name')
       .skip(skipIndex)
       .limit(limitInt);
 
