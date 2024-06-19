@@ -10,6 +10,9 @@ const {
   getProfessionalScore,
   addSpecialty,
   removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
 } = require('../controllers/index');
 
 const { upload } = require('#src/config/multerConfig');
@@ -36,6 +39,11 @@ router.get('/professional_score/:id', getProfessionalScore);
 router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
 router.delete('/:profesional_id/specialty/:specialty_id', removeSpecialty);
 
+// ! TODO = AUTH AND ZOD VALIDATION.
+router.post('/:id/experience', addExperience);
+router.put('/:id/experience/:experienceId', updateExperience);
+router.delete('/:id/experience/:experienceId', deleteExperience);
+
 router.use(authAll);
 
 router.put(
@@ -52,7 +60,7 @@ router.patch(
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   statusProfessional
 );
- 
+
 // ! Agregar rol professional si se añade funcionalidad para eliminar propia cuenta.
 router.delete(
   '/delete/:id',
