@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('./addressSchema');
+const experienceSchema = require('./experienceSchema');
 
 const Profesional = new Schema(
   {
@@ -80,7 +81,7 @@ const Profesional = new Schema(
     },
     address: {
       type: addressSchema,
-      required: true
+      required: true,
     },
     coordinates: {
       type: [Number], // lat, lng
@@ -89,7 +90,7 @@ const Profesional = new Schema(
     },
     image: {
       type: String,
-      default: ''
+      default: '',
     },
     id_image: {
       type: String,
@@ -106,6 +107,10 @@ const Profesional = new Schema(
           ref: 'Specialty',
         },
       ],
+      default: [],
+    },
+    experience: {
+      type: [experienceSchema],
       default: [],
     },
   },
