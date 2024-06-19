@@ -1,69 +1,54 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('#src/config/envConfig');
+const {
+  NotFoundError,
+  BadRequestError,
+  UnauthorizedError,
+} = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
 const User = require('#src/models/User');
-const Profesional = require('#src/models/Profesional');
+const Professional = require('#src/models/Profesional');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  var userResult = null;
 
   try {
-    await Promise.allSettled([
+    if (!email || !password) throw new BadRequestError('Credenciales requeridas');
+
+    const [user, professional] = await Promise.all([
       User.findOne({ email }),
-      Profesional.findOne({ email }),
-    ]).then((settElements) => {
-      const usersMap = settElements.map((settElement, index) => {
-        if (settElement.status === 'fulfilled' && settElement.value) {
-          if (index === 0) {
-            return { user: settElement.value };
-          } else {
-            return { user: settElement.value };
-          }
-        } else {
-          return null;
-        }
-      });
-      const firstNonNullUser = usersMap.filter((user) => user)[0];
-      userResult = firstNonNullUser?.user || null; // Manejar el caso nulo
+      Professional.findOne({ email }),
+    ]);
+
+    const foundUser = user || professional;
+    if (!foundUser) throw new NotFoundError('Usuario no encontrado');
+
+    const passwordMatches = await verifyHashedData(
+      password,
+      foundUser.password
+    );
+    if (!passwordMatches) throw new UnauthorizedError('Contraseña incorrecta');
+
+    // * Creación de JWT
+    let payload = {
+      id: foundUser._id,
+      name: foundUser.name,
+      email: foundUser.email,
+      image: foundUser.image,
+      role: foundUser.role,
+      coordinates: foundUser.coordinates,
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '2d' });
+
+    res.cookie('accessToken', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 2, // ? 2 days
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
     });
 
-    if (!userResult) {
-      res.status(401).json({ message: 'Usuario no encontrado' });
-    } else {
-      const coincidePass = await verifyHashedData(
-        password,
-        userResult.password,
-      );
-
-      if (!coincidePass) {
-        res.status(401).json({ message: 'Contraseña incorrecta' });
-      } else {
-        //crear token
-        let payload = {
-          id: userResult._id,
-          name: userResult.name,
-          email: userResult.email,
-          image: userResult.image,
-          role: userResult.role,
-          coordinates: userResult.coordinates,
-        };
-
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-
-        res.cookie('accessToken', token, {
-          maxAge: 1000 * 60 * 60 * 24 * 2, // ? 2 days
-          httpOnly: true,
-          secure: true,
-        });
-
-        res.setHeader('Authorization', `Bearer ${token}`);
-
-        return res
-          .status(201)
-          .send({ ...payload, message: 'Logeado con exito!' });
-      }
-    }
+    res.status(201).send({ ...payload, message: 'Logeado con éxito!' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
