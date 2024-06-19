@@ -7,7 +7,8 @@ const getUsers = async (req, res) => {
       limit = 10,
       search = '',
       interests = '',
-      pos = '0,0',
+      position = '0,0',
+      bbox = '',
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -23,13 +24,22 @@ const getUsers = async (req, res) => {
       interestsArr = interests.split(',');
     }
 
-    const coords = pos.split(',');
+    const coords = position.split(',');
     const lat = parseFloat(coords[0]);
     const lng = parseFloat(coords[1]);
     if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
       return res
         .status(400)
         .json({ message: 'lat and lng must be valid coordinates' });
+    }
+
+    let polygonQuery;
+    if (bbox !== '') {
+      const bboxArray = bbox.split(',').map(parseFloat);
+      const southwest = [bboxArray[1], bboxArray[0]];
+      const northeast = [bboxArray[3], bboxArray[2]];
+      const box = [southwest, northeast];
+      polygonQuery = { box };
     }
 
     let userQuery = {
@@ -67,17 +77,27 @@ const getUsers = async (req, res) => {
       userQuery.$and.push({ interests: { $in: interestsArr }});
     }
 
-    const users = await User.find(userQuery)
-    .populate('interests', 'name')
-    .skip(skipIndex)
-    .limit(limitInt);
+    if (polygonQuery) {
+      const users = await User.find(userQuery)
+      .populate('interests', 'name')
+      .where('coordinates').within(polygonQuery)
+      .limit(limitInt);
 
-    const queryWithoutNear = { ...userQuery };
-    queryWithoutNear.$and.shift();
+      return res.status(200).json({ quantity: users.length, users, page: 1, totalPages: 1 });
 
-    const totalUsers = await User.countDocuments(queryWithoutNear);
-    const totalPages = Math.ceil(totalUsers / limitInt);
-    return res.status(200).json({ quantity: totalUsers, users, page: pageInt, totalPages });
+    } else {
+      const users = await User.find(userQuery)
+      .populate('interests', 'name')
+      .skip(skipIndex)
+      .limit(limitInt);
+
+      const queryWithoutNear = { ...userQuery };
+      queryWithoutNear.$and.shift();
+
+      const totalUsers = await User.countDocuments(queryWithoutNear);
+      const totalPages = Math.ceil(totalUsers / limitInt);
+      return res.status(200).json({ quantity: totalUsers, users, page: pageInt, totalPages });
+    }
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }

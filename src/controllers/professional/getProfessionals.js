@@ -8,7 +8,7 @@ const getProfessionals = async (req, res) => {
       search = '',
       specialtyId = '',
       city = '',
-      pos = '0,0',
+      position = '0,0',
       bbox = '',
     } = req.query;
 
@@ -22,7 +22,7 @@ const getProfessionals = async (req, res) => {
     }
     const skipIndex = (pageInt - 1) * limitInt;
 
-    const coords = pos.split(',');
+    const coords = position.split(',');
     const lat = parseFloat(coords[0]);
     const lng = parseFloat(coords[1]);
     if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
