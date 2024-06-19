@@ -7,7 +7,7 @@ const getUsers = async (req, res) => {
       limit = 10,
       search = '',
       interests = '',
-      pos = '-12.057822374374036,-77.06708360541617',
+      pos = '0,0',
     } = req.query;
 
     const pageInt = parseInt(page);
@@ -68,9 +68,9 @@ const getUsers = async (req, res) => {
     }
 
     const users = await User.find(userQuery)
-      .populate('interests', 'name')
-      .skip(skipIndex)
-      .limit(limitInt);
+    .populate('interests', 'name')
+    .skip(skipIndex)
+    .limit(limitInt);
 
     const queryWithoutNear = { ...userQuery };
     queryWithoutNear.$and.shift();
