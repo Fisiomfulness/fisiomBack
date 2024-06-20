@@ -8,14 +8,14 @@ const validateId = async (id, modelName) => {
 
 // * For blog content htmlString validation
 const countHtmlCharacters = (htmlString) => {
-  // ? Tag <br> count like a character like tiptap
+  // ? Tag <br> count like a character like Tiptap front library
   const text = htmlString.replace(/<br\s*\/?>/g, ' ').replace(/<[^>]+>/g, '');
   return text.length;
-}
+};
 
 const isDateOnRange = (value, minYearsAgo, maxYearsAgo) => {
   const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!value || typeof value !== "string" || !isoDateRegex.test(value)) return false;
+  if (!value || typeof value !== 'string' || !isoDateRegex.test(value)) return false;
 
   const currentDate = new Date();
   const dateISO = new Date(value);
@@ -35,4 +35,8 @@ const isDateOnRange = (value, minYearsAgo, maxYearsAgo) => {
   return dateISO >= minDate && dateISO <= maxDate;
 };
 
-module.exports = { validateId, countHtmlCharacters, isDateOnRange };
+module.exports = {
+  validateId,
+  countHtmlCharacters,
+  isDateOnRange,
+};

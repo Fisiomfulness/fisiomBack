@@ -50,6 +50,10 @@ const Profesional = new Schema(
       type: String,
       default: null,
     },
+    calendlyLink: {
+      type: String,
+      default: ''
+    },
     professionalScore: [
       {
         type: ObjectId,
@@ -93,7 +97,7 @@ const Profesional = new Schema(
     },
     id_image: {
       type: String,
-      default: 'does not have image id',
+      default: '',
     },
     consultationPrice: {
       type: Number,

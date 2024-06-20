@@ -60,6 +60,12 @@ const {
   deleteQuestion,
 } = require('./question/index');
 
+const {
+  getAllInterests,
+  createInterest,
+  deleteInterest,
+} = require('./interest/index');
+
 const { sendEmail } = require('./mail/index');
 
 module.exports = {
@@ -104,5 +110,8 @@ module.exports = {
   createQuestion,
   respondQuestion,
   deleteQuestion,
+  getAllInterests,
+  createInterest,
+  deleteInterest,
   sendEmail,
 };

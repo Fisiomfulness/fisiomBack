@@ -12,7 +12,7 @@ Content-Type: application/json
    "email": "anotherDoc@gmail.com",
    "name": "Otro Doctor", 
    "password": "otrodoctor",
-   "dateOfBirth": "1988-06-22",
+   "birthDate": "1988-06-22",
    "gender": "Masculino",
    "resume": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin.",
    "curriculum": "https://res.cloudinary.com/do6ra4oau/image/upload/v1714055789/FisiumFulness/users/1714055787309-pdfpruebafisiomfulness.pdf",
@@ -44,9 +44,18 @@ Content-Type: application/json
 }
 
 ### UPDATE PROFESSIONAL
-PUT {{url}}/professionals/update/6633e20ecd6e204ec206fecd
+PUT {{url}}/professionals/update/663822474296b1639d4cb8ba
 Content-Type: application/json
 
 {
-    "professionalDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin."
+    "calendlyLink": "https://calendly.com/bsarti-lacapital/consulta-profesional"
 }
+
+### GET PROFESSIONALS
+GET {{url}}/professionals/?search=&city=&specialtyId=&pos=-32.953808,-60.6401331&page=1
+
+### GET PROFESSIONALS
+GET {{url}}/professionals/?bbox=-60.6797218322754,-33.00232932608292,-60.594921112060554,-32.91331501423898
+
+### GET INTERESTS
+GET {{url}}/interests

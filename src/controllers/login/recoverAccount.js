@@ -101,8 +101,6 @@ const resetPassword = async (req, res) => {
       res.status(401).json({ message: 'Usuario invalido o inexistente' });
     } else {
       const hashedPass = await hashData(newPassword);
-      console.log('🚀 userResult:', userResult);
-      console.log('🚀 userResult:', newPassword);
       await userResult.model.findOneAndUpdate(
         { _id: decodedToken.userId },
         { password: hashedPass },
