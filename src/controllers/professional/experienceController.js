@@ -3,7 +3,7 @@ const Professional = require('#src/models/Profesional');
 
 const addExperience = async (req, res) => {
   const { id } = req.params;
-  const newExperience = req.body;
+  const newExperience = req.validatedBody;
 
   const professional = await Professional.findById(id);
   if (!professional) throw new NotFoundError('Profesional no encontrado');
@@ -11,12 +11,12 @@ const addExperience = async (req, res) => {
   professional.experience.push(newExperience);
   await professional.save();
 
-  res.status(201).json({ professional });
+  res.status(201).json({ experiences: professional.experience });
 };
 
 const updateExperience = async (req, res) => {
   const { id, experienceId } = req.params;
-  const updatedExperience = req.body;
+  const updatedExperience = req.validatedBody;
 
   const professional = await Professional.findById(id);
   if (!professional) throw new NotFoundError('Profesional no encontrado');
@@ -27,7 +27,7 @@ const updateExperience = async (req, res) => {
   experience.set(updatedExperience);
   await professional.save();
 
-  res.status(200).json({ professional });
+  res.status(200).json({ experiences: professional.experience });
 };
 
 const deleteExperience = async (req, res) => {
@@ -42,7 +42,7 @@ const deleteExperience = async (req, res) => {
   professional.experience.remove({ _id: experienceId });
   await professional.save();
 
-  res.status(200).json({ professional });
+  res.status(200).json({ experiences: professional.experience });
 };
 
 module.exports = {
