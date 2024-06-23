@@ -1,0 +1,4 @@
+# variables
+@url = http://localhost:3000
+
+### POST appointment
