@@ -50,10 +50,6 @@ const Profesional = new Schema(
       type: String,
       default: null,
     },
-    calendlyLink: {
-      type: String,
-      default: ''
-    },
     professionalScore: [
       {
         type: ObjectId,

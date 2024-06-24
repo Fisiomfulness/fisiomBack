@@ -32,7 +32,7 @@ router.use('/professionals', professional);
 router.use('/questions', question);
 router.use('/interests', interest);
 router.use('/chat', chatRouter);
-router.use('/appointment', appointmentRouter);
+router.use('/appointments', appointmentRouter);
 
 router.get('/logout', (req, res) => {
   res.clearCookie('accessToken');

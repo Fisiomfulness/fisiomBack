@@ -24,6 +24,10 @@ const createAppointment = async (req, res) => {
         });
     }
 
+    if (moment(fromDateTime) > moment(toDateTime)) {
+      res.status(401).json({ message: 'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización' });
+    }
+
     const overlapping = await Appointment.findOne({
       $and: [
         { toDateTime: { $gt: fromDateTime } },
