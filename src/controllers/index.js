@@ -68,6 +68,8 @@ const {
 
 const { sendEmail } = require('./mail/index');
 
+const { createAppointment } = require('./appointment/index');
+
 module.exports = {
   createBlog,
   deleteBlog,
@@ -114,4 +116,5 @@ module.exports = {
   createInterest,
   deleteInterest,
   sendEmail,
+  createAppointment
 };
