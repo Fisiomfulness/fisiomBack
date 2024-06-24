@@ -11,9 +11,6 @@ const {
 } = require('#src/services/cloudinaryService');
 const Professional = require('#src/models/Profesional');
 
-const roles = require('#src/util/roles');
-const admins = [roles.ADMIN, roles.SUPER_ADMIN];
-
 const updateProfessional = async (req, res) => {
   const { id } = req.params;
   const { email, password } = req.validatedBody;
@@ -29,13 +26,6 @@ const updateProfessional = async (req, res) => {
     if (email && email !== professional.email) {
       const emailExists = await verifyExistingEmail(email);
       if (emailExists) throw new BadRequestError('El email enviado ya esta registrado');
-    }
-
-    // ? Si es admin puede actualizar los demás datos de un usuario sin sus credenciales
-    if (!admins.includes(req.user.role)) {
-      if (!password) throw new BadRequestError('La contraseña es necesaria para actualizar los datos');
-      const passwordMatches = await verifyHashedData(password, professional.password);
-      if (!passwordMatches) throw new BadRequestError('La contraseña enviada es incorrecta');
     }
 
     if (hasFile) {
