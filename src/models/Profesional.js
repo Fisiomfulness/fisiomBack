@@ -49,7 +49,7 @@ const Profesional = new Schema(
     },
     license: {
       type: String,
-      default: null,
+      default: '',
     },
     calendlyLink: {
       type: String,
@@ -79,10 +79,6 @@ const Profesional = new Schema(
       type: String,
       default: '',
     },
-    experience: {
-      type: Array,
-      default: [],
-    },
     address: {
       type: addressSchema,
       required: true,
@@ -104,6 +100,10 @@ const Profesional = new Schema(
       type: Number,
       default: 0,
     },
+    experience: {
+      type: [experienceSchema],
+      default: [],
+    },
     specialties: {
       type: [
         {
@@ -111,10 +111,6 @@ const Profesional = new Schema(
           ref: 'Specialty',
         },
       ],
-      default: [],
-    },
-    experience: {
-      type: [experienceSchema],
       default: [],
     },
   },
