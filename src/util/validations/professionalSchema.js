@@ -43,7 +43,8 @@ const professionalSchema = z.object({
     .min(3, 'el n° colegiado debe tener mas de 3 dígitos')
     .max(10, 'el n° colegiado no puede tener mas de 10 dígitos')
     .regex(numericRegex, 'el n° colegiado debe ser numérico')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   address: addressSchema,
   coordinates: z
     .array(z.number())
