@@ -75,7 +75,7 @@ const Profesional = new Schema(
       default: '',
       required: true,
     },
-    professionalDescription: {
+    description: {
       type: String,
       default: '',
     },
