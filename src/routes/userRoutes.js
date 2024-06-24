@@ -7,6 +7,7 @@ const {
   statusUser,
   deleteUser,
   getUserById,
+  verifyCredentials,
 } = require('#src/controllers/user/index');
 
 const { upload } = require('#src/config/multerConfig');
@@ -21,10 +22,13 @@ const permit = require('#src/middleware/rolesMiddleware');
 
 const router = Router();
 
+// ? Algunas rutas trabajan solo con el modelo User y otras adicionalmente con Professional
 router.get('/', decodeTokenUser, getUsers);
 router.get('/all', getAllUsers);
 router.get('/detail/:id', getUserById);
+
 router.post('/create', upload, addressMiddleware, createUser);
+router.post('/verify-credentials', verifyCredentials);
 
 router.use(authAll);
 
