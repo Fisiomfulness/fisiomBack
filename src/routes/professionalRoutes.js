@@ -32,21 +32,22 @@ router.post('/create', addressMiddleware, createProfessional);
 router.get('/', decodeTokenUser, getProfessionals);
 router.get('/detail/:id', getProfessionalDetail);
 
-// Rutas para crear y obtener professional_scores (rank, comentario)
+// ? Rutas para crear y obtener professional_scores (rank, comentario)
 router.post('/professional_score', createProfessionalScore);
 router.get('/professional_score/:id', getProfessionalScore);
 
-// rutas para agregar o quitar specialties
+// ? Rutas para agregar o quitar specialties
 router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
 router.delete('/:profesional_id/specialty/:specialty_id', removeSpecialty);
 
 router.use(authAll);
 
+// ? No actualiza contraseña [apropósito]
 router.put(
   '/update/:id',
   upload,
   addressMiddleware,
-  validationMiddleware(professionalSchema),
+  validationMiddleware(professionalSchema, "update"),
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   updateProfessional
 );

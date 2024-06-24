@@ -22,7 +22,7 @@ const permit = require('#src/middleware/rolesMiddleware');
 
 const router = Router();
 
-// ? Algunas rutas trabajan solo con el modelo User y otras adicionalmente con Professional
+// ? IMPORTANTE: Algunas rutas trabajan solo con el modelo User y otras adicionalmente con Professional
 router.get('/', decodeTokenUser, getUsers);
 router.get('/all', getAllUsers);
 router.get('/detail/:id', getUserById);
@@ -32,6 +32,7 @@ router.post('/verify-credentials', verifyCredentials);
 
 router.use(authAll);
 
+// ? No actualiza contraseña [apropósito]
 router.put(
   '/update/:id',
   upload,
