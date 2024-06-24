@@ -23,8 +23,8 @@ const findUserById = async (id) => {
 
 const verifyExistingEmail = async (email) => {
   const [userExists, professionalExists] = await Promise.all([
-    User.exists({ email }),
-    Professional.exists({ email }),
+    User.findOne({ email }),
+    Professional.findOne({ email }),
   ]);
   return userExists || professionalExists;
 };
@@ -36,7 +36,7 @@ const updateUserData = async (user, newData) => {
 
   for (const key in newData) {
     let value = newData[key];
-    if (key !== 'password') {
+    if (key !== 'password' && value) {
       user[key] = value;
     }
   }
