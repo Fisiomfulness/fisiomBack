@@ -1,10 +1,7 @@
 const { userUploadOptions } = require('#src/config/cloudinaryConfig');
 const { BadRequestError, NotFoundError } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
-const {
-  verifyExistingEmail,
-  updateUserData,
-} = require('#src/services/userService');
+const { verifyExistingEmail } = require('#src/services/userService');
 const {
   uploadImage,
   deleteLocalFile,
@@ -39,10 +36,11 @@ const updateProfessional = async (req, res) => {
       image: newImage,
       id_image: newIdImage,
     };
+    if (newData.password) delete newData.password;
 
-    await updateUserData(professional, newData);
+    const updated = await Professional.findByIdAndUpdate(id, newData, { new: true });
 
-    res.status(200).json({ updated: professional, message: 'profesional actualizado' });
+    res.status(200).json({ updated, message: 'profesional actualizado' });
   } catch (err) {
     throw err;
   } finally {

@@ -29,23 +29,7 @@ const verifyExistingEmail = async (email) => {
   return userExists || professionalExists;
 };
 
-const updateUserData = async (user, newData) => {
-  if (!isValidUser(user)) {
-    throw new Error('El usuario no es una instancia valida de User o Profesional');
-  }
-
-  for (const key in newData) {
-    let value = newData[key];
-    if (key !== 'password' && value) {
-      user[key] = value;
-    }
-  }
-
-  await user.save({ validateModifiedOnly: true });
-};
-
 module.exports = {
   findUserById,
-  verifyExistingEmail,
-  updateUserData,
+  verifyExistingEmail
 };

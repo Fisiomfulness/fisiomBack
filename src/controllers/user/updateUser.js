@@ -1,15 +1,12 @@
 const { userUploadOptions } = require('#src/config/cloudinaryConfig');
 const { BadRequestError, NotFoundError } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
-const {
-  verifyExistingEmail,
-  updateUserData,
-} = require('#src/services/userService');
+const { verifyExistingEmail } = require('#src/services/userService');
 const {
   uploadImage,
   deleteLocalFile,
 } = require('#src/services/cloudinaryService');
-const User = require('#src/models/User')
+const User = require('#src/models/User');
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
@@ -21,9 +18,9 @@ const updateUser = async (req, res) => {
     let newIdImage = undefined;
 
     const user = await User.findById(id);
-    if(!user) throw new NotFoundError('usuario no encontrado');
+    if (!user) throw new NotFoundError('usuario no encontrado');
 
-    if(email && email !== user.email) {
+    if (email && email !== user.email) {
       const emailExists = await verifyExistingEmail(email);
       if (emailExists) throw new BadRequestError('El email enviado ya esta registrado');
     }
@@ -39,10 +36,11 @@ const updateUser = async (req, res) => {
       image: newImage,
       id_image: newIdImage,
     };
-    
-    await updateUserData(user, newData);
+    if (newData.password) delete newData.password;
 
-    res.status(200).json({ updated: user, message: 'usuario actualizado' });
+    const updated = await User.findByIdAndUpdate(id, newData, { new: true });
+
+    res.status(200).json({ updated, message: 'usuario actualizado' });
   } catch (err) {
     throw err;
   } finally {
