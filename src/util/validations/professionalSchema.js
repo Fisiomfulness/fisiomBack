@@ -25,6 +25,12 @@ const professionalSchema = z.object({
       (value) => isDateOnRange(value, acceptedYears.min, acceptedYears.max),
       `debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`
     ),
+  description: z
+    .string()
+    .trim()
+    .max(500, 'La descripción no puede tener mas de 500 caracteres')
+    .optional()
+    .or(z.literal('')),
   password: z
     .string()
     .trim()
