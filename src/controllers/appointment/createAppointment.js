@@ -11,11 +11,13 @@ const createAppointment = async (req, res) => {
     const professional = await Profesional.findById(_professional);
     if (!professional || !professional.status) {
       res.status(401).json({ message: 'profesional ID no válido' });
+      return
     }
     // Validate patient
     const patient = await User.findById(_patient);
     if (!patient || !patient.status) {
       res.status(401).json({ message: 'paciente ID no válido' });
+      return
     }
 
     // Validate fromDateTime and toDateTime formats
@@ -25,18 +27,20 @@ const createAppointment = async (req, res) => {
             message:
             'Formato de fecha de cita no válido. Por favor usa YYYY-MM-DDTHH:mm.',
         });
+        return
     }
 
     // Validate fromDateTime is not after toDateTime
     if (moment(fromDateTime) > moment(toDateTime)) {
-      res.status(401).json({ message: 'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización' });
+        return res.status(401).json({ message: 'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización' });
     }
 
     // Validate that fromDateTime and toDateTime are on the same day
     const startDate = fromDateTime.split('T')[0];
     const endDate = toDateTime.split('T')[0];
     if (startDate !== endDate) {
-      res.status(401).json({ message: 'La fecha de inicio y la fecha de finalización deben ser del mismo día' });
+        res.status(401).json({ message: 'La fecha de inicio y la fecha de finalización deben ser del mismo día' });
+        return
     }
 
     // Validate there are no valid overlapping appointments
@@ -64,9 +68,10 @@ const createAppointment = async (req, res) => {
       ],
     });
     if (overlapping) {
-      res.status(401).json({ 
+        res.status(401).json({ 
         message: 'La fecha y hora seleccionada se superponen con otra cita del profesional o del paciente' 
       });
+      return
     }
 
     // Validate that the professional is available during the time of the appointment
@@ -106,7 +111,8 @@ const createAppointment = async (req, res) => {
       }
     }
     if (!insideWorkingHours) {
-      res.status(401).json({ message: 'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional' });
+        res.status(401).json({ message: 'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional' });
+        return
     }
 
     // Create appointment
@@ -117,7 +123,7 @@ const createAppointment = async (req, res) => {
       fromDateTime,
       toDateTime
     });
-    res.status(201).json({ appointment });
+    return res.status(201).json({ appointment });
 
   } catch (error) {
     res.status(500).send(error.message);

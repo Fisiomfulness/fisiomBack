@@ -76,7 +76,7 @@ const Appointment = new Schema(
     },
     expiration: {
         type: Date,
-        default: new Date(Date.now() + 3 * 60 * 60 * 1000)
+        default: new Date(Date.now() + 3 * 60 * 60 * 1000) // 3 hours
     }
   },
   {
