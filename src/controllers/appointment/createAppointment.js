@@ -7,15 +7,18 @@ const createAppointment = async (req, res) => {
   try {
     const { _professional, _patient, title, fromDateTime, toDateTime } = req.body;
 
-    const professional = await Profesional.findById(_professional)
-    if (!professional) {
+    // Validate professional
+    const professional = await Profesional.findById(_professional);
+    if (!professional || !professional.status) {
       res.status(401).json({ message: 'profesional ID no válido' });
     }
-    const patient = await User.findById(_patient)
-    if (!patient) {
+    // Validate patient
+    const patient = await User.findById(_patient);
+    if (!patient || !patient.status) {
       res.status(401).json({ message: 'paciente ID no válido' });
     }
 
+    // Validate fromDateTime and toDateTime formats
     if (!moment(fromDateTime, 'YYYY-MM-DDTHH:mm', true).isValid() 
         || !moment(toDateTime, 'YYYY-MM-DDTHH:mm', true).isValid()) {
         res.status(401).json({
@@ -24,15 +27,40 @@ const createAppointment = async (req, res) => {
         });
     }
 
+    // Validate fromDateTime is not after toDateTime
     if (moment(fromDateTime) > moment(toDateTime)) {
       res.status(401).json({ message: 'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización' });
     }
 
+    // Validate that fromDateTime and toDateTime are on the same day
+    const startDate = fromDateTime.split('T')[0];
+    const endDate = toDateTime.split('T')[0];
+    if (startDate !== endDate) {
+      res.status(401).json({ message: 'La fecha de inicio y la fecha de finalización deben ser del mismo día' });
+    }
+
+    // Validate there are no valid overlapping appointments
     const overlapping = await Appointment.findOne({
       $and: [
+        // Status is ACCEPTED or PENDING but not yet expired
+        { $or: [
+            { status: "ACCEPTED" },
+            { $and: [
+                { status: "PENDING" },
+                { expiration: { $gt: Date.now() } }
+              ]  
+            }
+          ] 
+        },
+        // Are overlaping
         { toDateTime: { $gt: fromDateTime } },
         { dateTime: { $lt: toDateTime } },
-        { $or: [{ _patient }, { _professional }] }
+        // Are for the same professional or patient
+        { $or: [
+           { _patient }, 
+           { _professional }
+          ] 
+        }
       ],
     });
     if (overlapping) {
@@ -41,6 +69,47 @@ const createAppointment = async (req, res) => {
       });
     }
 
+    // Validate that the professional is available during the time of the appointment
+    const daysOfWeekMap = {
+      0: 'sunday',
+      1: 'monday',
+      2: 'tuesday',
+      3: 'wednesday',
+      4: 'thursday',
+      5: 'friday',
+      6: 'saturday',
+    };
+    // Get day of week key
+    const startDateDay = daysOfWeekMap[moment(fromDateTime).day()];
+    // Match key to day of week
+    const workingHours = professional.availability[startDateDay];
+
+    let insideWorkingHours = false;
+    // Check through working hours timeLapses for that day of the week
+    for (let i = 0; i < workingHours.length; i++) {
+      if (
+        moment(fromDateTime.split('T')[1], 'HH:mm').isBetween(
+          moment(workingHours[i].start, 'HH:mm'),
+          moment(workingHours[i].end, 'HH:mm'),
+          null,
+          []
+        ) &&
+        moment(toDateTime.split('T')[1], 'HH:mm').isBetween(
+          moment(workingHours[i].start, 'HH:mm'),
+          moment(workingHours[i].end, 'HH:mm'),
+          null,
+          []
+        )
+      ) {
+        insideWorkingHours = true;
+        break;
+      }
+    }
+    if (!insideWorkingHours) {
+      res.status(401).json({ message: 'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional' });
+    }
+
+    // Create appointment
     const appointment = await Appointment.create({
       _professional,
       _patient,
