@@ -23,29 +23,13 @@ const findUserById = async (id) => {
 
 const verifyExistingEmail = async (email) => {
   const [userExists, professionalExists] = await Promise.all([
-    User.exists({ email }),
-    Professional.exists({ email }),
+    User.findOne({ email }),
+    Professional.findOne({ email }),
   ]);
   return userExists || professionalExists;
 };
 
-const updateUserData = async (user, newData) => {
-  if (!isValidUser(user)) {
-    throw new Error('El usuario no es una instancia valida de User o Profesional');
-  }
-
-  for (const key in newData) {
-    let value = newData[key];
-    if (key !== 'password') {
-      user[key] = value;
-    }
-  }
-
-  await user.save({ validateModifiedOnly: true });
-};
-
 module.exports = {
   findUserById,
-  verifyExistingEmail,
-  updateUserData,
+  verifyExistingEmail
 };

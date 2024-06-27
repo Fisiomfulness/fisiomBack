@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('./addressSchema');
+const experienceSchema = require('./experienceSchema');
 
 const Profesional = new Schema(
   {
@@ -48,7 +49,7 @@ const Profesional = new Schema(
     },
     license: {
       type: String,
-      default: null,
+      default: '',
     },
     calendlyLink: {
       type: String,
@@ -74,17 +75,13 @@ const Profesional = new Schema(
       default: '',
       required: true,
     },
-    professionalDescription: {
+    description: {
       type: String,
       default: '',
     },
-    experience: {
-      type: Array,
-      default: [],
-    },
     address: {
       type: addressSchema,
-      required: true
+      required: true,
     },
     coordinates: {
       type: [Number], // lat, lng
@@ -93,7 +90,7 @@ const Profesional = new Schema(
     },
     image: {
       type: String,
-      default: ''
+      default: '',
     },
     id_image: {
       type: String,
@@ -102,6 +99,10 @@ const Profesional = new Schema(
     consultationPrice: {
       type: Number,
       default: 0,
+    },
+    experience: {
+      type: [experienceSchema],
+      default: [],
     },
     specialties: {
       type: [

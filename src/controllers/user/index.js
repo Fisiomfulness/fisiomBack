@@ -5,6 +5,7 @@ const { getUsers } = require('./getUsers');
 const { getUserById } = require('./getUserById');
 const { statusUser } = require('./statusUser');
 const { updateUser } = require('./updateUser');
+const { verifyCredentials } = require('./verifyCredentials');
 
 module.exports = {
   createUser,
@@ -14,4 +15,5 @@ module.exports = {
   getUserById,
   statusUser,
   updateUser,
+  verifyCredentials,
 };

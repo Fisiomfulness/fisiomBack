@@ -17,7 +17,8 @@ const userSchema = z.object({
     .string()
     .trim()
     .regex(phoneRegExp, 'no es un teléfono valido')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   email: z.string().trim().email('no es un email'),
   birthDate: z
     .string()

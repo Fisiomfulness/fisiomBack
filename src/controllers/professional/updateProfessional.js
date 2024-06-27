@@ -1,18 +1,12 @@
 const { userUploadOptions } = require('#src/config/cloudinaryConfig');
 const { BadRequestError, NotFoundError } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
-const {
-  verifyExistingEmail,
-  updateUserData,
-} = require('#src/services/userService');
+const { verifyExistingEmail } = require('#src/services/userService');
 const {
   uploadImage,
   deleteLocalFile,
 } = require('#src/services/cloudinaryService');
 const Professional = require('#src/models/Profesional');
-
-const roles = require('#src/util/roles');
-const admins = [roles.ADMIN, roles.SUPER_ADMIN];
 
 const updateProfessional = async (req, res) => {
   const { id } = req.params;
@@ -31,13 +25,6 @@ const updateProfessional = async (req, res) => {
       if (emailExists) throw new BadRequestError('El email enviado ya esta registrado');
     }
 
-    // ? Si es admin puede actualizar los demás datos de un usuario sin sus credenciales
-    if (!admins.includes(req.user.role)) {
-      if (!password) throw new BadRequestError('La contraseña es necesaria para actualizar los datos');
-      const passwordMatches = await verifyHashedData(password, professional.password);
-      if (!passwordMatches) throw new BadRequestError('La contraseña enviada es incorrecta');
-    }
-
     if (hasFile) {
       const { public_id, url } = await uploadImage(req.file, userUploadOptions, professional.id_image);
       newImage = url;
@@ -49,10 +36,11 @@ const updateProfessional = async (req, res) => {
       image: newImage,
       id_image: newIdImage,
     };
+    if (newData.password) delete newData.password;
 
-    await updateUserData(professional, newData);
+    const updated = await Professional.findByIdAndUpdate(id, newData, { new: true });
 
-    res.status(200).json({ updated: professional, message: 'profesional actualizado' });
+    res.status(200).json({ updated, message: 'profesional actualizado' });
   } catch (err) {
     throw err;
   } finally {
