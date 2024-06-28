@@ -57,7 +57,7 @@ const experienceSchema = z.object({
     .string()
     .trim()
     .min(1, 'La descripción es requerida')
-    .max(500, 'No mas de 500 caracteres'),
+    .max(1000, 'La descripción no puede tener mas de 1000 caracteres'),
   current: z.boolean({
     required_error: 'Requerido',
     invalid_type_error: 'Debe ser true o false',
