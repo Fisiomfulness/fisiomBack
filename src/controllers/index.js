@@ -51,6 +51,9 @@ const {
   getProfessionalScore,
   addSpecialty,
   removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
 } = require('./professional/index');
 
 const {
@@ -111,6 +114,9 @@ module.exports = {
   getProfessionalScore,
   addSpecialty,
   removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
   getAllQuestions,
   createQuestion,
   respondQuestion,
