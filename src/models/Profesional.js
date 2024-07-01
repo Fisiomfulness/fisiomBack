@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('./addressSchema');
-const timeLapseSchema = require('./addressSchema');
+const timeLapseSchema = require('./timeLapseSchema');
 const moment = require('moment');
 const experienceSchema = require('./experienceSchema');
- 
 
 const Profesional = new Schema(
   {
@@ -124,7 +123,7 @@ const Profesional = new Schema(
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-  }
+  },
 );
 
 module.exports = model('Profesional', Profesional);
