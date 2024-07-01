@@ -5,6 +5,7 @@ const addressMiddleware = async (req, res, next) => {
   try {
     const { streetName, streetNumber, city, state, country, floorAppartment } =
       req.body;
+    
     if (!streetName || !streetNumber || !city || !country) {
       next();
       return;

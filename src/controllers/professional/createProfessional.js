@@ -9,31 +9,31 @@ const createProfessional = async (req, res) => {
     const emailVerify = await Profesional.findOne({ email });
 
     if (emailVerify) {
-      res.status(401).json({ message: 'este email ya existe' });
+      return res.status(401).json({ message: 'este email ya existe' });
     } else {
       const hashedPass = await hashData(password);
-
+      
       if (!moment(birthDate, 'YYYY-MM-DD', true).isValid()) {
-        res.status(401).json({
+        return res.status(401).json({
           message:
             'Formato de fecha de nacimiento no válido. Por favor usa YYYY-MM-DD.',
         });
       } else {
         const today = moment();
-        const birthDate = moment(birthDate);
+        const dateOfBirth = moment(birthDate);
         const age = today.diff(birthDate, 'years', true);
 
         if (age < 18) {
-          res.status(401).json({
+          return res.status(401).json({
             message: 'Necesitas tener 18 años o mas para registrarte.',
           });
         } else {
           restData.password = hashedPass;
-          restData.birthDate = birthDate;
+          restData.birthDate = dateOfBirth;
           restData.email = email;
 
           const profesional = await Profesional.create(restData);
-          res.status(201).json({ profesional });
+          return res.status(201).json({ profesional });
         }
       }
     }

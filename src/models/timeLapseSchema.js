@@ -27,7 +27,7 @@ const timeLapseSchema = new Schema({
         },
       }
     },
-})
+}, { _id: false });
 
 // Schema-level validation
 timeLapseSchema.pre('validate', function (next) {

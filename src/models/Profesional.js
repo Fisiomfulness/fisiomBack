@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('./addressSchema');
-const timeLapseSchema = require('./addressSchema');
+const timeLapseSchema = require('./timeLapseSchema');
 const moment = require('moment');
 const experienceSchema = require('./experienceSchema');
  
