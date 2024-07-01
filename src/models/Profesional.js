@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('./addressSchema');
+const timeLapseSchema = require('./addressSchema');
+const moment = require('moment');
 const experienceSchema = require('./experienceSchema');
+ 
 
 const Profesional = new Schema(
   {
@@ -51,10 +54,6 @@ const Profesional = new Schema(
       type: String,
       default: '',
     },
-    calendlyLink: {
-      type: String,
-      default: ''
-    },
     professionalScore: [
       {
         type: ObjectId,
@@ -95,6 +94,15 @@ const Profesional = new Schema(
     id_image: {
       type: String,
       default: '',
+    },
+    availability: {
+      monday: { type: [timeLapseSchema], default: [] },
+      tuesday: { type: [timeLapseSchema], default: [] },
+      wednesday: { type: [timeLapseSchema], default: [] },
+      thursday: { type: [timeLapseSchema], default: [] },
+      friday: { type: [timeLapseSchema], default: [] },
+      saturday: { type: [timeLapseSchema], default: [] },
+      sunday: { type: [timeLapseSchema], default: [] },
     },
     consultationPrice: {
       type: Number,
