@@ -24,7 +24,8 @@ const addressSchema = z.object({
     .trim()
     .max(5, 'no puede tener mas de 5 dígitos')
     .regex(numericRegex, 'Debe ser numérico')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   city: z
     .string()
     .trim()
@@ -40,7 +41,8 @@ const addressSchema = z.object({
     .min(2, 'el estado/provincia debe tener al menos 2 caracteres')
     .max(50, 'el estado/provincia no puede tener mas de 50 caracteres')
     .regex(nameRegex, 'solo puede contener letras')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   country: z
     .string()
     .trim()

@@ -51,6 +51,9 @@ const {
   getProfessionalScore,
   addSpecialty,
   removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
 } = require('./professional/index');
 
 const {
@@ -60,7 +63,18 @@ const {
   deleteQuestion,
 } = require('./question/index');
 
+const {
+  getAllInterests,
+  createInterest,
+  deleteInterest,
+} = require('./interest/index');
+
 const { sendEmail } = require('./mail/index');
+
+const { 
+  createAppointment,
+  getAppointments 
+} = require('./appointment/index');
 
 module.exports = {
   createBlog,
@@ -100,9 +114,17 @@ module.exports = {
   getProfessionalScore,
   addSpecialty,
   removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
   getAllQuestions,
   createQuestion,
   respondQuestion,
   deleteQuestion,
+  getAllInterests,
+  createInterest,
+  deleteInterest,
   sendEmail,
+  createAppointment,
+  getAppointments
 };

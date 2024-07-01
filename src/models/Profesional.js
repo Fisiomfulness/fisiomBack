@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('./addressSchema');
+const timeLapseSchema = require('./addressSchema');
+const moment = require('moment');
+const experienceSchema = require('./experienceSchema');
+ 
 
 const Profesional = new Schema(
   {
@@ -48,7 +52,7 @@ const Profesional = new Schema(
     },
     license: {
       type: String,
-      default: null,
+      default: '',
     },
     professionalScore: [
       {
@@ -70,17 +74,13 @@ const Profesional = new Schema(
       default: '',
       required: true,
     },
-    professionalDescription: {
+    description: {
       type: String,
       default: '',
     },
-    experience: {
-      type: Array,
-      default: [],
-    },
     address: {
       type: addressSchema,
-      required: true
+      required: true,
     },
     coordinates: {
       type: [Number], // lat, lng
@@ -89,15 +89,28 @@ const Profesional = new Schema(
     },
     image: {
       type: String,
-      default: ''
+      default: '',
     },
     id_image: {
       type: String,
-      default: 'does not have image id',
+      default: '',
+    },
+    availability: {
+      monday: { type: [timeLapseSchema], default: [] },
+      tuesday: { type: [timeLapseSchema], default: [] },
+      wednesday: { type: [timeLapseSchema], default: [] },
+      thursday: { type: [timeLapseSchema], default: [] },
+      friday: { type: [timeLapseSchema], default: [] },
+      saturday: { type: [timeLapseSchema], default: [] },
+      sunday: { type: [timeLapseSchema], default: [] },
     },
     consultationPrice: {
       type: Number,
       default: 0,
+    },
+    experience: {
+      type: [experienceSchema],
+      default: [],
     },
     specialties: {
       type: [
