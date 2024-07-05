@@ -9,17 +9,33 @@ POST {{url}}/professionals/create
 Content-Type: application/json
 
 {
-   "email": "anotherDoc@gmail.com",
-   "name": "Otro Doctor", 
+   "email": "olddoctor@gmail.com",
+   "name": "Yamil Bambeino", 
    "password": "otrodoctor",
-   "birthDate": "1988-06-22",
+   "birthDate": "1990-06-22",
    "gender": "Masculino",
-   "resume": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin.",
+   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin.",
    "curriculum": "https://res.cloudinary.com/do6ra4oau/image/upload/v1714055789/FisiumFulness/users/1714055787309-pdfpruebafisiomfulness.pdf",
    "license": "M1354",
    "phone": "11 1568942",
-   "address": "Pellegrini 828, Rosario, Santa Fe, Argentina",
-   "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg"
+    "streetName": "Francia",
+    "streetNumber": "415",
+    "city": "Rosario",
+    "state": "Santa Fe",
+    "country": "Argentina",
+   "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg",
+   "availability": {
+        "monday": [
+            { 
+                "start": "09:30",
+                "end": "12:30"
+            },
+            {
+                "start": "15:00",
+                "end": "19:00"
+            }
+        ]
+   }
 }
 
 ### GET USERS
@@ -48,7 +64,7 @@ PUT {{url}}/professionals/update/663822474296b1639d4cb8ba
 Content-Type: application/json
 
 {
-    "calendlyLink": "https://calendly.com/bsarti-lacapital/consulta-profesional"
+    "license": "M1485"
 }
 
 ### GET PROFESSIONALS
