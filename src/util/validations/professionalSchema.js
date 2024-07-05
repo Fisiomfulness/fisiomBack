@@ -1,6 +1,6 @@
 const { z } = require('zod');
 const { nameRegex, phoneRegExp, numericRegex } = require('../regExp');
-const { isDateOnRange } = require('../helpers');
+const { isDateOnRange, validateId } = require('../helpers');
 const addressSchema = require('./addressSchema');
 
 const acceptedYears = { min: 18, max: 100 };
@@ -75,4 +75,30 @@ const professionalSchema = z.object({
     .optional(),
 });
 
-module.exports = professionalSchema;
+const professionalRatingSchema = z.object({
+  score: z
+    .number({ required_error: 'La puntuación es requerida' })
+    .min(1, 'La puntuación mínimo es 1')
+    .max(5, 'La puntuación máxima es de 5'),
+  description: z
+    .string({ required_error: 'El comentario es requerido' })
+    .min(3, 'El comentario debe tener al menos 3 caracteres')
+    .max(300, 'El comentario no puede tener mas de 300 caracteres'),
+  _user: z
+    .string({ required_error: 'ID del usuario requerido' })
+    .refine(
+      async (value) => await validateId(value, 'User'),
+      'Usuario no encontrado'
+    ),
+  _professional: z
+    .string({ required_error: 'ID del profesional requerido' })
+    .refine(
+      async (value) => await validateId(value, 'Profesional'),
+      'Profesional no encontrado'
+    ),
+});
+
+module.exports = {
+  professionalSchema,
+  professionalRatingSchema,
+};

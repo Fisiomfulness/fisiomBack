@@ -14,6 +14,7 @@ const { upload } = require('#src/config/multerConfig');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
 const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
 const { validationMiddleware } = require('#src/middleware/validationMiddleware');
+const { validateFileType } = require('#src/middleware/validateFileType')
 const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const userSchema = require('#src/util/validations/userSchema');
 const roles = require('#src/util/roles');
@@ -36,6 +37,7 @@ router.use(authAll);
 router.put(
   '/update/:id',
   upload,
+  validateFileType('image'),
   addressMiddleware,
   validationMiddleware(userSchema, 'update'),
   permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
