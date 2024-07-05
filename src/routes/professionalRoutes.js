@@ -70,9 +70,11 @@ router.delete(
   deleteProfessional
 );
 
+// ? Los profesionales no pueden hacer comentarios a otros profesionales.
 router.post(
   '/rating',
   validationMiddleware(professionalRatingSchema),
+  permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
   createProfessionalRating
 );
 router.delete(
