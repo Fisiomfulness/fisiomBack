@@ -6,8 +6,9 @@ const {
   statusProfessional,
   updateProfessional,
   deleteProfessional,
-  createProfessionalRating,
   getProfessionalRating,
+  createProfessionalRating,
+  deleteProfessionalRating,
   checkUserRating,
   addSpecialty,
   removeSpecialty,
@@ -35,10 +36,12 @@ const router = Router();
 
 router.get('/', decodeTokenUser, getProfessionals);
 router.get('/detail/:id', getProfessionalDetail);
+
 router.get('/rating/:professional_id', getProfessionalRating);
 router.get('/rating/:professional_id/:user_id/hasCommented', checkUserRating);
 
 router.post('/create', addressMiddleware, createProfessional);
+
 // ? Rutas para agregar o quitar specialties
 router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
 router.delete('/:profesional_id/specialty/:specialty_id', removeSpecialty);
@@ -55,13 +58,11 @@ router.put(
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   updateProfessional
 );
-
 router.patch(
   '/status/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   statusProfessional
 );
-
 // ! Agregar rol professional si se añade funcionalidad para eliminar propia cuenta.
 router.delete(
   '/delete/:id',
@@ -73,6 +74,11 @@ router.post(
   '/rating',
   validationMiddleware(professionalRatingSchema),
   createProfessionalRating
+);
+router.delete(
+  '/rating/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  deleteProfessionalRating
 );
 
 router.post(
