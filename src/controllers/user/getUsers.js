@@ -117,7 +117,6 @@ const getSpecificUserData = async (req, res) => {
         $project: { _id: 1, ...data },
       },
     ]);
-    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     console.error('Error fetching users:', error);
