@@ -9,8 +9,6 @@ const getUserById = async (req, res) => {
 
   if (foundUser instanceof User) {
     await foundUser.populate('interests', 'name');
-  } else {
-    await foundUser.populate('professionalScore');
   }
 
   res.status(200).json({ foundUser });
