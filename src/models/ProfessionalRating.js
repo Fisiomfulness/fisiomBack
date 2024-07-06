@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-const ProfessionalScore = new Schema(
+const ProfessionalRating = new Schema(
   {
     _id: {
       type: String,
@@ -10,24 +10,24 @@ const ProfessionalScore = new Schema(
         return new ObjectId().toString();
       },
     },
-    _user: { type: ObjectId, ref: 'User' },
-    _profesional: { type: ObjectId, ref: 'Profesional' },
-    name: {
-      type: String,
-      required: true,
+    score: {
+      type: Number,
+      default: 0,
     },
     description: {
       type: String,
       required: true,
     },
-    score: {
-      type: Number,
-      default: 0,
+    _professional: { type: ObjectId, ref: 'Profesional', required: true },
+    _user: {
+      type: ObjectId,
+      ref: 'User',
+      required: true,
     },
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-  },
+  }
 );
 
-module.exports = model('ProfessionalScore', ProfessionalScore);
+module.exports = model('ProfessionalRating', ProfessionalRating);

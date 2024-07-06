@@ -6,8 +6,10 @@ const {
   statusProfessional,
   updateProfessional,
   deleteProfessional,
-  createProfessionalScore,
-  getProfessionalScore,
+  getProfessionalRating,
+  createProfessionalRating,
+  deleteProfessionalRating,
+  checkUserRating,
   addSpecialty,
   removeSpecialty,
   addExperience,
@@ -20,21 +22,25 @@ const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
 const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
 const { validationMiddleware } = require('#src/middleware/validationMiddleware');
-const professionalSchema = require('#src/util/validations/professionalSchema');
-const experienceSchema = require('#src/util/validations/experienceSchema');
+const { validateFileType } = require('#src/middleware/validateFileType');
+const {
+  experienceSchema,
+  professionalSchema,
+  professionalRatingSchema,
+} = require('#src/util/validations/index');
 const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
 const permit = require('#src/middleware/rolesMiddleware');
 
 const router = Router();
 
-router.post('/create', addressMiddleware, createProfessional);
 router.get('/', decodeTokenUser, getProfessionals);
 router.get('/detail/:id', getProfessionalDetail);
 
-// ? Rutas para crear y obtener professional_scores (rank, comentario)
-router.post('/professional_score', createProfessionalScore);
-router.get('/professional_score/:id', getProfessionalScore);
+router.get('/rating/:professional_id', getProfessionalRating);
+router.get('/rating/:professional_id/:user_id/hasCommented', checkUserRating);
+
+router.post('/create', addressMiddleware, createProfessional);
 
 // ? Rutas para agregar o quitar specialties
 router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
@@ -46,23 +52,35 @@ router.use(authAll);
 router.put(
   '/update/:id',
   upload,
+  validateFileType('image'),
   addressMiddleware,
-  validationMiddleware(professionalSchema, "update"),
+  validationMiddleware(professionalSchema, 'update'),
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   updateProfessional
 );
-
 router.patch(
   '/status/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   statusProfessional
 );
-
 // ! Agregar rol professional si se añade funcionalidad para eliminar propia cuenta.
 router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   deleteProfessional
+);
+
+// ? Los profesionales no pueden hacer comentarios a otros profesionales.
+router.post(
+  '/rating',
+  validationMiddleware(professionalRatingSchema),
+  permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
+  createProfessionalRating
+);
+router.delete(
+  '/rating/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  deleteProfessionalRating
 );
 
 router.post(

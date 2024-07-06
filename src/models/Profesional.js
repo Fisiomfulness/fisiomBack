@@ -53,17 +53,6 @@ const Profesional = new Schema(
       type: String,
       default: '',
     },
-    professionalScore: [
-      {
-        type: ObjectId,
-        ref: 'ProfessionalScore',
-      },
-    ],
-    averageScore: {
-      average: { type: Number, default: 0 },
-      totalComments: { type: Number, default: 0 },
-      totalScore: { type: Number, default: 0 },
-    },
     confirmEmail: {
       type: Boolean,
       default: false,
@@ -106,6 +95,11 @@ const Profesional = new Schema(
     consultationPrice: {
       type: Number,
       default: 0,
+    },
+    rating: {
+      total: { type: Number, default: 0 },
+      totalComments: { type: Number, default: 0 },
+      average: { type: Number, default: 0 },
     },
     experience: {
       type: [experienceSchema],
