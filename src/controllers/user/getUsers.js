@@ -15,7 +15,9 @@ const getUsers = async (req, res) => {
     const limitInt = parseInt(limit);
 
     if (!Number.isInteger(pageInt) || !Number.isInteger(limitInt)) {
-      return res.status(400).json({ message: 'page and limit must be integers' });
+      return res
+        .status(400)
+        .json({ message: 'page and limit must be integers' });
     }
     const skipIndex = (pageInt - 1) * limitInt;
 
@@ -74,35 +76,55 @@ const getUsers = async (req, res) => {
 
     // Uncomment when interests are ready
     if (interestsArr.length) {
-      userQuery.$and.push({ interests: { $in: interestsArr }});
+      userQuery.$and.push({ interests: { $in: interestsArr } });
     }
 
     if (polygonQuery) {
       const users = await User.find(userQuery)
-      .populate('interests', 'name')
-      .where('coordinates').within(polygonQuery)
-      .limit(limitInt);
+        .populate('interests', 'name')
+        .where('coordinates')
+        .within(polygonQuery)
+        .limit(limitInt);
 
-      return res.status(200).json({ quantity: users.length, users, page: 1, totalPages: 1 });
-
+      return res
+        .status(200)
+        .json({ quantity: users.length, users, page: 1, totalPages: 1 });
     } else {
       const users = await User.find(userQuery)
-      .populate('interests', 'name')
-      .skip(skipIndex)
-      .limit(limitInt);
+        .populate('interests', 'name')
+        .skip(skipIndex)
+        .limit(limitInt);
 
       const queryWithoutNear = { ...userQuery };
       queryWithoutNear.$and.shift();
 
       const totalUsers = await User.countDocuments(queryWithoutNear);
       const totalPages = Math.ceil(totalUsers / limitInt);
-      return res.status(200).json({ quantity: totalUsers, users, page: pageInt, totalPages });
+      return res
+        .status(200)
+        .json({ quantity: totalUsers, users, page: pageInt, totalPages });
     }
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
 };
 
+const getSpecificUserData = async (req, res) => {
+  const data = req.body;
+  try {
+    const result = await User.aggregate([
+      {
+        $project: { _id: 1, ...data },
+      },
+    ]);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+
 module.exports = {
-  getUsers
+  getUsers,
+  getSpecificUserData,
 };
