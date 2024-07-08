@@ -73,12 +73,9 @@ const {
 
 const { sendEmail } = require('./mail/index');
 
-const { 
-  createAppointment,
-  getAppointments 
-} = require('./appointment/index');
+const { createAppointment, getAppointments } = require('./appointment/index');
 
-const { createService } = require('./service/index');
+const { createService, getAllServices } = require('./service/index');
 
 module.exports = {
   createBlog,
@@ -133,5 +130,6 @@ module.exports = {
   sendEmail,
   createAppointment,
   getAppointments,
-  createService
+  createService,
+  getAllServices,
 };

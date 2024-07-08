@@ -5,10 +5,12 @@ const { validationMiddleware } = require('#src/middleware/validationMiddleware')
 const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const { serviceSchema } = require('#src/util/validations/index');
 
-const { createService } = require('#src/controllers/index');
+const { createService, getAllServices } = require('#src/controllers/index');
+
+router.get('/', getAllServices);
 
 router.post('/', validationMiddleware(serviceSchema), createService);
 
-router.use(errorMiddleware)
+router.use(errorMiddleware);
 
 module.exports = router;
