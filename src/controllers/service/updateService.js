@@ -7,7 +7,7 @@ const updateService = async (req, res) => {
   const service = await Service.findByIdAndUpdate(id, req.validatedBody, { new: true });
   if (!service) throw new NotFoundError('Servicio no encontrado');
 
-  res.status(201).json({ updated: service, message: 'Servicio actualizado' });
+  res.status(200).json({ updated: service, message: 'Servicio actualizado' });
 };
 
 module.exports = { updateService };
