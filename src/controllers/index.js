@@ -79,6 +79,7 @@ const {
   createService,
   getAllServices,
   updateService,
+  deleteService,
 } = require('./service/index');
 
 module.exports = {
@@ -137,4 +138,5 @@ module.exports = {
   createService,
   getAllServices,
   updateService,
+  deleteService,
 };

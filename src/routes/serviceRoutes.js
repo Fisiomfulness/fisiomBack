@@ -9,13 +9,20 @@ const {
   createService,
   getAllServices,
   updateService,
+  deleteService,
 } = require('#src/controllers/index');
 
 router.get('/', getAllServices);
 
-router.put('/:id', validationMiddleware(serviceSchema, 'update'), updateService);
+router.put(
+  '/:id',
+  validationMiddleware(serviceSchema, 'update'),
+  updateService
+);
 
 router.post('/', validationMiddleware(serviceSchema), createService);
+
+router.delete('/:id', deleteService);
 
 router.use(errorMiddleware);
 
