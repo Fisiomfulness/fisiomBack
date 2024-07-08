@@ -78,6 +78,8 @@ const {
   getAppointments 
 } = require('./appointment/index');
 
+const { createService } = require('./service/index');
+
 module.exports = {
   createBlog,
   deleteBlog,
@@ -130,5 +132,6 @@ module.exports = {
   deleteInterest,
   sendEmail,
   createAppointment,
-  getAppointments
+  getAppointments,
+  createService
 };
