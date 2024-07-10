@@ -5,8 +5,17 @@ const User = require('../../models/User');
 
 const createAppointment = async (req, res) => {
   try {
-    const { _professional, _patient, title, fromDateTime, toDateTime } =
-      req.body;
+    const {
+      _professional,
+      _patient,
+      title,
+      start,
+      end,
+      additionalDescription,
+      status,
+    } = req.body;
+
+    const formatData = (data) => moment(data).format('YYYY-MM-DDTHH:mm');
 
     // Validate professional
     const professional = await Profesional.findById(_professional);
@@ -21,29 +30,28 @@ const createAppointment = async (req, res) => {
       return;
     }
 
-    // Validate fromDateTime and toDateTime formats
+    // Validate start and end formats (YYYY-MM-DDTHH:mm)
     if (
-      !moment(fromDateTime, 'YYYY-MM-DDTHH:mm', true).isValid() ||
-      !moment(toDateTime, 'YYYY-MM-DDTHH:mm', true).isValid()
+      !moment(formatData(start), 'YYYY-MM-DDTHH:mm', true).isValid() ||
+      !moment(formatData(end), 'YYYY-MM-DDTHH:mm', true).isValid()
     ) {
       res.status(401).json({
-        message:
-          'Formato de fecha de cita no válido. Por favor usa YYYY-MM-DDTHH:mm.',
+        message: 'Formato de fecha de cita no válido',
       });
       return;
     }
 
-    // Validate fromDateTime is not after toDateTime
-    if (moment(fromDateTime) > moment(toDateTime)) {
+    // Validate start is not after end
+    if (moment(start) > moment(end)) {
       return res.status(401).json({
         message:
           'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización',
       });
     }
 
-    // Validate that fromDateTime and toDateTime are on the same day
-    const startDate = fromDateTime.split('T')[0];
-    const endDate = toDateTime.split('T')[0];
+    // Validate that start and end are on the same day
+    const startDate = start.split('T')[0];
+    const endDate = end.split('T')[0];
     if (startDate !== endDate) {
       res.status(401).json({
         message:
@@ -68,8 +76,8 @@ const createAppointment = async (req, res) => {
           ],
         },
         // Are overlaping
-        { toDateTime: { $gt: fromDateTime } },
-        { dateTime: { $lt: toDateTime } },
+        { end: { $gt: start } },
+        { dateTime: { $lt: end } },
         // Are for the same professional or patient
         { $or: [{ _patient }, { _professional }] },
       ],
@@ -93,31 +101,37 @@ const createAppointment = async (req, res) => {
       6: 'saturday',
     };
     // Get day of week key
-    const startDateDay = daysOfWeekMap[moment(fromDateTime).day()];
+    const startDateDay = daysOfWeekMap[moment(start).day()];
     // Match key to day of week
     const workingHours = professional.availability[startDateDay];
 
-    let insideWorkingHours = false;
+    let insideWorkingHours = true;
     // Check through working hours timeLapses for that day of the week
-    for (let i = 0; i < workingHours.length; i++) {
-      if (
-        moment(fromDateTime.split('T')[1], 'HH:mm').isBetween(
-          moment(workingHours[i].start, 'HH:mm'),
-          moment(workingHours[i].end, 'HH:mm'),
-          null,
-          [],
-        ) &&
-        moment(toDateTime.split('T')[1], 'HH:mm').isBetween(
-          moment(workingHours[i].start, 'HH:mm'),
-          moment(workingHours[i].end, 'HH:mm'),
-          null,
-          [],
-        )
-      ) {
-        insideWorkingHours = true;
-        break;
+    if (workingHours.length > 0) {
+      for (let i = 0; i < workingHours.length; i++) {
+        if (
+          moment(start.split('T')[1], 'HH:mm').isBetween(
+            moment(workingHours[i].start, 'HH:mm'),
+            moment(workingHours[i].end, 'HH:mm'),
+            null,
+            [],
+          ) &&
+          moment(end.split('T')[1], 'HH:mm').isBetween(
+            moment(workingHours[i].start, 'HH:mm'),
+            moment(workingHours[i].end, 'HH:mm'),
+            null,
+            [],
+          )
+        ) {
+          insideWorkingHours = true;
+          break;
+        } else {
+          insideWorkingHours = false;
+          break;
+        }
       }
     }
+
     if (!insideWorkingHours) {
       res.status(401).json({
         message:
@@ -126,19 +140,24 @@ const createAppointment = async (req, res) => {
       return;
     }
 
+    const patientName = patient.name;
+
     // Create appointment
     const appointment = await Appointment.create({
       _professional,
       _patient,
+      patientName,
+      additionalDescription,
       title,
-      fromDateTime,
-      toDateTime,
+      start,
+      end,
+      status,
     });
     return res
       .status(201)
       .json({ appointment, message: 'Agendado con exito!' });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
