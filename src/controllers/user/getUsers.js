@@ -1,4 +1,6 @@
+const { getRandomCoordinates } = require('#src/util/helpers');
 const User = require('../../models/User');
+const roles = require('../../util/roles');
 
 const getUsers = async (req, res) => {
   try {
@@ -44,20 +46,14 @@ const getUsers = async (req, res) => {
 
     let userQuery = {
       $and: [
-        {
-          // sort by proximity to lat,lng
-          coordinates: {
-            $near: [lat, lng],
-          },
-        },
         // bring only active users
         { status: true },
       ],
     };
 
     // if user is logged don't bring himself
-    if (req.tokenUser) {
-      userQuery.$and.push({ _id: { $ne: req.tokenUser.id } });
+    if (req.user) {
+      userQuery.$and.push({ _id: { $ne: req.user.id } });
     }
 
     // filter by search
@@ -72,7 +68,7 @@ const getUsers = async (req, res) => {
       });
     }
 
-    // Uncomment when interests are ready
+    // Interests Query
     if (interestsArr.length) {
       userQuery.$and.push({ interests: { $in: interestsArr }});
     }
@@ -83,18 +79,46 @@ const getUsers = async (req, res) => {
       .where('coordinates').within(polygonQuery)
       .limit(limitInt);
 
+      // hide address in response unless admin request
+      if (!req.user
+        || (
+          req.user.role !== roles.ADMIN
+          && req.user.role !== roles.SUPER_ADMIN
+        )
+      ) {
+        users.forEach((user) => {
+          user.address.streetName = "hidden";
+          user.address.streetNumber = "hidden";
+          user.address.floorAppartment = "hidden";
+          user.coordinates = getRandomCoordinates(user.coordinates);
+        })
+      }
+
       return res.status(200).json({ quantity: users.length, users, page: 1, totalPages: 1 });
 
     } else {
       const users = await User.find(userQuery)
       .populate('interests', 'name')
+      .where('coordinates').near([lat, lng])
       .skip(skipIndex)
       .limit(limitInt);
 
-      const queryWithoutNear = { ...userQuery };
-      queryWithoutNear.$and.shift();
+      // hide address in response unless admin request
+      if (!req.user
+        || (
+          req.user.role !== roles.ADMIN
+          && req.user.role !== roles.SUPER_ADMIN
+        )
+      ) {
+        users.forEach((user) => {
+          user.address.streetName = "hidden";
+          user.address.streetNumber = "hidden";
+          user.address.floorAppartment = "hidden";
+          user.coordinates = getRandomCoordinates(user.coordinates);
+        })
+      }
 
-      const totalUsers = await User.countDocuments(queryWithoutNear);
+      const totalUsers = await User.countDocuments(userQuery);
       const totalPages = Math.ceil(totalUsers / limitInt);
       return res.status(200).json({ quantity: totalUsers, users, page: pageInt, totalPages });
     }
