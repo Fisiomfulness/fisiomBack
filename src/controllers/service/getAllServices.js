@@ -27,7 +27,8 @@ const getAllServices = async (req, res) => {
   const services = await Service.find(query)
     .sort({ title: 'asc' })
     .skip(offsetInt)
-    .limit(limitInt);
+    .limit(limitInt)
+    .populate('_professional', 'name');
 
   const totalServices = await Service.countDocuments(query);
   const hasMoreToLoad = totalServices > offsetInt + limitInt;
