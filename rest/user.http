@@ -65,3 +65,16 @@ Content-Type: application/json
 	"email": "admin@gmail.com",
 	"password": "admin"
 }
+
+### edit user
+PUT {{url}}/users/update/66391a8306b295e898dd6107
+Content-Type: application/json
+
+{			
+	"address": {
+		"streetName": "Tucuman",
+		"streetNumber": 920,
+		"city": "Rosario",
+		"country": "Argentina"
+	}
+}
