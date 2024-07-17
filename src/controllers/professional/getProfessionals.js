@@ -1,4 +1,6 @@
+const { getRandomCoordinates } = require('#src/util/helpers');
 const Profesional = require('../../models/Profesional');
+const roles = require('../../util/roles');
 
 const getProfessionals = async (req, res) => {
   try {
@@ -47,8 +49,8 @@ const getProfessionals = async (req, res) => {
     };
 
     // If user is logged don't bring himself
-    if (req.tokenUser) {
-      professionalQuery.$and.push({ _id: { $ne: req.tokenUser.id } });
+    if (req.user) {
+      professionalQuery.$and.push({ _id: { $ne: req.user.id } });
     }
 
     if (city.trim() !== '') {
@@ -82,6 +84,21 @@ const getProfessionals = async (req, res) => {
       .sort({'averageScore.average': -1})
       .limit(limitInt);
 
+      // hide address in response unless admin request
+      if (!req.user
+        || (
+          req.user.role !== roles.ADMIN
+          && req.user.role !== roles.SUPER_ADMIN
+        )
+      ) {
+        professionals.forEach((professional) => {
+          professional.address.streetName = "hidden";
+          professional.address.streetNumber = "hidden";
+          professional.address.floorAppartment = "hidden";
+          professional.coordinates = getRandomCoordinates(professional.coordinates);
+        })
+      }
+
       return res.status(200).json({ quantity: professionals.length, professionals, page: 1, totalPages: 1 });
 
     } else {
@@ -90,6 +107,21 @@ const getProfessionals = async (req, res) => {
       .where('coordinates').near([lat, lng])
       .skip(skipIndex)
       .limit(limitInt);
+
+      // hide address in response unless admin request
+      if (!req.user
+        || (
+          req.user.role !== roles.ADMIN
+          && req.user.role !== roles.SUPER_ADMIN
+        )
+      ) {
+        professionals.forEach((professional) => {
+          professional.address.streetName = "hidden";
+          professional.address.streetNumber = "hidden";
+          professional.address.floorAppartment = "hidden";
+          professional.coordinates = getRandomCoordinates(professional.coordinates);
+        })
+      }
   
       const totalProfessionals =
         await Profesional.countDocuments(professionalQuery);

@@ -35,8 +35,36 @@ const isDateOnRange = (value, minYearsAgo, maxYearsAgo) => {
   return dateISO >= minDate && dateISO <= maxDate;
 };
 
+
+// Function to generate random coordinates within 150 meters of the original location
+function getRandomCoordinates(coordinates) {
+
+  // Function to convert meters to degrees for latitude
+  function metersToLatDegrees(meters) {
+    return meters / 111320;
+  }
+  
+  // Function to convert meters to degrees for longitude based on latitude
+  function metersToLngDegrees(meters, latitude) {
+    return meters / (111320 * Math.cos(latitude * (Math.PI / 180)));
+  }
+  
+  const [lat, lng] = coordinates
+
+  const radiusInMeters = 150;
+
+  const latOffset = (Math.random() * 2 - 1) * metersToLatDegrees(radiusInMeters);
+  const lngOffset = (Math.random() * 2 - 1) * metersToLngDegrees(radiusInMeters, lat);
+
+  const newLat = lat + latOffset;
+  const newLng = lng + lngOffset;
+
+  return [newLat, newLng];
+}
+
 module.exports = {
   validateId,
   countHtmlCharacters,
   isDateOnRange,
+  getRandomCoordinates
 };

@@ -19,6 +19,7 @@ const {
 } = require('#src/middleware/validationMiddleware');
 const { validateFileType } = require('#src/middleware/validateFileType');
 const { errorMiddleware } = require('#src/middleware/errorMiddleware');
+const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
 const userSchema = require('#src/util/validations/userSchema');
 const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
