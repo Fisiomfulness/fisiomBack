@@ -117,7 +117,7 @@ const Profesional = new Schema(
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-  }
+  },
 );
 
 module.exports = model('Profesional', Profesional);
