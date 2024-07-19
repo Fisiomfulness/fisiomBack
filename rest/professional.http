@@ -65,7 +65,7 @@ Content-Type: application/json
 }
 
 ### GET PROFESSIONALS
-GET {{url}}/professionals/?search=&city=&specialtyId=&pos=-32.953808,-60.6401331&page=1
+GET {{url}}/professionals/?search=kine&city=&specialtyId=&pos=-32.953808,-60.6401331&page=1
 
 ### GET PROFESSIONALS
 GET {{url}}/professionals/?bbox=-60.6797218322754,-33.00232932608292,-60.594921112060554,-32.91331501423898

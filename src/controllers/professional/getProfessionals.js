@@ -13,7 +13,7 @@ const getProfessionals = async (req, res) => {
       position = '0,0',
       bbox = '',
     } = req.query;
-
+    
     const pageInt = parseInt(page);
     const limitInt = parseInt(limit);
 
@@ -73,28 +73,13 @@ const getProfessionals = async (req, res) => {
       })
     }
 
-    const specialtiesQuery = { $and: [] };
-    if (search.trim() !== '') {
-      const searchArray = search.split(',');
-      searchArray.forEach((s) => {
-        s = s.trim();
-        specialtiesQuery.$and.push({
-          name: { $regex: new RegExp(s, 'i') },
-        });
-      })
-    }
-
     if (specialtyId !== '') {
       professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
     }
 
     if (polygonQuery) {
       const professionals = await Profesional.find(professionalQuery)
-      .populate({
-        path: 'specialties',
-        match: specialtiesQuery,
-        select: 'name'
-      })
+      .populate('specialties', 'name')
       .where('coordinates').within(polygonQuery)
       .sort({'rating.average': -1})
       .limit(limitInt);
@@ -118,11 +103,7 @@ const getProfessionals = async (req, res) => {
 
     } else {
       const professionals = await Profesional.find(professionalQuery)
-      .populate({
-        path: 'specialties',
-        match: specialtiesQuery,
-        select: 'name'
-      })
+      .populate('specialties', 'name')
       .where('coordinates').near([lat, lng])
       .skip(skipIndex)
       .limit(limitInt);
