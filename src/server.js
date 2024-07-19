@@ -1,7 +1,7 @@
 // @ts-check
 const { createServer } = require('node:http');
-const { SocketApplication } = require('./models/SocketApplication');
-const { ExpressApplication } = require('./models/ExpressApplication');
+const { SocketApplication } = require('./SocketApplication');
+const { ExpressApplication } = require('./ExpressApplication');
 
 /** @typedef {import('express').Express} Express */
 

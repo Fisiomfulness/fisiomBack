@@ -1,5 +1,5 @@
-const { getRandomCoordinates } = require('#src/util/helpers');
 const Profesional = require('../../models/Profesional');
+const { getRandomCoordinates } = require('#src/util/helpers');
 const roles = require('../../util/roles');
 
 const getProfessionals = async (req, res) => {
@@ -56,7 +56,7 @@ const getProfessionals = async (req, res) => {
     if (city.trim() !== '') {
       professionalQuery.$and.push({ 'address.city': city });
     }
-
+    
     if (search.trim() !== '') {
       const searchArray = search.split(',');
       searchArray.forEach((s) => {
@@ -73,15 +73,30 @@ const getProfessionals = async (req, res) => {
       })
     }
 
+    const specialtiesQuery = { $and: [] };
+    if (search.trim() !== '') {
+      const searchArray = search.split(',');
+      searchArray.forEach((s) => {
+        s = s.trim();
+        specialtiesQuery.$and.push({
+          name: { $regex: new RegExp(s, 'i') },
+        });
+      })
+    }
+
     if (specialtyId !== '') {
       professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
     }
 
     if (polygonQuery) {
       const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name')
+      .populate({
+        path: 'specialties',
+        match: specialtiesQuery,
+        select: 'name'
+      })
       .where('coordinates').within(polygonQuery)
-      .sort({'averageScore.average': -1})
+      .sort({'rating.average': -1})
       .limit(limitInt);
 
       // hide address in response unless admin request
@@ -103,7 +118,11 @@ const getProfessionals = async (req, res) => {
 
     } else {
       const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name')
+      .populate({
+        path: 'specialties',
+        match: specialtiesQuery,
+        select: 'name'
+      })
       .where('coordinates').near([lat, lng])
       .skip(skipIndex)
       .limit(limitInt);
