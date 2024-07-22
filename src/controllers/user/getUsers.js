@@ -60,12 +60,13 @@ const getUsers = async (req, res) => {
 
     // filter by search
     if (search.trim() !== '') {
+      const decodedSearch = decodeURIComponent(search);
       userQuery.$and.push({
         $or: [
-          { name: { $regex: new RegExp(search, 'i') } },
-          { 'address.city': { $regex: new RegExp(search, 'i') } },
-          { 'address.state': { $regex: new RegExp(search, 'i') } },
-          { 'address.country': { $regex: new RegExp(search, 'i') } },
+          { name: { $regex: new RegExp(decodedSearch, 'i') } },
+          { 'address.city': { $regex: new RegExp(decodedSearch, 'i') } },
+          { 'address.state': { $regex: new RegExp(decodedSearch, 'i') } },
+          { 'address.country': { $regex: new RegExp(decodedSearch, 'i') } },
         ],
       });
     }
