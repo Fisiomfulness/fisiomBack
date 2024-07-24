@@ -30,7 +30,6 @@ Content-Type: application/json
                 "start": "09:30",
                 "end": "12:30"
             },
-           error.message
         ]
    }
 }
@@ -72,3 +71,15 @@ GET {{url}}/professionals/?bbox=-60.6797218322754,-33.00232932608292,-60.5949211
 
 ### GET INTERESTS
 GET {{url}}/interests
+
+### GET SPECIALTIES
+GET {{url}}/specialty
+
+### PATCH SPECIALTIES
+PATCH {{url}}/specialty
+Content-Type: application/json
+
+{
+    "id": "662a6e91d9b92088750976e7",
+    "keywords": ["esguince"]
+}

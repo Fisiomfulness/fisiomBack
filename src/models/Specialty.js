@@ -66,13 +66,15 @@ class Specialty {
    * @param {{
    *   id: string,
    *   name: string,
+   *   keywords: string[],
    * }} values
    */
-  constructor({ id, name }) {
+  constructor({ id, name, keywords }) {
     /** @readonly @type {string} */
     this.id = id;
     /** @readonly @type {string} */
     this.name = name;
+    this.keywords = keywords;
   }
 }
 
