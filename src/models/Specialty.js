@@ -18,6 +18,10 @@ const specialtySchema = new Schema(
       type: [{ type: Types.ObjectId, ref: 'Profesional' }],
       default: [],
     },
+    keywords: {
+      type: [String],
+      default: [],
+    },
     is_deleted: {
       type: Boolean,
       default: false,
@@ -43,6 +47,8 @@ const specialtySchema = new Schema(
  * @typedef {{
  *   _id: string,
  *   name: string,
+ *   professionals: string[],
+ *   keywords: string[],
  *   is_deleted: boolean,
  *   createdDate?: Date,
  *   updatedDate?: Date
