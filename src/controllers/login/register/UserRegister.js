@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const { hashData } = require('#src/util/hashData');
 const { JWT_SECRET, FRONT_URL } = require('#src/config/envConfig');
 const { sendEmailNodemailer } = require('#src/util/nodemailer');
-const User = require('#src/models/User');
-const Profesional = require('#src/models/Profesional');
+const User = require('#src/models/user/User');
+const Profesional = require('#src/models/profesional/Profesional');
 
 const UserRegister = async (req, res) => {
   try {
@@ -30,7 +30,8 @@ const UserRegister = async (req, res) => {
       userExist = firstNonNullUser?.user || null; // Manejar el caso nulo
     });
 
-    if (userExist) return res.status(400).json({ message: 'Email ya registrado' });
+    if (userExist)
+      return res.status(400).json({ message: 'Email ya registrado' });
 
     const hashedPass = await hashData(newData.password);
     const finalUser = {

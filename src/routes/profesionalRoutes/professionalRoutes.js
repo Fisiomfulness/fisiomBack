@@ -15,13 +15,15 @@ const {
   addExperience,
   updateExperience,
   deleteExperience,
-} = require('../controllers/index');
+} = require('../../controllers/index');
 
 const { upload } = require('#src/config/multerConfig');
 const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
 const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
-const { validationMiddleware } = require('#src/middleware/validationMiddleware');
+const {
+  validationMiddleware,
+} = require('#src/middleware/validationMiddleware');
 const { validateFileType } = require('#src/middleware/validateFileType');
 const {
   experienceSchema,
@@ -31,6 +33,9 @@ const {
 const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
 const permit = require('#src/middleware/rolesMiddleware');
+
+const getAvailability = require('#src/controllers/availability/getAvailability');
+const updateAvailability = require('#src/controllers/availability/updateAvailability');
 
 const router = Router();
 
@@ -56,18 +61,18 @@ router.put(
   addressMiddleware,
   validationMiddleware(professionalSchema, 'update'),
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  updateProfessional
+  updateProfessional,
 );
 router.patch(
   '/status/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  statusProfessional
+  statusProfessional,
 );
 // ! Agregar rol professional si se añade funcionalidad para eliminar propia cuenta.
 router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  deleteProfessional
+  deleteProfessional,
 );
 
 // ? Los profesionales no pueden hacer comentarios a otros profesionales.
@@ -75,30 +80,40 @@ router.post(
   '/rating',
   validationMiddleware(professionalRatingSchema),
   permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
-  createProfessionalRating
+  createProfessionalRating,
 );
 router.delete(
   '/rating/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  deleteProfessionalRating
+  deleteProfessionalRating,
 );
 
 router.post(
   '/:id/experience',
   validationMiddleware(experienceSchema),
   permit(roles.PROFESSIONAL),
-  addExperience
+  addExperience,
 );
 router.put(
   '/:id/experience/:experienceId',
   validationMiddleware(experienceSchema),
   permit(roles.PROFESSIONAL),
-  updateExperience
+  updateExperience,
 );
 router.delete(
   '/:id/experience/:experienceId',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  deleteExperience
+  deleteExperience,
+);
+
+// Obtener disponibilidad
+router.get('/availability/:userId', decodeTokenUser, getAvailability);
+
+// Actualizar disponibilidad
+router.post(
+  '/availability/:userId',
+  permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
+  updateAvailability,
 );
 
 router.use(errorMiddleware);

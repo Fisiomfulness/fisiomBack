@@ -1,5 +1,5 @@
 const { getRandomCoordinates } = require('#src/util/helpers');
-const Profesional = require('../../models/Profesional');
+const Profesional = require('../../models/profesional/Profesional');
 const roles = require('../../util/roles');
 
 const getProfessionals = async (req, res) => {
@@ -43,9 +43,7 @@ const getProfessionals = async (req, res) => {
     }
 
     let professionalQuery = {
-      $and: [
-        { status: true },
-      ],
+      $and: [{ status: true }],
     };
 
     // If user is logged don't bring himself
@@ -70,64 +68,75 @@ const getProfessionals = async (req, res) => {
             { 'address.country': { $regex: new RegExp(s, 'i') } },
           ],
         });
-      })
+      });
     }
 
     if (specialtyId !== '') {
-      professionalQuery.$and.push({ specialties: { $in: [specialtyId] }});
+      professionalQuery.$and.push({ specialties: { $in: [specialtyId] } });
     }
 
     if (polygonQuery) {
       const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name')
-      .where('coordinates').within(polygonQuery)
-      .sort({'averageScore.average': -1})
-      .limit(limitInt);
+        .populate('specialties', 'name')
+        .where('coordinates')
+        .within(polygonQuery)
+        .sort({ 'averageScore.average': -1 })
+        .limit(limitInt);
 
       // hide address in response unless admin request
-      if (!req.user
-        || (
-          req.user.role !== roles.ADMIN
-          && req.user.role !== roles.SUPER_ADMIN
-        )
+      if (
+        !req.user ||
+        (req.user.role !== roles.ADMIN && req.user.role !== roles.SUPER_ADMIN)
       ) {
         professionals.forEach((professional) => {
-          professional.address.streetName = "hidden";
-          professional.address.streetNumber = "hidden";
-          professional.address.floorAppartment = "hidden";
-          professional.coordinates = getRandomCoordinates(professional.coordinates);
-        })
+          professional.address.streetName = 'hidden';
+          professional.address.streetNumber = 'hidden';
+          professional.address.floorAppartment = 'hidden';
+          professional.coordinates = getRandomCoordinates(
+            professional.coordinates,
+          );
+        });
       }
 
-      return res.status(200).json({ quantity: professionals.length, professionals, page: 1, totalPages: 1 });
-
+      return res.status(200).json({
+        quantity: professionals.length,
+        professionals,
+        page: 1,
+        totalPages: 1,
+      });
     } else {
       const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name')
-      .where('coordinates').near([lat, lng])
-      .skip(skipIndex)
-      .limit(limitInt);
+        .populate('specialties', 'name')
+        .where('coordinates')
+        .near([lat, lng])
+        .skip(skipIndex)
+        .limit(limitInt);
 
       // hide address in response unless admin request
-      if (!req.user
-        || (
-          req.user.role !== roles.ADMIN
-          && req.user.role !== roles.SUPER_ADMIN
-        )
+      if (
+        !req.user ||
+        (req.user.role !== roles.ADMIN && req.user.role !== roles.SUPER_ADMIN)
       ) {
         professionals.forEach((professional) => {
-          professional.address.streetName = "hidden";
-          professional.address.streetNumber = "hidden";
-          professional.address.floorAppartment = "hidden";
-          professional.coordinates = getRandomCoordinates(professional.coordinates);
-        })
+          professional.address.streetName = 'hidden';
+          professional.address.streetNumber = 'hidden';
+          professional.address.floorAppartment = 'hidden';
+          professional.coordinates = getRandomCoordinates(
+            professional.coordinates,
+          );
+        });
       }
-  
+
       const totalProfessionals =
         await Profesional.countDocuments(professionalQuery);
       const totalPages = Math.ceil(totalProfessionals / limitInt);
 
-      return res.status(200).json({ quantity: totalProfessionals, professionals, page: pageInt, totalPages });
+      return res.status(200).json({
+        quantity: totalProfessionals,
+        professionals,
+        page: pageInt,
+        totalPages,
+      });
     }
   } catch (error) {
     return res.status(404).json({ message: error.message });

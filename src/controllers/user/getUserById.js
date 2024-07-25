@@ -1,6 +1,6 @@
 const { findUserById } = require('#src/services/userService');
-const Profesional = require('../../models/Profesional');
-const User = require('../../models/User');
+const Profesional = require('../../models/profesional/Profesional');
+const User = require('../../models/user/User');
 
 const getUserById = async (req, res) => {
   const { id } = req.params;

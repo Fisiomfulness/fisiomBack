@@ -1,6 +1,6 @@
-const Blog = require('#src/models/Blog');
-const Comment = require('#src/models/Comment');
-const User = require('#src/models/User');
+const Blog = require('#src/models/blog/Blog');
+const Comment = require('#src/models/blog/Comment');
+const User = require('#src/models/user/User');
 
 const createComment = async (req, res) => {
   const { content, rating, sender_id, blog_id } = req.body;

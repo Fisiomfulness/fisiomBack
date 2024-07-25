@@ -1,7 +1,7 @@
 const moment = require('moment');
-const Appointment = require('../../models/Appointment');
-const Profesional = require('../../models/Profesional');
-const User = require('../../models/User');
+const Appointment = require('../../models/appointment/Appointment');
+const Profesional = require('../../models/profesional/Profesional');
+const User = require('../../models/user/User');
 
 const createAppointment = async (req, res) => {
   try {
@@ -157,7 +157,9 @@ const createAppointment = async (req, res) => {
       .status(201)
       .json({ appointment, message: 'Agendado con exito!' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ error: error.message, message: 'Ups, Algo salio mal!' });
   }
 };
 

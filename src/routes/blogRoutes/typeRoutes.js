@@ -3,8 +3,8 @@ const {
   createType,
   getTypes,
   getTypeById,
-  deleteType
-} = require('../controllers/index');
+  deleteType,
+} = require('../../controllers/index');
 
 const router = Router();
 

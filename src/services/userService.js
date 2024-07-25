@@ -4,10 +4,11 @@ const {
   BadRequestError,
 } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
-const User = require('#src/models/User');
-const Professional = require('#src/models/Profesional');
+const User = require('#src/models/user/User');
+const Professional = require('#src/models/profesional/Profesional');
 
-const isValidUser = (user) => user instanceof User || user instanceof Professional;
+const isValidUser = (user) =>
+  user instanceof User || user instanceof Professional;
 
 const findUserById = async (id) => {
   const [user, professional] = await Promise.all([
@@ -31,5 +32,5 @@ const verifyExistingEmail = async (email) => {
 
 module.exports = {
   findUserById,
-  verifyExistingEmail
+  verifyExistingEmail,
 };

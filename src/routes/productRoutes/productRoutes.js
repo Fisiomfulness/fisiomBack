@@ -6,10 +6,10 @@ const {
   updateProduct,
   statusProduct,
   deleteProduct,
-  removeProduct
-} = require('../controllers/index');
-const { adminAuthMiddleware } = require('../middleware/adminMiddleware');
-const { upload } = require('../config/multerConfig');
+  removeProduct,
+} = require('../../controllers/index');
+const { adminAuthMiddleware } = require('../../middleware/adminMiddleware');
+const { upload } = require('../../config/multerConfig');
 
 const router = Router();
 

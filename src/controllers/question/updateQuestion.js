@@ -1,5 +1,5 @@
 const { BadRequestError, NotFoundError } = require('../../util/errors');
-const Profesional = require('../../models/Profesional');
+const Profesional = require('../../models/profesional/Profesional');
 const Question = require('../../models/Question');
 
 const respondQuestion = async (req, res) => {
@@ -20,7 +20,7 @@ const respondQuestion = async (req, res) => {
   const updatedQuestion = await Question.findOneAndUpdate(
     { _id: id },
     newData,
-    { new: true }
+    { new: true },
   ).populate('answer.professional', 'name image');
   if (!updatedQuestion) throw new NotFoundError('pregunta no encontrada');
 

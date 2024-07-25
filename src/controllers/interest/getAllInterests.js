@@ -1,4 +1,4 @@
-const Interest = require('#src/models/Interest');
+const Interest = require('#src/models/user/Interest');
 
 const getAllInterests = async (req, res) => {
   const { name = '' } = req.query;

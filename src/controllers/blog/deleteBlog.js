@@ -1,6 +1,6 @@
 const { NotFoundError } = require('../../util/errors');
 const { cloudinary } = require('../../config/cloudinaryConfig');
-const Blog = require('../../models/Blog');
+const Blog = require('../../models/blog/Blog');
 
 // * Permanent delete - removing the image from cloudinary
 const deleteBlog = async (req, res) => {

@@ -6,14 +6,15 @@ const {
   UnauthorizedError,
 } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
-const User = require('#src/models/User');
-const Professional = require('#src/models/Profesional');
+const User = require('#src/models/user/User');
+const Professional = require('#src/models/profesional/Profesional');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    if (!email || !password) throw new BadRequestError('Credenciales requeridas');
+    if (!email || !password)
+      throw new BadRequestError('Credenciales requeridas');
 
     const [user, professional] = await Promise.all([
       User.findOne({ email }),
@@ -25,7 +26,7 @@ const login = async (req, res) => {
 
     const passwordMatches = await verifyHashedData(
       password,
-      foundUser.password
+      foundUser.password,
     );
     if (!passwordMatches) throw new UnauthorizedError('Contraseña incorrecta');
 

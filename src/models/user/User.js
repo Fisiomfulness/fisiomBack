@@ -2,7 +2,7 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
-const addressSchema = require('./addressSchema');
+const addressSchema = require('../addressSchema');
 
 const User = new Schema(
   {
@@ -79,7 +79,7 @@ const User = new Schema(
       default: '',
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
+  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
 );
 
 User.virtual('age').get(function () {

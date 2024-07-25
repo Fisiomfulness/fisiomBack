@@ -24,15 +24,11 @@ Content-Type: application/json
     "state": "Santa Fe",
     "country": "Argentina",
    "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg",
-   "availability": {
-        "monday": [
-            { 
-                "start": "09:30",
-                "end": "12:30"
-            },
-           error.message
-        ]
-   }
+   "availability": [
+     {
+        day: "Monday",
+        timeSlots: [{start: "11:00", end: "13:00"}]
+     },]
 }
 
 ### GET USERS

@@ -1,9 +1,12 @@
-const Profesional = require('../../models/Profesional');
+const Profesional = require('../../models/profesional/Profesional');
 
 const getProfessionalDetail = async (req, res) => {
   try {
     const { id } = req.params;
-    const professional = await Profesional.findById(id).populate('specialties', 'name');
+    const professional = await Profesional.findById(id).populate(
+      'specialties',
+      'name',
+    );
 
     if (!professional) throw new Error('professional not found');
 

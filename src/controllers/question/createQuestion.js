@@ -1,5 +1,5 @@
 const { NotFoundError } = require('#src/util/errors');
-const { SpecialtyModel } = require('#src/models/Specialty');
+const { SpecialtyModel } = require('#src/models/profesional/Specialty');
 const Question = require('#src/models/Question');
 
 const createQuestion = async (req, res) => {

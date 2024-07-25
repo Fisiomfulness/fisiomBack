@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const register = require('./register.js');
 const {
   login,
   activateConfirmEmail,
@@ -14,8 +13,5 @@ router.post('/', login);
 router.post('/send_email', emailResetPassword);
 router.post('/reset_password', resetPassword);
 router.get('/confirm_email/:token', activateConfirmEmail);
-
-//register
-router.use('/register', register);
 
 module.exports = router;

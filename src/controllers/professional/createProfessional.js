@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { hashData } = require('../../util/hashData');
-const Profesional = require('../../models/Profesional');
+const Profesional = require('../../models/profesional/Profesional');
 
 const createProfessional = async (req, res) => {
   try {

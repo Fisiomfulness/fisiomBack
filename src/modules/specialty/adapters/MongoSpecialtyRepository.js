@@ -1,5 +1,6 @@
 // @ts-check
-const { SpecialtyModel, Specialty } = require('#src/models/Specialty');
+const { SpecialtyModel, Specialty } =
+  require('#src/models/profesional/Specialty');
 const { MongoCriteriaConverter } = require('./MongoCriteriaConverter');
 
 /**
