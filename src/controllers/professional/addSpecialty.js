@@ -1,5 +1,5 @@
 const Profesional = require('../../models/Profesional');
-const Specialty = require('../../models/Specialty');
+const Specialty = require('../../models/Specialty').SpecialtyModel;
 
 const addSpecialty = async (req, res) => {
     try {

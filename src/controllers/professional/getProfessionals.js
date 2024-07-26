@@ -68,7 +68,7 @@ const getProfessionals = async (req, res) => {
       
       // Get all professionals in query so far and populate spelcialties
       const professionals = await Profesional.find(professionalQuery)
-      .populate('specialties', 'name');
+      .populate('specialties', 'name keywords');
 
       // Set up Fuse for fuzzy search on professionals and specialties
       const fuseOptions = {
@@ -81,6 +81,7 @@ const getProfessionals = async (req, res) => {
           'address.state',
           'address.country',
           'specialties.name',
+          'specialties.keywords',
           // add any more fields
         ],
       };
