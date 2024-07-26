@@ -2,6 +2,7 @@ const { z } = require('zod');
 const { nameRegex, phoneRegExp, numericRegex } = require('../regExp');
 const { isDateOnRange, validateId } = require('../helpers');
 const addressSchema = require('./addressSchema');
+const serviceSchema = require('./serviceSchema');
 
 const acceptedYears = { min: 18, max: 100 };
 const MAX_PICTURE_SIZE = 1024 * 1024 * 3; // ? 3MB
@@ -73,6 +74,7 @@ const professionalSchema = z.object({
       'Tamaño de imagen máxima: 3MB'
     )
     .optional(),
+  services: z.array(serviceSchema),
 });
 
 const professionalRatingSchema = z.object({

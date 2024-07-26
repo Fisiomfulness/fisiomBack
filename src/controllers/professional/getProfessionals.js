@@ -82,6 +82,7 @@ const getProfessionals = async (req, res) => {
           'address.country',
           'specialties.name',
           'specialties.keywords',
+          'services.serviceDescription',
           // add any more fields
         ],
       };

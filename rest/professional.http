@@ -58,9 +58,22 @@ Content-Type: application/json
 ### UPDATE PROFESSIONAL
 PUT {{url}}/professionals/update/663822474296b1639d4cb8ba
 Content-Type: application/json
-
+// ojo cualquier campo especificado se "pisa", si se desea agregar o quitar un elemento
+// hacer un get y copiar el array de la respuesta, hacer los cambios y enviar el nuevo array
 {
-    "license": "M1485"
+    "services": [
+        { "serviceDescription": "Masaje Relajante", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Descontracturante", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Shiatsu", "serviceCost": 50 },
+        { "serviceDescription": "Masaje Holistico", "serviceCost": 50 },
+        { "serviceDescription": "Descarga Muscular", "serviceCost": 40 },
+        { "serviceDescription": "Drenaje linfático", "serviceCost": 40 },
+        { "serviceDescription": "Masaje reflexologia", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Tailandes", "serviceCost": 60 },
+        { "serviceDescription": "Masaje aromaterapia", "serviceCost": 40 },
+        { "serviceDescription": "Masaje con piedras calientes", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Ayurvédico", "serviceCost": 40 }
+    ]
 }
 
 ### GET PROFESSIONALS
