@@ -30,7 +30,6 @@ Content-Type: application/json
                 "start": "09:30",
                 "end": "12:30"
             },
-           error.message
         ]
    }
 }
@@ -59,9 +58,22 @@ Content-Type: application/json
 ### UPDATE PROFESSIONAL
 PUT {{url}}/professionals/update/663822474296b1639d4cb8ba
 Content-Type: application/json
-
+// ojo cualquier campo especificado se "pisa", si se desea agregar o quitar un elemento
+// hacer un get y copiar el array de la respuesta, hacer los cambios y enviar el nuevo array
 {
-    "license": "M1485"
+    "services": [
+        { "serviceDescription": "Masaje Relajante", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Descontracturante", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Shiatsu", "serviceCost": 50 },
+        { "serviceDescription": "Masaje Holistico", "serviceCost": 50 },
+        { "serviceDescription": "Descarga Muscular", "serviceCost": 40 },
+        { "serviceDescription": "Drenaje linfático", "serviceCost": 40 },
+        { "serviceDescription": "Masaje reflexologia", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Tailandes", "serviceCost": 60 },
+        { "serviceDescription": "Masaje aromaterapia", "serviceCost": 40 },
+        { "serviceDescription": "Masaje con piedras calientes", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Ayurvédico", "serviceCost": 40 }
+    ]
 }
 
 ### GET PROFESSIONALS
@@ -72,3 +84,26 @@ GET {{url}}/professionals/?bbox=-60.6797218322754,-33.00232932608292,-60.5949211
 
 ### GET INTERESTS
 GET {{url}}/interests
+
+### CREATE SPECIALTY
+POST {{url}}/specialty
+Content-Type: application/json
+
+{
+    "name": "Fonoaudiología",
+    "keywords": []
+}
+
+### GET SPECIALTIES
+GET {{url}}/specialty
+
+### PATCH SPECIALTIES
+PATCH {{url}}/specialty
+Content-Type: application/json
+// ojo keywords será completamente reemplazado por este array
+// si se desea agregar o quitar hacer un get y copiar el array
+// de la respuesta, hacer los cambios y enviar el nuevo array
+{
+    "id": "662a6e7ed9b92088750976e3",
+    "keywords": []
+}

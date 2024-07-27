@@ -27,6 +27,7 @@
     "express-promise-router": "^4.1.1",
     "express-validator": "^7.1.0",
     "file-type": "^19.0.0",
+    "fuse.js": "^7.0.0",
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",

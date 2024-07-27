@@ -11,9 +11,8 @@ const specialtyRepository = new MongoSpecialtyRepository();
 const router = Router();
 
 router.post('/', async (req, res) => {
-  const { name } = req.body;
-
-  const response = await specialtyRepository.create(name);
+  const specialty = new Specialty(req.body);
+  const response = await specialtyRepository.create(specialty);
 
   res.json(response);
 });
@@ -27,9 +26,7 @@ router.delete('/', async (req, res) => {
 });
 
 router.patch('/', async (req, res) => {
-  const { id, name } = req.body;
-
-  const specialty = new Specialty({ id: id, name: name });
+  const specialty = new Specialty(req.body);
   const response = await specialtyRepository.update(specialty);
 
   res.json(response);
