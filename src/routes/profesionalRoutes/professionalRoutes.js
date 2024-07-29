@@ -40,6 +40,13 @@ const updateAvailability = require('#src/controllers/availability/updateAvailabi
 const router = Router();
 
 router.get('/', decodeTokenUser, getProfessionals);
+
+// Obtener disponibilidad
+router.get('/availability/:userId', getAvailability);
+
+// Actualizar disponibilidad
+router.post('/availability/:userId', updateAvailability);
+
 router.get('/detail/:id', getProfessionalDetail);
 
 router.get('/rating/:professional_id', getProfessionalRating);
@@ -51,6 +58,7 @@ router.post('/create', addressMiddleware, createProfessional);
 router.post('/:profesional_id/specialty/:specialty_id', addSpecialty);
 router.delete('/:profesional_id/specialty/:specialty_id', removeSpecialty);
 
+// Middleware para autorizacion
 router.use(authAll);
 
 // ? No actualiza contraseña [apropósito]
@@ -104,16 +112,6 @@ router.delete(
   '/:id/experience/:experienceId',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   deleteExperience,
-);
-
-// Obtener disponibilidad
-router.get('/availability/:userId', decodeTokenUser, getAvailability);
-
-// Actualizar disponibilidad
-router.post(
-  '/availability/:userId',
-  permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
-  updateAvailability,
 );
 
 router.use(errorMiddleware);

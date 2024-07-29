@@ -1,4 +1,0 @@
-@url = http://localhost:3000
-
-###get availability
-GET {{url}}/professionals/availavility/6633f9151f2ba717f4f8c3b6

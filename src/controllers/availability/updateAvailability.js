@@ -8,20 +8,15 @@ const updateAvailability = async (req, res) => {
       userId,
     });
     if (userAvailability) {
-      const newAvailability = await Availability.findByIdAndUpdate(
-        userId,
-        availability,
-      );
-      res.status(200).json(newAvailability);
+      userAvailability.availability = availability;
     } else {
-      const newAvailability = await Availability.create({
+      userAvailability = new Availability({
         userId,
         availability,
       });
-      res
-        .status(200)
-        .json({ availability: newAvailability, message: 'creado con exixo!' });
     }
+    await userAvailability.save();
+    res.json(userAvailability);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
