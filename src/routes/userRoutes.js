@@ -8,14 +8,17 @@ const {
   deleteUser,
   getUserById,
   verifyCredentials,
+  getSpecificUserData,
 } = require('#src/controllers/user/index');
 
 const { upload } = require('#src/config/multerConfig');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
-const { validationMiddleware } = require('#src/middleware/validationMiddleware');
-const { validateFileType } = require('#src/middleware/validateFileType')
-const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
+const {
+  validationMiddleware,
+} = require('#src/middleware/validationMiddleware');
+const { validateFileType } = require('#src/middleware/validateFileType');
+const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const userSchema = require('#src/util/validations/userSchema');
 const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
@@ -25,6 +28,7 @@ const router = Router();
 
 // ? IMPORTANTE: Algunas rutas trabajan solo con el modelo User y otras adicionalmente con Professional
 router.get('/', decodeTokenUser, getUsers);
+router.post('/', decodeTokenUser, getSpecificUserData);
 router.get('/all', getAllUsers);
 router.get('/detail/:id', getUserById);
 
@@ -41,7 +45,7 @@ router.put(
   addressMiddleware,
   validationMiddleware(userSchema, 'update'),
   permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
-  updateUser
+  updateUser,
 );
 
 router.patch('/status/:id', permit(roles.ADMIN, roles.SUPER_ADMIN), statusUser);
@@ -50,7 +54,7 @@ router.patch('/status/:id', permit(roles.ADMIN, roles.SUPER_ADMIN), statusUser);
 router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
-  deleteUser
+  deleteUser,
 );
 
 router.use(errorMiddleware);

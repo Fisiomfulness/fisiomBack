@@ -35,7 +35,7 @@ const permit = require('#src/middleware/rolesMiddleware');
 const router = Router();
 
 router.get('/', decodeTokenUser, getProfessionals);
-router.get('/detail/:id', getProfessionalDetail);
+router.get('/detail/:id', decodeTokenUser, getProfessionalDetail);
 
 router.get('/rating/:professional_id', getProfessionalRating);
 router.get('/rating/:professional_id/:user_id/hasCommented', checkUserRating);

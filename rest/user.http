@@ -44,6 +44,15 @@ Content-Type: application/json
 ### obtener usuarios
 GET {{url}}/users
 
+### obtener datos especificos de usuarios
+POST {{url}}/users
+Content-Type: application/json
+
+{
+	"name": 1,
+	"email": 1,
+}
+
 ### obtener usuario por id 
 GET {{url}}/users/661df9d14d019890d80057af
 

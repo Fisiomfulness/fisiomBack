@@ -12,7 +12,7 @@ export interface SpecialtyRepository {
    * }
    */
 
-  create(value: string): Promise<Specialty>;
+  create(value: Specialty): Promise<Specialty>;
 
   update(specialty: Specialty): Promise<Specialty>;
 

@@ -12,7 +12,7 @@ const createProfessional = async (req, res) => {
       return res.status(401).json({ message: 'este email ya existe' });
     } else {
       const hashedPass = await hashData(password);
-      
+
       if (!moment(birthDate, 'YYYY-MM-DD', true).isValid()) {
         return res.status(401).json({
           message:
@@ -29,7 +29,7 @@ const createProfessional = async (req, res) => {
           });
         } else {
           restData.password = hashedPass;
-          restData.birthDate = dateOfBirth;
+          restData.birthDate = birthDate;
           restData.email = email;
 
           const profesional = await Profesional.create(restData);
@@ -41,5 +41,4 @@ const createProfessional = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
 module.exports = { createProfessional };

@@ -1,7 +1,7 @@
 const { createUser } = require('./createUser');
 const { deleteUser } = require('./deleteUser');
 const { getAllUsers } = require('./getAllUsers');
-const { getUsers } = require('./getUsers');
+const { getUsers, getSpecificUserData } = require('./getUsers');
 const { getUserById } = require('./getUserById');
 const { statusUser } = require('./statusUser');
 const { updateUser } = require('./updateUser');
@@ -16,4 +16,5 @@ module.exports = {
   statusUser,
   updateUser,
   verifyCredentials,
+  getSpecificUserData,
 };
