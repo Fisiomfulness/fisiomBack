@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
+// reffers to blog type
 const Type = new Schema({
   _id: {
     type: String,
