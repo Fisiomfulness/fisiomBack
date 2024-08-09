@@ -5,7 +5,12 @@ const Professional = require('#src/models/Profesional');
 const LIMIT_SERVICES = 30;
 
 const getAllServices = async (req, res) => {
-  const { offset = 0, limit = LIMIT_SERVICES, page = 1, professionalId } = req.query;
+  const { 
+    offset = 0, 
+    limit = LIMIT_SERVICES, 
+    page = 1, 
+    professionalId 
+  } = req.query;
 
   const offsetInt = parseInt(offset);
   const limitInt = parseInt(limit);
