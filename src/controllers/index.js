@@ -17,6 +17,7 @@ const {
 } = require('./category/index');
 
 const {
+  checkUserComment,
   createComment,
   deleteComment,
   getComment,
@@ -100,6 +101,7 @@ module.exports = {
   deleteCategory,
   getCategoryById,
   getCategorys,
+  checkUserComment,
   createComment,
   deleteComment,
   getComment,
