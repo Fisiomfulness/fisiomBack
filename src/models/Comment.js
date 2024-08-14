@@ -20,10 +20,6 @@ const Comment = new Schema(
       max: [5, 'no more than 5 of rating, got {VALUE}'],
       required: true,
     },
-    status: {
-      type: Boolean,
-      default: true,
-    },
     sender: {
       type: ObjectId,
       ref: 'User',
