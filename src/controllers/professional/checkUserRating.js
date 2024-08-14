@@ -1,6 +1,5 @@
 const ProfessionalRating = require('#src/models/ProfessionalRating');
 
-// * Lo llamamos Account por que cualquier cuenta puede dejar un comentario en el perfil Profesional
 const checkUserRating = async (req, res) => {
   const { professional_id, user_id } = req.params;
 

@@ -1,37 +1,30 @@
+const { BadRequestError, NotFoundError } = require('#src/util/errors');
 const Blog = require('#src/models/Blog');
 const Comment = require('#src/models/Comment');
 
 const LIMIT_COMMENTS = 30;
 
 const getCommentBlog = async (req, res) => {
-  const blog_id = req.params.id;
-  if (!(await Blog.findById(blog_id)))
-    return res.status(404).json({ message: 'blog not found' });
+  const blogId = req.params.blogId;
+  if (!(await Blog.findById(blogId))) throw new NotFoundError('Blog no encontrado');
 
   const { offset = 0, limit = LIMIT_COMMENTS } = req.query;
   const offsetInt = parseInt(offset);
   const limitInt = parseInt(limit);
 
-  if (!Number.isInteger(offsetInt) || !Number.isInteger(limitInt))
-    return res
-      .status(400)
-      .json({ message: 'offset and limit must be integers' });
-
-  if (limitInt > LIMIT_COMMENTS)
-    return res.status(400).json({ message: 'limit exceeded' });
-
-  try {
-    const totalComments = await Comment.countDocuments({ blog: blog_id });
-    const comments = await Comment.find({ blog: blog_id, status: true })
-      .sort({ createdDate: -1 })
-      .skip(offsetInt)
-      .limit(limitInt)
-      .populate('sender', 'name image');
-
-    res.status(200).json({ comments, totalComments });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!Number.isInteger(offsetInt) || !Number.isInteger(limitInt)){
+    throw new BadRequestError('"offset" y "limit" deben ser enteros');
   }
+
+  const queryLimit = limitInt > LIMIT_COMMENTS ? LIMIT_COMMENTS : limitInt;
+  const totalComments = await Comment.countDocuments({ blog: blogId });
+  const comments = await Comment.find({ blog: blogId })
+    .sort({ createdDate: -1 })
+    .skip(offsetInt)
+    .limit(queryLimit)
+    .populate('sender', 'name image');
+
+  res.status(200).json({ comments, totalComments });
 };
 
 module.exports = {
