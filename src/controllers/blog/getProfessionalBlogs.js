@@ -18,14 +18,14 @@ const getProfessionalBlogs = async (req, res, next) => {
   if (!Number.isInteger(pageInt) || !Number.isInteger(limitInt)) {
     throw new BadRequestError('page and limit must be integers');
   }
-  if (limitInt > LIMIT_BLOGS) throw new BadRequestError('limit exceeded');
 
+  const queryLimit = limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
   const query = { status: true, createdBy: professionalId };
-  const skipIndex = (pageInt - 1) * limitInt;
+  const skipIndex = (pageInt - 1) * queryLimit;
   const blogs = await Blog.find(query)
     .sort({ createdDate: -1 })
     .skip(skipIndex)
-    .limit(limitInt)
+    .limit(queryLimit)
     .populate('type', 'name')
 
   const activeCommentsCounts = await Comment.aggregate([
@@ -40,7 +40,7 @@ const getProfessionalBlogs = async (req, res, next) => {
   });
 
   const totalBlogs = await Blog.countDocuments(query);
-  const totalPages = Math.ceil(totalBlogs / limitInt);
+  const totalPages = Math.ceil(totalBlogs / queryLimit);
 
   res.status(200).json({ blogs: blogsWithActiveCommentsCount, page: pageInt, totalPages });
 };

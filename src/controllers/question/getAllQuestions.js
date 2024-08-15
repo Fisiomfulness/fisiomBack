@@ -18,8 +18,8 @@ const getAllQuestions = async (req, res) => {
   if (!Number.isInteger(offsetInt) || !Number.isInteger(limitInt)) {
     throw new BadRequestError('"offset" y "limit" deben ser enteros');
   }
-  if (limitInt > LIMIT_QUESTIONS) throw new BadRequestError('"limit" excedido');
 
+  const queryLimit = limitInt <= 0 ? LIMIT_QUESTIONS : Math.min(limitInt, LIMIT_QUESTIONS);
   let query = { specialty: null };
 
   if (specialtyId) {
@@ -35,10 +35,10 @@ const getAllQuestions = async (req, res) => {
   const questions = await Question.find(query)
     .sort({ createdDate: 'desc' })
     .skip(offsetInt)
-    .limit(limitInt)
+    .limit(queryLimit)
     .populate('answer.professional', 'name image');
   const totalQuestions = await Question.countDocuments(query);
-  const hasMoreToLoad = totalQuestions > offsetInt + limitInt;
+  const hasMoreToLoad = totalQuestions > offsetInt + queryLimit;
 
   res.status(200).json({ questions, totalQuestions, hasMoreToLoad });
 };

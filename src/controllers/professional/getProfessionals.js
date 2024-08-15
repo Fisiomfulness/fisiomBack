@@ -4,11 +4,13 @@ const { getRandomCoordinates } = require('#src/util/helpers');
 const roles = require('../../util/roles');
 const Fuse = require('fuse.js');
 
+const LIMIT_PROFESSIONALS = 6;
+
 const getProfessionals = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 6,
+      limit = LIMIT_PROFESSIONALS,
       search = '',
       specialtyId = '',
       city = '',
@@ -25,8 +27,10 @@ const getProfessionals = async (req, res) => {
         .status(400)
         .json({ message: 'page and limit must be integers' });
     }
-    const skipIndex = (pageInt - 1) * limitInt;
-    
+
+    const queryLimit = limitInt <= 0 ? LIMIT_PROFESSIONALS : Math.min(limitInt, LIMIT_PROFESSIONALS);
+    const skipIndex = (pageInt - 1) * queryLimit;
+
     // Validate user position
     const coords = position.split(',');
     const lat = parseFloat(coords[0]);
@@ -115,7 +119,7 @@ const getProfessionals = async (req, res) => {
         .populate('specialties', 'name')
         .where('coordinates').within(polygonQuery)
         .sort({'rating.average': -1})
-        .limit(limitInt);
+        .limit(queryLimit);
 
       // Hide address in response unless admin request
       if (!req.user
@@ -140,7 +144,7 @@ const getProfessionals = async (req, res) => {
         .populate('specialties', 'name')
         .where('coordinates').near([lat, lng])
         .skip(skipIndex)
-        .limit(limitInt);
+        .limit(queryLimit);
 
       // Hide address in response unless admin request
       if (!req.user
@@ -159,7 +163,7 @@ const getProfessionals = async (req, res) => {
   
       const totalProfessionals =
         await Profesional.countDocuments(professionalQuery);
-      const totalPages = Math.ceil(totalProfessionals / limitInt);
+      const totalPages = Math.ceil(totalProfessionals / queryLimit);
 
       return res.status(200).json({ quantity: totalProfessionals, professionals, page: pageInt, totalPages });
     }

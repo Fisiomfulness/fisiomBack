@@ -1,12 +1,12 @@
 const Product = require('../../models/Product');
 
-
+const LIMIT_PRODUCTS = 10;
 
 const getAllProduct = async (req, res) => {
   try {
     const { 
       page = 1,
-      limit = 10,
+      limit = LIMIT_PRODUCTS,
       search = '',
       categoryId = ''
     } = req.query;
@@ -18,13 +18,13 @@ const getAllProduct = async (req, res) => {
       return res.status(400).json({ message: 'page and limit must be integers' });
     }
 
-    const skipIndex = (pageInt - 1) * limitInt;
+    const queryLimit = limitInt <= 0 ? LIMIT_PRODUCTS : Math.min(limitInt, LIMIT_PRODUCTS);
+    const skipIndex = (pageInt - 1) * queryLimit;
     const query = { status: true };
 
     if (search.trim() !== '') {
       query.name = { $regex: new RegExp(search, 'i') }
     };
-
     
     if (categoryId.trim() !== '') {
       query.category = categoryId
@@ -32,14 +32,14 @@ const getAllProduct = async (req, res) => {
 
     const products = await Product.find(query)
     .skip(skipIndex)
-    .limit(limitInt)
+    .limit(queryLimit)
     .populate({
       path: 'category',
       select: 'name'
     });
     
     const totalProducts = await Product.countDocuments(query);
-    const totalPages = Math.ceil(totalProducts / limitInt);
+    const totalPages = Math.ceil(totalProducts / queryLimit);
     return res.status(200).json({ products, page: pageInt, totalPages });
   } catch (error) {
     return res.status(404).json({ message: error.message });
