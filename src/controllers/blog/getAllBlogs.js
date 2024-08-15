@@ -22,9 +22,9 @@ const getAllBlogs = async (req, res) => {
   if (!Number.isInteger(pageInt) || !Number.isInteger(limitInt)) {
     throw new BadRequestError('page and limit must be integers');
   }
-  if (limitInt > LIMIT_BLOGS) throw new BadRequestError('limit exceeded');
 
-  const skipIndex = (pageInt - 1) * limitInt;
+  const queryLimit = limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
+  const skipIndex = (pageInt - 1) * queryLimit;
   let query = {};
   let sortOptions = {};
 
@@ -45,12 +45,12 @@ const getAllBlogs = async (req, res) => {
   const blogs = await Blog.find(query)
     .sort({ ...sortOptions, _id: 1 })
     .skip(skipIndex)
-    .limit(limitInt)
+    .limit(queryLimit)
     .populate('createdBy', 'name image')
     .populate('type', 'name');
 
   const totalBlogs = await Blog.countDocuments(query);
-  const totalPages = Math.ceil(totalBlogs / limitInt);
+  const totalPages = Math.ceil(totalBlogs / queryLimit);
   
   res.status(200).json({ blogs, page: pageInt, totalPages });
 };

@@ -16,7 +16,7 @@ const getCommentBlog = async (req, res) => {
     throw new BadRequestError('"offset" y "limit" deben ser enteros');
   }
 
-  const queryLimit = limitInt > LIMIT_COMMENTS ? LIMIT_COMMENTS : limitInt;
+  const queryLimit = limitInt <= 0 ? LIMIT_COMMENTS : Math.min(limitInt, LIMIT_COMMENTS);
   const totalComments = await Comment.countDocuments({ blog: blogId });
   const comments = await Comment.find({ blog: blogId })
     .sort({ createdDate: -1 })

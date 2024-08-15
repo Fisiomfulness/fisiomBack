@@ -14,9 +14,9 @@ const getAllServices = async (req, res) => {
   if (!Number.isInteger(offsetInt) || !Number.isInteger(limitInt) || !Number.isInteger(pageInt)) {
     throw new BadRequestError('"offset" | "limit" | "page" deben ser enteros');
   }
-  if (limitInt > LIMIT_SERVICES) throw new BadRequestError('"limit" excedido');
 
-  let query = {};
+  const queryLimit = limitInt <= 0 ? LIMIT_SERVICES : Math.min(limitInt, LIMIT_SERVICES);
+  let query = {};                                               
 
   if (professionalId) {
     if (!(await Professional.findById(professionalId))) {
@@ -28,12 +28,12 @@ const getAllServices = async (req, res) => {
   const services = await Service.find(query)
     .sort({ title: 'asc' })
     .skip(offsetInt)
-    .limit(limitInt)
+    .limit(queryLimit)
     .populate('_professional', 'name');
 
   const totalServices = await Service.countDocuments(query);
-  const totalPages = Math.ceil(totalServices / limitInt);
-  const hasMoreToLoad = totalServices > offsetInt + limitInt;
+  const totalPages = Math.ceil(totalServices / queryLimit);
+  const hasMoreToLoad = totalServices > offsetInt + queryLimit;
 
   res.status(200).json({ services, totalServices, page: pageInt, totalPages, hasMoreToLoad });
 };
