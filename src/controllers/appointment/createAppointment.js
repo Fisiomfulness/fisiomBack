@@ -2,6 +2,8 @@ const moment = require('moment');
 const Appointment = require('../../models/appointment/Appointment');
 const Profesional = require('../../models/profesional/Profesional');
 const User = require('../../models/user/User');
+const Availability = require('#src/models/profesional/availabilitySchema');
+moment.locale('es'); // Establecemos el locale a español
 
 const createAppointment = async (req, res) => {
   try {
@@ -91,54 +93,58 @@ const createAppointment = async (req, res) => {
     }
 
     // Validate that the professional is available during the time of the appointment
-    const daysOfWeekMap = {
-      0: 'sunday',
-      1: 'monday',
-      2: 'tuesday',
-      3: 'wednesday',
-      4: 'thursday',
-      5: 'friday',
-      6: 'saturday',
-    };
-    // Get day of week key
-    const startDateDay = daysOfWeekMap[moment(start).day()];
-    // Match key to day of week
-    const workingHours = professional.availability[startDateDay];
+    const dayOfWeek = moment(start).format('dddd').toLowerCase(); // Obtener el día de la semana
+    console.log(dayOfWeek);
 
-    let insideWorkingHours = true;
-    // Check through working hours timeLapses for that day of the week
-    if (workingHours.length > 0) {
-      for (let i = 0; i < workingHours.length; i++) {
-        if (
-          moment(start.split('T')[1], 'HH:mm').isBetween(
-            moment(workingHours[i].start, 'HH:mm'),
-            moment(workingHours[i].end, 'HH:mm'),
-            null,
-            [],
-          ) &&
-          moment(end.split('T')[1], 'HH:mm').isBetween(
-            moment(workingHours[i].start, 'HH:mm'),
-            moment(workingHours[i].end, 'HH:mm'),
-            null,
-            [],
-          )
-        ) {
-          insideWorkingHours = true;
-          break;
-        } else {
-          insideWorkingHours = false;
-          break;
-        }
+    // Buscar la disponibilidad del profesional para el día específico
+    const professionalAvailability = await Availability.find({
+      userId: _professional,
+    });
+
+    console.log('profesionalAVA', professionalAvailability[0].availability);
+
+    const availabilityForDay = professionalAvailability[0].availability.find(
+      (availability) => availability.day.toLowerCase() === dayOfWeek,
+    );
+
+    console.log('day', availabilityForDay);
+
+    /* CHECK IF WORK */
+
+    if (availabilityForDay.day) {
+      // Validar si la cita está dentro de algún intervalo de tiempo disponible
+      const isWithinWorkingHours = availabilityForDay.timeSlots.some(
+        (timeSlot) => {
+          return (
+            moment(start)
+              .format('HH:mm')
+              .isBetween(
+                moment(timeSlot.start).format('HH:mm'),
+                moment(timeSlot.end).format('HH:mm'),
+                null,
+                '[]',
+              ) &&
+            moment(end)
+              .format('HH:mm')
+              .isBetween(
+                moment(timeSlot.start).format('HH:mm'),
+                moment(timeSlot.end).format('HH:mm'),
+                null,
+                '[]',
+              )
+          );
+        },
+      );
+
+      if (!isWithinWorkingHours) {
+        return res.status(401).json({
+          message:
+            'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
+        });
       }
     }
 
-    if (!insideWorkingHours) {
-      res.status(401).json({
-        message:
-          'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
-      });
-      return;
-    }
+    /* CHECK IF WORK */
 
     const patientName = patient.name;
 

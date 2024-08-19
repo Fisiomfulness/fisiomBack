@@ -16,9 +16,9 @@ const updateAvailability = async (req, res) => {
       });
     }
     await userAvailability.save();
-    res.json(userAvailability);
+    res.json({ message: 'Disponibilidad Actualizada', userAvailability });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json(err);
   }
 };
 
