@@ -17,6 +17,7 @@ const {
 } = require('./category/index');
 
 const {
+  checkUserComment,
   createComment,
   deleteComment,
   getComment,
@@ -80,6 +81,13 @@ const {
   deleteAppointment,
 } = require('./appointment/index');
 
+const {
+  createService,
+  getAllServices,
+  updateService,
+  deleteService,
+} = require('./service/index');
+
 module.exports = {
   createBlog,
   deleteBlog,
@@ -93,6 +101,7 @@ module.exports = {
   deleteCategory,
   getCategoryById,
   getCategorys,
+  checkUserComment,
   createComment,
   deleteComment,
   getComment,
@@ -133,6 +142,10 @@ module.exports = {
   sendEmail,
   createAppointment,
   getAppointments,
+  createService,
+  getAllServices,
+  updateService,
+  deleteService,
   updateAppointment,
   deleteAppointment,
 };

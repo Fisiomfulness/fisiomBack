@@ -2,11 +2,13 @@ const { getRandomCoordinates } = require('#src/util/helpers');
 const User = require('../../models/user/User');
 const roles = require('../../util/roles');
 
+const LIMIT_USERS = 10;
+
 const getUsers = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 10,
+      limit = LIMIT_USERS,
       search = '',
       interests = '',
       position = '0,0',
@@ -21,7 +23,9 @@ const getUsers = async (req, res) => {
         .status(400)
         .json({ message: 'page and limit must be integers' });
     }
-    const skipIndex = (pageInt - 1) * limitInt;
+
+    const queryLimit = limitInt <= 0 ? LIMIT_USERS : Math.min(limitInt, LIMIT_USERS);
+    const skipIndex = (pageInt - 1) * queryLimit;
 
     let interestsArr = [];
     if (interests !== '') {
@@ -60,12 +64,13 @@ const getUsers = async (req, res) => {
 
     // filter by search
     if (search.trim() !== '') {
+      const decodedSearch = decodeURIComponent(search);
       userQuery.$and.push({
         $or: [
-          { name: { $regex: new RegExp(search, 'i') } },
-          { 'address.city': { $regex: new RegExp(search, 'i') } },
-          { 'address.state': { $regex: new RegExp(search, 'i') } },
-          { 'address.country': { $regex: new RegExp(search, 'i') } },
+          { name: { $regex: new RegExp(decodedSearch, 'i') } },
+          { 'address.city': { $regex: new RegExp(decodedSearch, 'i') } },
+          { 'address.state': { $regex: new RegExp(decodedSearch, 'i') } },
+          { 'address.country': { $regex: new RegExp(decodedSearch, 'i') } },
         ],
       });
     }
@@ -80,7 +85,7 @@ const getUsers = async (req, res) => {
         .populate('interests', 'name')
         .where('coordinates')
         .within(polygonQuery)
-        .limit(limitInt);
+        .limit(queryLimit);
 
       // hide address in response unless admin request
       if (
@@ -104,7 +109,7 @@ const getUsers = async (req, res) => {
         .where('coordinates')
         .near([lat, lng])
         .skip(skipIndex)
-        .limit(limitInt);
+        .limit(queryLimit);
 
       // hide address in response unless admin request
       if (
@@ -120,7 +125,7 @@ const getUsers = async (req, res) => {
       }
 
       const totalUsers = await User.countDocuments(userQuery);
-      const totalPages = Math.ceil(totalUsers / limitInt);
+      const totalPages = Math.ceil(totalUsers / queryLimit);
       return res
         .status(200)
         .json({ quantity: totalUsers, users, page: pageInt, totalPages });

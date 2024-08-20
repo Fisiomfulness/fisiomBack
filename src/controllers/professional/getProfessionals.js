@@ -1,12 +1,16 @@
+const Profesional = require('../../models/Profesional');
+const Specialty = require('../../models/Specialty').SpecialtyModel;
 const { getRandomCoordinates } = require('#src/util/helpers');
-const Profesional = require('../../models/profesional/Profesional');
 const roles = require('../../util/roles');
+const Fuse = require('fuse.js');
+
+const LIMIT_PROFESSIONALS = 6;
 
 const getProfessionals = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 6,
+      limit = LIMIT_PROFESSIONALS,
       search = '',
       specialtyId = '',
       city = '',
@@ -17,13 +21,20 @@ const getProfessionals = async (req, res) => {
     const pageInt = parseInt(page);
     const limitInt = parseInt(limit);
 
+    // Validate page and limit
     if (!Number.isInteger(pageInt) || !Number.isInteger(limitInt)) {
       return res
         .status(400)
         .json({ message: 'page and limit must be integers' });
     }
-    const skipIndex = (pageInt - 1) * limitInt;
 
+    const queryLimit =
+      limitInt <= 0
+        ? LIMIT_PROFESSIONALS
+        : Math.min(limitInt, LIMIT_PROFESSIONALS);
+    const skipIndex = (pageInt - 1) * queryLimit;
+
+    // Validate user position
     const coords = position.split(',');
     const lat = parseFloat(coords[0]);
     const lng = parseFloat(coords[1]);
@@ -33,15 +44,7 @@ const getProfessionals = async (req, res) => {
         .json({ message: 'lat and lng must be valid coordinates' });
     }
 
-    let polygonQuery;
-    if (bbox !== '') {
-      const bboxArray = bbox.split(',').map(parseFloat);
-      const southwest = [bboxArray[1], bboxArray[0]];
-      const northeast = [bboxArray[3], bboxArray[2]];
-      const box = [southwest, northeast];
-      polygonQuery = { box };
-    }
-
+    // Start professional query, don't bring deleted professionals
     let professionalQuery = {
       $and: [{ status: true }],
     };
@@ -51,39 +54,83 @@ const getProfessionals = async (req, res) => {
       professionalQuery.$and.push({ _id: { $ne: req.user.id } });
     }
 
+    // If city match city
     if (city.trim() !== '') {
       professionalQuery.$and.push({ 'address.city': city });
     }
 
-    if (search.trim() !== '') {
-      const searchArray = search.split(',');
-      searchArray.forEach((s) => {
-        s = s.trim();
-        professionalQuery.$and.push({
-          $or: [
-            { name: { $regex: new RegExp(s, 'i') } },
-            { 'address.streetName': { $regex: new RegExp(s, 'i') } },
-            { 'address.city': { $regex: new RegExp(s, 'i') } },
-            { 'address.state': { $regex: new RegExp(s, 'i') } },
-            { 'address.country': { $regex: new RegExp(s, 'i') } },
-          ],
-        });
-      });
-    }
-
+    // If specialtyId
     if (specialtyId !== '') {
       professionalQuery.$and.push({ specialties: { $in: [specialtyId] } });
     }
 
+    // If search query
+    if (search.trim() !== '') {
+      const searchArray = decodeURIComponent(search)
+        .split(',')
+        .map((s) => s.trim())
+        .filter((s) => s);
+
+      // Get all professionals in query so far and populate spelcialties
+      const professionals = await Profesional.find(professionalQuery).populate(
+        'specialties',
+        'name keywords',
+      );
+
+      // Set up Fuse for fuzzy search on professionals and specialties
+      const fuseOptions = {
+        includeScore: true,
+        threshold: 0.2,
+        keys: [
+          'name',
+          'address.streetName',
+          'address.city',
+          'address.state',
+          'address.country',
+          'specialties.name',
+          'specialties.keywords',
+          'services.serviceDescription',
+          // add any more fields
+        ],
+      };
+      const fuseProfessionals = new Fuse(professionals, fuseOptions);
+
+      // Create an array to hold fuse result IDs for each search term
+      const fuseResultIDs = searchArray.map((term) =>
+        fuseProfessionals
+          .search(term)
+          .map((result) => result?.item._id.toString()),
+      );
+
+      // Filter unique professional IDs present in every fuse result
+      const matchedProfessionalIds = fuseResultIDs[0].filter((id) =>
+        fuseResultIDs.every((ids) => ids.includes(id)),
+      );
+
+      // Add matched professional IDs to the query
+      professionalQuery.$and.push({ _id: { $in: matchedProfessionalIds } });
+    }
+
+    // Prepare polygonQuery if bbox
+    let polygonQuery;
+    if (bbox !== '') {
+      const bboxArray = bbox.split(',').map(parseFloat);
+      const southwest = [bboxArray[1], bboxArray[0]];
+      const northeast = [bboxArray[3], bboxArray[2]];
+      const box = [southwest, northeast];
+      polygonQuery = { box };
+    }
+
     if (polygonQuery) {
+      // Get professionals in polygon
       const professionals = await Profesional.find(professionalQuery)
         .populate('specialties', 'name')
         .where('coordinates')
         .within(polygonQuery)
-        .sort({ 'averageScore.average': -1 })
-        .limit(limitInt);
+        .sort({ 'rating.average': -1 })
+        .limit(queryLimit);
 
-      // hide address in response unless admin request
+      // Hide address in response unless admin request
       if (
         !req.user ||
         (req.user.role !== roles.ADMIN && req.user.role !== roles.SUPER_ADMIN)
@@ -105,14 +152,15 @@ const getProfessionals = async (req, res) => {
         totalPages: 1,
       });
     } else {
+      // Get professionals sorted by proximity
       const professionals = await Profesional.find(professionalQuery)
         .populate('specialties', 'name')
         .where('coordinates')
         .near([lat, lng])
         .skip(skipIndex)
-        .limit(limitInt);
+        .limit(queryLimit);
 
-      // hide address in response unless admin request
+      // Hide address in response unless admin request
       if (
         !req.user ||
         (req.user.role !== roles.ADMIN && req.user.role !== roles.SUPER_ADMIN)
@@ -129,7 +177,7 @@ const getProfessionals = async (req, res) => {
 
       const totalProfessionals =
         await Profesional.countDocuments(professionalQuery);
-      const totalPages = Math.ceil(totalProfessionals / limitInt);
+      const totalPages = Math.ceil(totalProfessionals / queryLimit);
 
       return res.status(200).json({
         quantity: totalProfessionals,

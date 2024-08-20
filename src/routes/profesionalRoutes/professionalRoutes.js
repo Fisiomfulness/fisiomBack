@@ -47,7 +47,7 @@ router.get('/availability/:userId', getAvailability);
 // Actualizar disponibilidad
 router.post('/availability/:userId', updateAvailability);
 
-router.get('/detail/:id', getProfessionalDetail);
+router.get('/detail/:id', decodeTokenUser, getProfessionalDetail);
 
 router.get('/rating/:professional_id', getProfessionalRating);
 router.get('/rating/:professional_id/:user_id/hasCommented', checkUserRating);

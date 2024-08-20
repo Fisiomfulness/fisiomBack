@@ -4,6 +4,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const addressSchema = require('../addressSchema');
 const moment = require('moment');
 const experienceSchema = require('./experienceSchema');
+const serviceSchema = require('./serviceSchema');
 
 const Profesional = new Schema(
   {
@@ -113,6 +114,10 @@ const Profesional = new Schema(
       ],
       default: [],
     },
+    services: {
+      type: [serviceSchema],
+      default: [],
+    }
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },

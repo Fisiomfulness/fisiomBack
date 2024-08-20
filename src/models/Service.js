@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
 
-const Comment = new Schema(
+const Service = new Schema(
   {
     _id: {
       type: String,
@@ -10,28 +10,30 @@ const Comment = new Schema(
         return new ObjectId().toString();
       },
     },
-    content: {
+    title: {
       type: String,
       required: true,
     },
-    rating: {
+    description: {
+      type: String,
+      required: true,
+    },
+    price: {
       type: Number,
-      min: [1, 'must be at least 1, got {VALUE}'],
-      max: [5, 'no more than 5 of rating, got {VALUE}'],
       required: true,
     },
-    sender: {
-      type: ObjectId,
-      ref: 'User',
-      required: true,
+    duration: {
+      // * (Minutos) No utilizado en el front pero en un futuro puede llegar a ser util
+      type: Number,
+      default: 60,
     },
-    blog: {
+    _professional: {
       type: ObjectId,
-      ref: 'Blog',
+      ref: 'Profesional',
       required: true,
     },
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
 );
 
-module.exports = model('Comment', Comment);
+module.exports = model('Service', Service);

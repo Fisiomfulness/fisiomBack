@@ -14,15 +14,16 @@ class MongoSpecialtyRepository {
   collection = SpecialtyModel;
 
   /**
-   * @param {string} value
+   * @param {Specialty} value
    * @returns {Promise<Specialty>}
    */
   async create(value) {
-    const response = await this.collection.create({ name: value });
+    const response = await this.collection.create(value);
 
     return new Specialty({
       id: response._id,
       name: response.name,
+      keywords: response.keywords
     });
   }
 
@@ -42,6 +43,7 @@ class MongoSpecialtyRepository {
     return new Specialty({
       id: response._id,
       name: response.name,
+      keywords: response.keywords
     });
   }
 
@@ -50,9 +52,8 @@ class MongoSpecialtyRepository {
    * @returns {Promise<Specialty>}
    */
   async update(specialty) {
-    const response = await this.collection.findByIdAndUpdate(specialty.id, {
-      name: specialty.name,
-    });
+    const { id, ...specialtyProps } = specialty;
+    const response = await this.collection.findByIdAndUpdate(id, specialtyProps, { new: true });
 
     if (!response) {
       throw new Error('Specialty not found');
@@ -61,6 +62,7 @@ class MongoSpecialtyRepository {
     return new Specialty({
       id: response._id,
       name: response.name,
+      keywords: response.keywords
     });
   }
 
@@ -88,6 +90,7 @@ class MongoSpecialtyRepository {
     const specialtyResults = results.map((result) => ({
       id: result._id,
       name: result.name,
+      keywords: result.keywords,
       createdDate: result.createdDate,
       updatedDate: result.updatedDate,
     }));

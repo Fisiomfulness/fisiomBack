@@ -14,22 +14,19 @@ const getProfessionalRating = async (req, res) => {
     throw new BadRequestError('offset and limit must be integers');
   }
 
-  if (limitInt > LIMIT_RATINGS) {
-    throw new BadRequestError('limit exceeded');
-  }
-
+  const queryLimit = limitInt <= 0 ? LIMIT_RATINGS : Math.min(limitInt, LIMIT_RATINGS);
   const comments = await ProfessionalRating.find({
     _professional: professional_id,
   })
     .sort({ createdDate: -1 })
     .skip(offsetInt)
-    .limit(limitInt)
+    .limit(queryLimit)
     .populate('_user');
 
   const totalComments = await ProfessionalRating.countDocuments({
     _professional: professional_id,
   });
-  const hasMoreToLoad = totalComments > offsetInt + limitInt;
+  const hasMoreToLoad = totalComments > offsetInt + queryLimit;
 
   res.status(200).json({ comments, totalComments, hasMoreToLoad });
 };
