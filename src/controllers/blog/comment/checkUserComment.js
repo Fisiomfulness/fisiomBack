@@ -1,4 +1,4 @@
-const Comment = require('#src/models/Comment');
+const Comment = require('#src/models/blog/Blog');
 
 const checkUserComment = async (req, res) => {
   const { blogId, userId } = req.params;
@@ -8,7 +8,9 @@ const checkUserComment = async (req, res) => {
     blog: blogId,
   });
 
-  res.status(200).json({ result: existingComment, hasCommented: !!existingComment });
+  res
+    .status(200)
+    .json({ result: existingComment, hasCommented: !!existingComment });
 };
 
 module.exports = { checkUserComment };

@@ -1,6 +1,6 @@
 const { BadRequestError } = require('#src/util/errors');
 const { updateBlogRating } = require('#src/services/blogService');
-const Comment = require('#src/models/Comment');
+const Comment = require('#src/models/blog/Comment');
 
 const createComment = async (req, res) => {
   const { content, rating, sender_id, blog_id } = req.validatedBody;

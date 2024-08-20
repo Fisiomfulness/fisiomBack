@@ -1,6 +1,6 @@
 const { BadRequestError, NotFoundError } = require('#src/util/errors');
-const Blog = require('#src/models/Blog');
-const Comment = require('#src/models/Comment');
+const Blog = require('#src/models/blog/Blog');
+const Comment = require('#src/models/blog/Comment');
 
 const LIMIT_COMMENTS = 30;
 

@@ -1,4 +1,4 @@
-const Product = require('../../models/Product');
+const Product = require('#src/models/product/Product');
 
 const LIMIT_PRODUCTS = 10;
 

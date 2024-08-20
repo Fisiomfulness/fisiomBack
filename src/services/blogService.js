@@ -1,6 +1,6 @@
 const { NotFoundError } = require('#src/util/errors');
-const Blog = require('#src/models/Blog');
-const Comment = require('#src/models/Comment');
+const Blog = require('#src/models/blog/Blog');
+const Comment = require('#src/models/blog/Comment');
 
 const updateBlogRating = async (blogId) => {
   const blog = await Blog.findById(blogId);

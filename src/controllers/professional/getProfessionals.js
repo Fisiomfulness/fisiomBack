@@ -1,5 +1,5 @@
-const Profesional = require('../../models/Profesional');
-const Specialty = require('../../models/Specialty').SpecialtyModel;
+const Profesional = require('#src/models/profesional/Profesional');
+const Specialty = require('#src/models/profesional/Specialty');
 const { getRandomCoordinates } = require('#src/util/helpers');
 const roles = require('../../util/roles');
 const Fuse = require('fuse.js');
