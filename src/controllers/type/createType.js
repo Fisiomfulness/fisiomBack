@@ -1,4 +1,4 @@
-const Type = require('../../models/Type');
+const Type = require('../../models/blog/Type');
 
 const createType = async (req, res) => {
   const { name } = req.body;
@@ -9,9 +9,8 @@ const createType = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  createType
-}
+  createType,
+};

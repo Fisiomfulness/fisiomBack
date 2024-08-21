@@ -1,4 +1,4 @@
-import { Specialty } from '#src/models/Specialty';
+import { Specialty } from '#src/models/profesional/Specialty';
 import { Criteria } from '#src/util/criteria/criteria';
 
 export interface SpecialtyRepository {

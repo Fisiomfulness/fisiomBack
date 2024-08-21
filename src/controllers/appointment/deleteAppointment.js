@@ -1,4 +1,4 @@
-const Appointment = require('#src/models/Appointment');
+const Appointment = require('#src/models/appointment/Appointment');
 
 const deleteAppointment = async (req, res) => {
   const { _id } = req.params;

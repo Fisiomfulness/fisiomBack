@@ -1,5 +1,5 @@
 const { getRandomCoordinates } = require('#src/util/helpers');
-const User = require('../../models/User');
+const User = require('../../models/user/User');
 const roles = require('../../util/roles');
 
 const LIMIT_USERS = 10;

@@ -1,5 +1,6 @@
 const { NotFoundError, BadRequestError } = require('#src/util/errors');
-const ProfessionalRating = require('#src/models/ProfessionalRating');
+const ProfessionalRating =
+  require('#src/models/profesional/ProfessionalRating');
 
 const LIMIT_RATINGS = 30;
 

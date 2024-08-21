@@ -3,8 +3,11 @@ const {
   cloudinary,
   blogsUploadOptions,
 } = require('#src/config/cloudinaryConfig');
-const { BadRequestError, UnsupportedMediaTypeError } = require('#src/util/errors');
-const Blog = require('../../models/Blog');
+const {
+  BadRequestError,
+  UnsupportedMediaTypeError,
+} = require('#src/util/errors');
+const Blog = require('../../models/blog/Blog');
 
 const createBlog = async (req, res) => {
   const { professional_id, type_id } = req.validatedBody;
@@ -18,7 +21,7 @@ const createBlog = async (req, res) => {
   // ? Sube a cloudinary y retorna el url de la imagen, que luego es asignado al blog
   const { public_id, url } = await cloudinary.uploader.upload(
     file.path,
-    blogsUploadOptions
+    blogsUploadOptions,
   );
   await fs.unlink(file.path);
 

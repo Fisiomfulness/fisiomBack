@@ -1,5 +1,5 @@
 const { BadRequestError } = require('../../util/errors');
-const { SpecialtyModel } = require('../../models/Specialty');
+const { SpecialtyModel } = require('../../models/profesional/Specialty');
 const Question = require('../../models/Question');
 
 const LIMIT_QUESTIONS = 30;

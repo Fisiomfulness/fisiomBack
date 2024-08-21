@@ -1,7 +1,7 @@
 // @ts-check
 const Router = require('express-promise-router').default;
-const User = require('#src/models/User');
-const UserSpecialty = require('#src/models/UserSpecialty');
+const User = require('#src/models/user/User');
+const UserSpecialty = require('#src/models/user/UserSpecialty');
 const { model } = require('mongoose');
 
 const collectionName = UserSpecialty.modelName;

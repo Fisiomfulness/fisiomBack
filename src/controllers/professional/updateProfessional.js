@@ -6,7 +6,7 @@ const {
   uploadImage,
   deleteLocalFile,
 } = require('#src/services/cloudinaryService');
-const Professional = require('#src/models/Profesional');
+const Professional = require('#src/models/profesional/Profesional');
 
 const updateProfessional = async (req, res) => {
   const { id } = req.params;
@@ -22,11 +22,16 @@ const updateProfessional = async (req, res) => {
 
     if (email && email !== professional.email) {
       const emailExists = await verifyExistingEmail(email);
-      if (emailExists) throw new BadRequestError('El email enviado ya esta registrado');
+      if (emailExists)
+        throw new BadRequestError('El email enviado ya esta registrado');
     }
 
     if (hasFile) {
-      const { public_id, url } = await uploadImage(req.file, userUploadOptions, professional.id_image);
+      const { public_id, url } = await uploadImage(
+        req.file,
+        userUploadOptions,
+        professional.id_image,
+      );
       newImage = url;
       newIdImage = public_id;
     }
@@ -38,7 +43,9 @@ const updateProfessional = async (req, res) => {
     };
     if (newData.password) delete newData.password;
 
-    const updated = await Professional.findByIdAndUpdate(id, newData, { new: true });
+    const updated = await Professional.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
 
     res.status(200).json({ updated, message: 'profesional actualizado' });
   } catch (err) {

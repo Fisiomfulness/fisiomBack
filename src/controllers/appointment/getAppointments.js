@@ -1,5 +1,5 @@
 const moment = require('moment');
-const Appointment = require('../../models/Appointment');
+const Appointment = require('../../models/appointment/Appointment');
 
 const getAppointments = async (req, res) => {
   try {

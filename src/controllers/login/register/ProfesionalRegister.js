@@ -8,8 +8,8 @@ const {
 } = require('#src/config/cloudinaryConfig');
 const { FRONT_URL, JWT_SECRET } = require('#src/config/envConfig');
 const { sendEmailNodemailer } = require('#src/util/nodemailer');
-const Profesional = require('#src/models/Profesional');
-const User = require('#src/models/User');
+const Profesional = require('#src/models/profesional/Profesional');
+const User = require('#src/models/user/User');
 
 const profesionalRegister = async (req, res) => {
   if (!req.file) {
@@ -48,7 +48,7 @@ const profesionalRegister = async (req, res) => {
 
     const { secure_url } = await cloudinary.uploader.upload(
       file,
-      curriculumUploadOptions
+      curriculumUploadOptions,
     );
 
     const hashedPass = await hashData(newData.password);

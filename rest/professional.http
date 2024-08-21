@@ -3,6 +3,20 @@
 ### GET ALL PROFESSIONALS
 GET {{url}}/professionals/
 
+###get availability
+GET {{url}/professionals/availability/662a9dce3ac9256327142bf5
+
+###post availability
+POST {{url}}/professionals/availability/662a9dce3ac9256327142bf5
+Content-Type: application/json
+
+{
+    "availability": [
+     {
+        "day": "Sabado",
+        "timeSlots": [{"start": "11:00", "end": "13:00"}]
+     }]
+}
 
 ### POST PROFESSIONAL
 POST {{url}}/professionals/create
@@ -24,14 +38,7 @@ Content-Type: application/json
     "state": "Santa Fe",
     "country": "Argentina",
    "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg",
-   "availability": {
-        "monday": [
-            { 
-                "start": "09:30",
-                "end": "12:30"
-            },
-        ]
-   }
+   "availability": 
 }
 
 ### GET USERS

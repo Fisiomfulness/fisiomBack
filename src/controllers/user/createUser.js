@@ -3,7 +3,7 @@ const {
   cloudinary,
   userUploadOptions,
 } = require('../../config/cloudinaryConfig');
-const User = require('../../models/User');
+const User = require('../../models/user/User');
 
 const createUser = async (req, res) => {
   const {

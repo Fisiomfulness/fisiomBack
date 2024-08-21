@@ -1,6 +1,9 @@
 const { NotFoundError } = require('#src/util/errors');
-const { updateProfessionalRating } = require('#src/services/professionalService');
-const ProfessionalRating = require('../../models/ProfessionalRating');
+const {
+  updateProfessionalRating,
+} = require('#src/services/professionalService');
+const ProfessionalRating =
+  require('../../models/profesional/ProfessionalRating');
 
 const deleteProfessionalRating = async (req, res) => {
   const { id } = req.params;

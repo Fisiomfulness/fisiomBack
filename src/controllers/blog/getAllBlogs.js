@@ -1,6 +1,6 @@
 const { BadRequestError } = require('../../util/errors');
-const Blog = require('../../models/Blog');
-const Profesional = require('../../models/Profesional');
+const Blog = require('../../models/blog/Blog');
+const Profesional = require('../../models/profesional/Profesional');
 
 const LIMIT_BLOGS = 30;
 
@@ -23,16 +23,19 @@ const getAllBlogs = async (req, res) => {
     throw new BadRequestError('page and limit must be integers');
   }
 
-  const queryLimit = limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
+  const queryLimit =
+    limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
   const skipIndex = (pageInt - 1) * queryLimit;
   let query = {};
   let sortOptions = {};
 
   if (status) {
-    if(status !== "true" && status !== "false") {
-      throw new BadRequestError('invalid received status - must be true or false');
+    if (status !== 'true' && status !== 'false') {
+      throw new BadRequestError(
+        'invalid received status - must be true or false',
+      );
     }
-    query.status = status === "true"; // ? Return a boolean
+    query.status = status === 'true'; // ? Return a boolean
   }
   if (professionalId) query.createdBy = professionalId;
   if (search.trim() !== '') {
@@ -51,7 +54,7 @@ const getAllBlogs = async (req, res) => {
 
   const totalBlogs = await Blog.countDocuments(query);
   const totalPages = Math.ceil(totalBlogs / queryLimit);
-  
+
   res.status(200).json({ blogs, page: pageInt, totalPages });
 };
 

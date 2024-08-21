@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
-const addressSchema = require('./addressSchema');
-const timeLapseSchema = require('./timeLapseSchema');
+const addressSchema = require('../addressSchema');
 const moment = require('moment');
 const experienceSchema = require('./experienceSchema');
-const serviceSchema = require('./serviceSchema');
+const serviceSchema = require('../serviceSchema');
 
 const Profesional = new Schema(
   {
@@ -84,7 +83,7 @@ const Profesional = new Schema(
       type: String,
       default: '',
     },
-    availability: {
+    /* availability: {
       monday: { type: [timeLapseSchema], default: [] },
       tuesday: { type: [timeLapseSchema], default: [] },
       wednesday: { type: [timeLapseSchema], default: [] },
@@ -92,7 +91,7 @@ const Profesional = new Schema(
       friday: { type: [timeLapseSchema], default: [] },
       saturday: { type: [timeLapseSchema], default: [] },
       sunday: { type: [timeLapseSchema], default: [] },
-    },
+    }, */
     consultationPrice: {
       type: Number,
       default: 0,
@@ -118,7 +117,7 @@ const Profesional = new Schema(
     services: {
       type: [serviceSchema],
       default: [],
-    }
+    },
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },

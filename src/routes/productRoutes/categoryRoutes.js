@@ -3,8 +3,8 @@ const {
   createCategory,
   getCategorys,
   getCategoryById,
-  deleteCategory
-} = require('../controllers/index');
+  deleteCategory,
+} = require('../../controllers/index');
 
 const router = Router();
 

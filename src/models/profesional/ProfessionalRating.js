@@ -27,7 +27,7 @@ const ProfessionalRating = new Schema(
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-  }
+  },
 );
 
 module.exports = model('ProfessionalRating', ProfessionalRating);

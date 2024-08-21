@@ -1,14 +1,22 @@
 const { BadRequestError } = require('#src/util/errors');
-const { updateProfessionalRating } = require('#src/services/professionalService');
-const Professional = require('#src/models/Profesional');
-const ProfessionalRating = require('../../models/ProfessionalRating');
+const {
+  updateProfessionalRating,
+} = require('#src/services/professionalService');
+const Professional = require('#src/models/profesional/Profesional');
+const ProfessionalRating =
+  require('../../models/profesional/ProfessionalRating');
 
 const createProfessionalRating = async (req, res) => {
   const { _user, _professional, score, description } = req.validatedBody;
 
-  const existingRating = await ProfessionalRating.findOne({ _user, _professional });
+  const existingRating = await ProfessionalRating.findOne({
+    _user,
+    _professional,
+  });
   if (existingRating) {
-    throw new BadRequestError('Ya le has dejado un comentario a este profesional');
+    throw new BadRequestError(
+      'Ya le has dejado un comentario a este profesional',
+    );
   }
 
   const newRating = new ProfessionalRating(req.validatedBody);

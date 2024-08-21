@@ -1,6 +1,6 @@
 const { BadRequestError } = require('#src/util/errors');
 const { updateBlogRating } = require('#src/services/blogService');
-const Comment = require('#src/models/Comment');
+const Comment = require('#src/models/blog/Comment');
 
 const deleteComment = async (req, res) => {
   const { id } = req.params;

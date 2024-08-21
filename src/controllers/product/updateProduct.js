@@ -1,5 +1,5 @@
 const fs = require('node:fs/promises');
-const Product = require('../../models/Product');
+const Product = require('../../models/product/Product');
 const {
   cloudinary,
   productsUploadOptions,

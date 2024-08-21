@@ -1,7 +1,7 @@
 const { BadRequestError, NotFoundError } = require('../../util/errors');
 const { validateId } = require('../../util/helpers');
-const Blog = require('../../models/Blog');
-const Comment = require('../../models/Comment');
+const Blog = require('../../models/blog/Blog');
+const Comment = require('../../models/blog/Comment');
 
 const LIMIT_BLOGS = 30;
 
@@ -19,14 +19,15 @@ const getProfessionalBlogs = async (req, res, next) => {
     throw new BadRequestError('page and limit must be integers');
   }
 
-  const queryLimit = limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
+  const queryLimit =
+    limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
   const query = { status: true, createdBy: professionalId };
   const skipIndex = (pageInt - 1) * queryLimit;
   const blogs = await Blog.find(query)
     .sort({ createdDate: -1 })
     .skip(skipIndex)
     .limit(queryLimit)
-    .populate('type', 'name')
+    .populate('type', 'name');
 
   const activeCommentsCounts = await Comment.aggregate([
     { $match: { status: true } },
@@ -35,14 +36,19 @@ const getProfessionalBlogs = async (req, res, next) => {
 
   // ? add the field activeComments to the professional blogs
   const blogsWithActiveCommentsCount = blogs.map((blog) => {
-    const count = activeCommentsCounts.find((item) => item._id.toString() === blog._id.toString())?.count || 0;
+    const count =
+      activeCommentsCounts.find(
+        (item) => item._id.toString() === blog._id.toString(),
+      )?.count || 0;
     return { ...blog._doc, activeComments: count };
   });
 
   const totalBlogs = await Blog.countDocuments(query);
   const totalPages = Math.ceil(totalBlogs / queryLimit);
 
-  res.status(200).json({ blogs: blogsWithActiveCommentsCount, page: pageInt, totalPages });
+  res
+    .status(200)
+    .json({ blogs: blogsWithActiveCommentsCount, page: pageInt, totalPages });
 };
 
 module.exports = {

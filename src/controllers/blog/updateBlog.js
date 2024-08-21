@@ -8,7 +8,7 @@ const {
   BadRequestError,
   UnsupportedMediaTypeError,
 } = require('../../util/errors');
-const Blog = require('../../models/Blog');
+const Blog = require('../../models/blog/Blog');
 
 const updateBlog = async (req, res) => {
   const id = req.params.id;
@@ -27,7 +27,7 @@ const updateBlog = async (req, res) => {
       await cloudinary.uploader.destroy(id_image);
       const { public_id, url } = await cloudinary.uploader.upload(
         newImageUrl,
-        blogsUploadOptions
+        blogsUploadOptions,
       );
       newImage = url;
       newIdImage = public_id;
@@ -48,7 +48,9 @@ const updateBlog = async (req, res) => {
   });
   if (!updatedBlog) throw new NotFoundError('blog no encontrado');
 
-  res.status(200).json({ updatedBlog, message: 'blog actualizado correctamente' });
+  res
+    .status(200)
+    .json({ updatedBlog, message: 'blog actualizado correctamente' });
 };
 
 module.exports = {

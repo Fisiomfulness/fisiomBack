@@ -1,4 +1,4 @@
-const Professional = require('#src/models/Profesional');
+const Professional = require('#src/models/profesional/Profesional');
 
 /**
  * Actualiza el rating de un profesional.
@@ -12,7 +12,7 @@ const Professional = require('#src/models/Profesional');
 const updateProfessionalRating = async (
   professionalId,
   scoreChange,
-  commentChange
+  commentChange,
 ) => {
   if (typeof scoreChange !== 'number' || typeof commentChange !== 'number') {
     throw new Error('scoreChange and commentChange must be numbers');

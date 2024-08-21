@@ -1,4 +1,4 @@
-const User = require('../../models/User');
+const User = require('../../models/user/User');
 
 const statusUser = async (req, res) => {
   const id = req.params.id;
@@ -15,9 +15,8 @@ const statusUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  statusUser
-}
+  statusUser,
+};
