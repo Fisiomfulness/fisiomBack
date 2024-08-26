@@ -1,5 +1,5 @@
 const { NotFoundError } = require('#src/util/errors');
-const Professional = require('#src/models/Profesional');
+const Professional = require('#src/models/profesional/Profesional');
 
 const addExperience = async (req, res) => {
   const { id } = req.params;

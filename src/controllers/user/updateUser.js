@@ -6,7 +6,7 @@ const {
   uploadImage,
   deleteLocalFile,
 } = require('#src/services/cloudinaryService');
-const User = require('#src/models/User');
+const User = require('#src/models/user/User');
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
@@ -22,11 +22,16 @@ const updateUser = async (req, res) => {
 
     if (email && email !== user.email) {
       const emailExists = await verifyExistingEmail(email);
-      if (emailExists) throw new BadRequestError('El email enviado ya esta registrado');
+      if (emailExists)
+        throw new BadRequestError('El email enviado ya esta registrado');
     }
 
     if (hasFile) {
-      const { public_id, url } = await uploadImage(req.file, userUploadOptions, user.id_image);
+      const { public_id, url } = await uploadImage(
+        req.file,
+        userUploadOptions,
+        user.id_image,
+      );
       newImage = url;
       newIdImage = public_id;
     }

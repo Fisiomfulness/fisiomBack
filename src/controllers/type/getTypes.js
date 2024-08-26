@@ -1,10 +1,11 @@
-const Type = require('../../models/Type');
+const Type = require('../../models/blog/Type');
 
 const getTypes = async (req, res) => {
   const { name = '' } = req.query;
   try {
     let query = {};
-    if (name.trim() !== '') query.name = { $regex: new RegExp('^' + name, 'i') };
+    if (name.trim() !== '')
+      query.name = { $regex: new RegExp('^' + name, 'i') };
     const types = await Type.find(query).sort({ name: 1 });
     res.status(200).json({ types });
   } catch (error) {

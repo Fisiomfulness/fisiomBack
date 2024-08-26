@@ -1,9 +1,9 @@
 const { NotFoundError } = require('../../util/errors');
-const Blog = require('../../models/Blog');
+const Blog = require('../../models/blog/Blog');
 
 const getBlogDetail = async (req, res) => {
   const { id } = req.params;
-  
+
   const blog = await Blog.findById(id)
     .populate('createdBy', 'name image')
     .populate('type', 'name');

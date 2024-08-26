@@ -2,8 +2,8 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 
-const Profesional = require('#src/models/Profesional');
-const User = require('../../models/User');
+const Profesional = require('#src/models/profesional/Profesional');
+const User = require('../../models/user/User');
 const {
   MAIL_PORT,
   MAIL_HOST,

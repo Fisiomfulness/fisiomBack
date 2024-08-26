@@ -1,4 +1,4 @@
-const Interest = require('#src/models/Interest');
+const Interest = require('#src/models/user/Interest');
 
 const deleteInterest = async (req, res) => {
   const { id } = req.params;

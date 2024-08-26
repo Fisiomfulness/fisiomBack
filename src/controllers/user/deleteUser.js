@@ -1,6 +1,6 @@
 const { cloudinary } = require('../../config/cloudinaryConfig');
-const User = require('../../models/User');
-const Comment = require('../../models/Comment');
+const User = require('../../models/user/User');
+const Comment = require('../../models/blog/Comment');
 
 const deleteUser = async (req, res) => {
   const id = req.params.id;
@@ -16,8 +16,8 @@ const deleteUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
+};
 
 module.exports = {
-  deleteUser
-}
+  deleteUser,
+};

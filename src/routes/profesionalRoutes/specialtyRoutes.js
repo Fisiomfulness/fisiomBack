@@ -1,6 +1,6 @@
 // @ts-check
 const Router = require('express-promise-router').default;
-const { Specialty } = require('#src/models/Specialty');
+const { Specialty } = require('#src/models/profesional/Specialty');
 const {
   MongoSpecialtyRepository,
 } = require('#src/modules/specialty/adapters/MongoSpecialtyRepository');

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 
-const User = require('../../models/User');
+const User = require('../../models/user/User');
 const {
   MAIL_PORT,
   MAIL_HOST,
@@ -13,7 +13,7 @@ const {
 } = require('../../config/envConfig');
 const { sendEmailNodemailer } = require('#src/util/nodemailer');
 const { hashData } = require('#src/util/hashData');
-const Profesional = require('#src/models/Profesional');
+const Profesional = require('#src/models/profesional/Profesional');
 
 const emailResetPassword = async (req, res) => {
   const { email } = req.body;

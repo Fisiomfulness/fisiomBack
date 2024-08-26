@@ -1,11 +1,16 @@
 const moment = require('moment');
-const Appointment = require('../../models/Appointment');
-const Profesional = require('../../models/Profesional');
-const User = require('../../models/User');
+const momentZone = require('moment-timezone');
+const Appointment = require('../../models/appointment/Appointment');
+const Profesional = require('../../models/profesional/Profesional');
+const User = require('../../models/user/User');
+const Availability = require('#src/models/profesional/availabilitySchema');
+moment.locale('es'); // Establecemos el locale a español
+
+const timeFormat = 'YYYY-MM-DDTHH:mm';
 
 const createAppointment = async (req, res) => {
   try {
-    const {
+    let {
       _professional,
       _patient,
       title,
@@ -15,7 +20,8 @@ const createAppointment = async (req, res) => {
       status,
     } = req.body;
 
-    const formatData = (data) => moment(data).format('YYYY-MM-DDTHH:mm');
+    start = momentZone(start).tz('America/Lima').format(timeFormat);
+    end = momentZone(end).tz('America/Lima').format(timeFormat);
 
     // Validate professional
     const professional = await Profesional.findById(_professional);
@@ -32,8 +38,8 @@ const createAppointment = async (req, res) => {
 
     // Validate start and end formats (YYYY-MM-DDTHH:mm)
     if (
-      !moment(formatData(start), 'YYYY-MM-DDTHH:mm', true).isValid() ||
-      !moment(formatData(end), 'YYYY-MM-DDTHH:mm', true).isValid()
+      !moment(start, timeFormat, true).isValid() ||
+      !moment(start, timeFormat, true).isValid()
     ) {
       res.status(401).json({
         message: 'Formato de fecha de cita no válido',
@@ -50,9 +56,8 @@ const createAppointment = async (req, res) => {
     }
 
     // Validate that start and end are on the same day
-    const startDate = start.split('T')[0];
-    const endDate = end.split('T')[0];
-    if (startDate !== endDate) {
+    const verifySameDay = moment(start).isSame(end, 'day');
+    if (!verifySameDay) {
       res.status(401).json({
         message:
           'La fecha de inicio y la fecha de finalización deben ser del mismo día',
@@ -70,74 +75,63 @@ const createAppointment = async (req, res) => {
             {
               $and: [
                 { status: 'PENDING' },
-                { expiration: { $gt: Date.now() } },
+                { end: { $gt: moment().toDate() } }, // Verifica que la cita pendiente no haya expirado
               ],
             },
           ],
         },
-        // Are overlaping
-        { end: { $gt: start } },
-        { dateTime: { $lt: end } },
+        // Are overlapping
+        { end: { $gt: start } }, // La cita existente termina después de que comienza la nueva cita
+        { start: { $lt: end } }, // La cita existente comienza antes de que termine la nueva cita
         // Are for the same professional or patient
         { $or: [{ _patient }, { _professional }] },
       ],
     });
+
     if (overlapping) {
       res.status(401).json({
-        message:
-          'La fecha y hora seleccionada se superponen con otra cita del profesional o del paciente',
+        message: 'La cita se superpone con una existente.',
       });
       return;
     }
 
     // Validate that the professional is available during the time of the appointment
-    const daysOfWeekMap = {
-      0: 'sunday',
-      1: 'monday',
-      2: 'tuesday',
-      3: 'wednesday',
-      4: 'thursday',
-      5: 'friday',
-      6: 'saturday',
+    const dayOfWeek = moment(start).format('dddd').toLowerCase(); // Obtener el día de la semana
+
+    // Buscar la disponibilidad del profesional para el día específico
+    const findProfessional = await Availability.find({
+      userId: _professional,
+    });
+
+    const professionalAvailability = findProfessional[0].availability;
+
+    const availabilityForDay = professionalAvailability.find(
+      (availability) => availability.day.toLowerCase() === dayOfWeek,
+    );
+
+    const isTimeInRange = (time, range) => {
+      const date = moment(time).format('HH:mm');
+      const timeToCheck = moment(date, 'HH:mm');
+      const startTime = moment(range.start, 'HH:mm');
+      const endTime = moment(range.end, 'HH:mm');
+
+      return timeToCheck.isBetween(startTime, endTime, null, '[]');
     };
-    // Get day of week key
-    const startDateDay = daysOfWeekMap[moment(start).day()];
-    // Match key to day of week
-    const workingHours = professional.availability[startDateDay];
 
-    let insideWorkingHours = true;
-    // Check through working hours timeLapses for that day of the week
-    if (workingHours.length > 0) {
-      for (let i = 0; i < workingHours.length; i++) {
-        if (
-          moment(start.split('T')[1], 'HH:mm').isBetween(
-            moment(workingHours[i].start, 'HH:mm'),
-            moment(workingHours[i].end, 'HH:mm'),
-            null,
-            [],
-          ) &&
-          moment(end.split('T')[1], 'HH:mm').isBetween(
-            moment(workingHours[i].start, 'HH:mm'),
-            moment(workingHours[i].end, 'HH:mm'),
-            null,
-            [],
-          )
-        ) {
-          insideWorkingHours = true;
-          break;
-        } else {
-          insideWorkingHours = false;
-          break;
-        }
+    if (availabilityForDay?.day) {
+      // Validar si la cita está dentro de algún intervalo de tiempo disponible
+      const isWithinWorkingHours = availabilityForDay.timeSlots.some(
+        (timeSlot) => {
+          return isTimeInRange(start, timeSlot) || isTimeInRange(end, timeSlot);
+        },
+      );
+
+      if (isWithinWorkingHours) {
+        return res.status(401).json({
+          message:
+            'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
+        });
       }
-    }
-
-    if (!insideWorkingHours) {
-      res.status(401).json({
-        message:
-          'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
-      });
-      return;
     }
 
     const patientName = patient.name;
@@ -157,7 +151,11 @@ const createAppointment = async (req, res) => {
       .status(201)
       .json({ appointment, message: 'Agendado con exito!' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+
+    res
+      .status(500)
+      .json({ error: error.message, message: 'Ups, Algo salio mal!' });
   }
 };
 

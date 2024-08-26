@@ -4,7 +4,7 @@ const {
   getAppointments,
   updateAppointment,
   deleteAppointment,
-} = require('../controllers/index');
+} = require('../../controllers/index');
 
 const router = Router();
 
