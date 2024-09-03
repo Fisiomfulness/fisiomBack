@@ -98,39 +98,45 @@ const createAppointment = async (req, res) => {
     // Validate that the professional is available during the time of the appointment
     const dayOfWeek = moment(start).format('dddd').toLowerCase(); // Obtener el día de la semana
 
-    // Buscar la disponibilidad del profesional para el día específico
-    const findProfessional = await Availability.find({
+    // search the availability of the professional for the specific day
+    const findProfessionalAvailability = await Availability.find({
       userId: _professional,
     });
 
-    const professionalAvailability = findProfessional[0].availability;
+    //verify if exist any availability
+    if (findProfessionalAvailability.length) {
+      const professionalAvailability =
+        findProfessionalAvailability[0].availability;
 
-    const availabilityForDay = professionalAvailability.find(
-      (availability) => availability.day.toLowerCase() === dayOfWeek,
-    );
-
-    const isTimeInRange = (time, range) => {
-      const date = moment(time).format('HH:mm');
-      const timeToCheck = moment(date, 'HH:mm');
-      const startTime = moment(range.start, 'HH:mm');
-      const endTime = moment(range.end, 'HH:mm');
-
-      return timeToCheck.isBetween(startTime, endTime, null, '[]');
-    };
-
-    if (availabilityForDay?.day) {
-      // Validar si la cita está dentro de algún intervalo de tiempo disponible
-      const isWithinWorkingHours = availabilityForDay.timeSlots.some(
-        (timeSlot) => {
-          return isTimeInRange(start, timeSlot) || isTimeInRange(end, timeSlot);
-        },
+      const availabilityForDay = professionalAvailability.find(
+        (availability) => availability.day.toLowerCase() === dayOfWeek,
       );
 
-      if (isWithinWorkingHours) {
-        return res.status(401).json({
-          message:
-            'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
-        });
+      const isTimeInRange = (time, range) => {
+        const date = moment(time).format('HH:mm');
+        const timeToCheck = moment(date, 'HH:mm');
+        const startTime = moment(range.start, 'HH:mm');
+        const endTime = moment(range.end, 'HH:mm');
+
+        return timeToCheck.isBetween(startTime, endTime, null, '[]');
+      };
+
+      if (availabilityForDay?.day) {
+        // Validar si la cita está dentro de algún intervalo de tiempo disponible
+        const isWithinWorkingHours = availabilityForDay.timeSlots.some(
+          (timeSlot) => {
+            return (
+              isTimeInRange(start, timeSlot) || isTimeInRange(end, timeSlot)
+            );
+          },
+        );
+
+        if (isWithinWorkingHours) {
+          return res.status(401).json({
+            message:
+              'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
+          });
+        }
       }
     }
 
