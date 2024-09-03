@@ -1,0 +1,4 @@
+{
+  "recommendations": ["biomejs.biome", "humao.rest-client"],
+  "unwantedRecommendations": []
+}

@@ -1,17 +1,20 @@
-const { createUser } = require("./createUser")
-const { deleteUser } = require("./deleteUser")
-const { getDetail } = require("./getDetail")
-const { getUser } = require("./getUser")
-const { statusUser } = require("./statusUser")
-const { updateUser } = require("./updateUser")
-
-
+const { createUser } = require('./createUser');
+const { deleteUser } = require('./deleteUser');
+const { getAllUsers } = require('./getAllUsers');
+const { getUsers, getSpecificUserData } = require('./getUsers');
+const { getUserById } = require('./getUserById');
+const { statusUser } = require('./statusUser');
+const { updateUser } = require('./updateUser');
+const { verifyCredentials } = require('./verifyCredentials');
 
 module.exports = {
   createUser,
   deleteUser,
-  getDetail,
-  getUser,
+  getAllUsers,
+  getUsers,
+  getUserById,
   statusUser,
-  updateUser
-}
+  updateUser,
+  verifyCredentials,
+  getSpecificUserData,
+};

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ESNext",
+    "strict": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "skipLibCheck": false,
+    "paths": {
+      "#src/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.js", "src/**/*.d.ts", "tests/**/*.js"],
+  "exclude": ["node_modules"]
+}

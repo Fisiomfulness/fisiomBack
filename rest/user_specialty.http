@@ -1,0 +1,85 @@
+# variables
+@url = http://localhost:3000
+
+@user1 = 661df9cf4d019890d80057ac
+@user2 = 66204bc13416c2ad4945e2b0
+
+@specialty1 = 661d3b7d114cf313036abf7e
+@specialty2 = 661d3bc8114cf313036abf80
+@specialty3 = 661d3c21114cf313036abf82
+
+# user_specialty
+
+### obtener usuarios (endpoint de prueba)
+GET {{url}}/user_specialty/getUsers
+
+### obtener especialidades del usuario
+GET {{url}}/user_specialty/users
+Content-Type: application/json
+
+{
+  "user_id": "{{user1}}"
+}
+
+### obtener usuarios por especialidad
+GET {{url}}/user_specialty/specialties
+Content-Type: application/json
+
+{
+  "specialty_id": "{{specialty3}}"
+}
+
+### asignar una especialidad
+POST {{url}}/user_specialty/assignSpecialty
+Content-Type: application/json
+
+{
+  "user_id": "{{user2}}",
+  "specialty_id": "{{specialty3}}"
+}
+
+# specialty
+
+### obtener especialidades
+GET {{url}}/specialty
+### limit
+GET {{url}}/specialty?limit=3
+### offset
+GET {{url}}/specialty?offset=1
+### orderBy
+GET {{url}}/specialty?orderBy=createdDate
+### order, necesita orderBy
+GET {{url}}/specialty?orderBy=id&order=desc
+### obtener especialidades desde la posicion 3 con un limite de 4 y ordenarlas por la fecha de creacion
+GET {{url}}/specialty?orderBy=createdDate&order=asc&offset=3&limit=4
+### filters
+GET {{url}}/specialty?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=Médico Clínico
+### filters con expresion, traera las especialidades que terminen con 'a'
+GET {{url}}/specialty?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=a$
+### filters con expresion, traera las especialidades que contengan 'a'
+GET {{url}}/specialty?filters[0][field]=name&filters[0][operator]=CONTAINS&filters[0][value]=a
+
+### crear una nueva especialidad
+POST {{url}}/specialty
+Content-Type: application/json
+
+{
+  "name": "especialidad nueva4"
+}
+
+### renombrar una especialidad
+PATCH {{url}}/specialty
+Content-Type: application/json
+
+{
+  "id": "6632db4494f49670c3607bd7",
+  "name": "testing working2"
+}
+
+### eliminar una especialidad
+DELETE {{url}}/specialty
+Content-Type: application/json
+
+{
+  "id": "6632db4494f49670c3607bd7"
+}

@@ -1,0 +1,21 @@
+# variables
+@url = http://localhost:3000
+
+### POST appointment
+POST {{url}}/appointments/create
+Content-Type: application/json
+
+{
+    "_professional": "663188a2ed34004f3db7a76c", 
+    "_patient": "66391a8306b295e898dd6107",
+    "additionalDescription": "Description",
+    "title": "Consulta profesional",
+    "start": "2024-07-11T14:00", 
+    "end": "2024-07-11T16:00",
+    "status": "PENDING"
+}
+
+### GET appointments
+GET {{url}}/appointments/?from=2024-07-01&to=2024-07-31&_professional=663188a2ed34004f3db7a76c
+
+###

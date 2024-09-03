@@ -1,8 +1,5 @@
-const Product = require('../../models/Product');
-const {
-  cloudinary,
-} = require('../../config/cloudinaryConfig.js');
-
+const Product = require('../../models/product/Product');
+const { cloudinary } = require('../../config/cloudinaryConfig.js');
 
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
@@ -17,9 +14,8 @@ const deleteProduct = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  deleteProduct
-}
+  deleteProduct,
+};

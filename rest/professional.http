@@ -1,0 +1,116 @@
+@url = http://localhost:3000
+
+### GET ALL PROFESSIONALS
+GET {{url}}/professionals/
+
+###get availability
+GET {{url}/professionals/availability/662a9dce3ac9256327142bf5
+
+###post availability
+POST {{url}}/professionals/availability/662a9dce3ac9256327142bf5
+Content-Type: application/json
+
+{
+    "availability": [
+     {
+        "day": "Sabado",
+        "timeSlots": [{"start": "11:00", "end": "13:00"}]
+     }]
+}
+
+### POST PROFESSIONAL
+POST {{url}}/professionals/create
+Content-Type: application/json
+
+{
+   "email": "olddoctor@gmail.com",
+   "name": "Yamil Bambeino", 
+   "password": "otrodoctor",
+   "birthDate": "1990-06-22",
+   "gender": "Masculino",
+   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam gravida eros ut ligula hendrerit, non fermentum elit varius. Integer suscipit libero sit amet ante finibus, et vehicula lacus varius. Aliquam erat volutpat. Suspendisse potenti. Vestibulum eu dolor risus. Etiam scelerisque dui eget orci varius, vitae dictum nulla sollicitudin.",
+   "curriculum": "https://res.cloudinary.com/do6ra4oau/image/upload/v1714055789/FisiumFulness/users/1714055787309-pdfpruebafisiomfulness.pdf",
+   "license": "M1354",
+   "phone": "11 1568942",
+    "streetName": "Francia",
+    "streetNumber": "415",
+    "city": "Rosario",
+    "state": "Santa Fe",
+    "country": "Argentina",
+   "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg",
+   "availability": 
+}
+
+### GET USERS
+GET {{url}}/users/662a9dce3ac9256327142bf5
+
+### UPDATE USER
+PUT {{url}}/users/update/662a9dce3ac9256327142bf5
+Content-Type: application/json
+
+{
+    "coordinates": [-32.93203966214841, -60.651035445557014],
+    "address": "Rivadavia 2250, Rosario, Argentina"
+}
+
+### logear usuario normal
+POST {{url}}/login
+Content-Type: application/json
+
+{			
+	"email": "john@user.com",
+	"password": "User0303456"
+}
+
+### UPDATE PROFESSIONAL
+PUT {{url}}/professionals/update/663822474296b1639d4cb8ba
+Content-Type: application/json
+// ojo cualquier campo especificado se "pisa", si se desea agregar o quitar un elemento
+// hacer un get y copiar el array de la respuesta, hacer los cambios y enviar el nuevo array
+{
+    "services": [
+        { "serviceDescription": "Masaje Relajante", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Descontracturante", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Shiatsu", "serviceCost": 50 },
+        { "serviceDescription": "Masaje Holistico", "serviceCost": 50 },
+        { "serviceDescription": "Descarga Muscular", "serviceCost": 40 },
+        { "serviceDescription": "Drenaje linfático", "serviceCost": 40 },
+        { "serviceDescription": "Masaje reflexologia", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Tailandes", "serviceCost": 60 },
+        { "serviceDescription": "Masaje aromaterapia", "serviceCost": 40 },
+        { "serviceDescription": "Masaje con piedras calientes", "serviceCost": 40 },
+        { "serviceDescription": "Masaje Ayurvédico", "serviceCost": 40 }
+    ]
+}
+
+### GET PROFESSIONALS
+GET {{url}}/professionals/?search=&city=&specialtyId=&pos=-32.953808,-60.6401331&page=1
+
+### GET PROFESSIONALS
+GET {{url}}/professionals/?bbox=-60.6797218322754,-33.00232932608292,-60.594921112060554,-32.91331501423898
+
+### GET INTERESTS
+GET {{url}}/interests
+
+### CREATE SPECIALTY
+POST {{url}}/specialty
+Content-Type: application/json
+
+{
+    "name": "Fonoaudiología",
+    "keywords": []
+}
+
+### GET SPECIALTIES
+GET {{url}}/specialty
+
+### PATCH SPECIALTIES
+PATCH {{url}}/specialty
+Content-Type: application/json
+// ojo keywords será completamente reemplazado por este array
+// si se desea agregar o quitar hacer un get y copiar el array
+// de la respuesta, hacer los cambios y enviar el nuevo array
+{
+    "id": "662a6e7ed9b92088750976e3",
+    "keywords": []
+}

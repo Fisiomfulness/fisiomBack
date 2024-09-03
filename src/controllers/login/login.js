@@ -1,24 +1,60 @@
-const User = require("../../models/User");
-const jwt = require("jsonwebtoken");
-const JWT_secret = process.env.JWT_secret;
-
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('#src/config/envConfig');
+const {
+  NotFoundError,
+  BadRequestError,
+  UnauthorizedError,
+} = require('#src/util/errors');
+const { verifyHashedData } = require('#src/util/hashData');
+const User = require('#src/models/user/User');
+const Professional = require('#src/models/profesional/Profesional');
 
 const login = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*")
   const { email, password } = req.body;
+
   try {
-    const user = await User.findOne({email, password });
-    if (user) {
-      const token = jwt.sign({ userId: user._id, role: user.role }, JWT_secret, { expiresIn: '1h' });
-      return res.status(200).json({user, token});
-    } else {
-      return res.status(401).json({ message: 'Usuario no encontrado' });
-    }
+    if (!email || !password)
+      throw new BadRequestError('Credenciales requeridas');
+
+    const [user, professional] = await Promise.all([
+      User.findOne({ email }),
+      Professional.findOne({ email }),
+    ]);
+
+    const foundUser = user || professional;
+    if (!foundUser) throw new NotFoundError('Usuario no encontrado');
+
+    const passwordMatches = await verifyHashedData(
+      password,
+      foundUser.password,
+    );
+    if (!passwordMatches) throw new UnauthorizedError('Contraseña incorrecta');
+
+    // * Creación de JWT
+    let payload = {
+      id: foundUser._id,
+      name: foundUser.name,
+      email: foundUser.email,
+      image: foundUser.image,
+      role: foundUser.role,
+      coordinates: foundUser.coordinates,
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '2d' });
+
+    res.cookie('accessToken', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 2, // ? 2 days
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    res.status(201).send({ ...payload, message: 'Logeado con éxito!' });
   } catch (error) {
-    return res.status(400).send(error.message);
+    res.status(500).json({ message: error.message });
   }
-}
+};
 
 module.exports = {
-  login
-}
+  login,
+};

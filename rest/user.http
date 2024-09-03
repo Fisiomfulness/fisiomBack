@@ -1,0 +1,89 @@
+# variables
+@url = http://localhost:3000
+
+### crear usuario admin
+POST {{url}}/register
+Content-Type: application/json
+
+{
+	"email": "admin@gmail.com",
+	"role": "admin",
+	"name": "admin",
+	"password": "admin",
+	"birthDate": "2006-04-13"
+}
+
+### crear usuario normal
+POST {{url}}/register/user
+Content-Type: application/json
+
+{
+	"email": "user4@gmail.com",
+	"name": "user",
+	"password": "1234",
+	"birthDate": "2006-04-13",
+	"phone": "23123",
+	"gender": "Masculino"
+}
+
+### crear usuario profesional
+POST {{url}}/register/profesional
+Content-Type: application/json
+
+{
+	"email": "profesional@gmail.com",
+	"name": "profesional",
+	"password": "1234",
+	"curriculum": "curriculum",
+	"birthDate": "2006-04-13",
+	"license": "license",
+	"phone": "23123",
+	"gender": "Masculino"
+}
+
+### obtener usuarios
+GET {{url}}/users
+
+### obtener datos especificos de usuarios
+POST {{url}}/users
+Content-Type: application/json
+
+{
+	"name": 1,
+	"email": 1,
+}
+
+### obtener usuario por id 
+GET {{url}}/users/661df9d14d019890d80057af
+
+
+### logear usuario normal
+POST {{url}}/login
+Content-Type: application/json
+
+{			
+	"email": "user4@gmail.com",
+	"password": "user"
+}
+
+### logear usuario admin
+POST {{url}}/login
+Content-Type: application/json
+
+{			
+	"email": "admin@gmail.com",
+	"password": "admin"
+}
+
+### edit user
+PUT {{url}}/users/update/66391a8306b295e898dd6107
+Content-Type: application/json
+
+{			
+	"address": {
+		"streetName": "Tucuman",
+		"streetNumber": 920,
+		"city": "Rosario",
+		"country": "Argentina"
+	}
+}

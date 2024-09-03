@@ -2,34 +2,27 @@ const {
   createBlog,
   deleteBlog,
   getAllBlogs,
+  getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
   statusBlog,
-  updateBlog 
-} = require("./blog/index")
-
+  updateBlog,
+} = require('./blog/index');
 
 const {
   createCategory,
   deleteCategory,
   getCategoryById,
-  getCategorys 
-} = require("./category/index")
-
+  getCategorys,
+} = require('./category/index');
 
 const {
+  checkUserComment,
   createComment,
   deleteComment,
   getComment,
-  getCommentBlog 
-} = require("./comment/index")
-
-
-const {
-  login,
-  recoverAccount 
-} = require("./login/index")
-
+  getCommentBlog,
+} = require('./blog/comment/index');
 
 const {
   createProduct,
@@ -38,37 +31,68 @@ const {
   getProductDetail,
   removeProduct,
   statusProduct,
-  updateProduct
-} = require("./product/index")
-
+  updateProduct,
+} = require('./product/index');
 
 const {
   createType,
   deleteType,
   getTypeById,
-  getTypes
-} = require("./type/index")
-
-
-const {
-  createUser,
-  deleteUser,
-  getDetail,
-  getUser,
-  statusUser,
-  updateUser
-} = require("./user/index")
-
+  getTypes,
+} = require('./type/index');
 
 const {
-  sendEmail
-} = require("./mail/index")
+  getProfessionals,
+  getProfessionalDetail,
+  createProfessional,
+  statusProfessional,
+  updateProfessional,
+  deleteProfessional,
+  getProfessionalRating,
+  createProfessionalRating,
+  deleteProfessionalRating,
+  checkUserRating,
+  addSpecialty,
+  removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
+} = require('./professional/index');
 
+const {
+  getAllQuestions,
+  createQuestion,
+  respondQuestion,
+  deleteQuestion,
+} = require('./question/index');
+
+const {
+  getAllInterests,
+  createInterest,
+  deleteInterest,
+} = require('./interest/index');
+
+const { sendEmail } = require('./mail/index');
+
+const {
+  createAppointment,
+  getAppointments,
+  updateAppointment,
+  deleteAppointment,
+} = require('./appointment/index');
+
+const {
+  createService,
+  getAllServices,
+  updateService,
+  deleteService,
+} = require('./service/index');
 
 module.exports = {
   createBlog,
   deleteBlog,
   getAllBlogs,
+  getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
   statusBlog,
@@ -77,12 +101,11 @@ module.exports = {
   deleteCategory,
   getCategoryById,
   getCategorys,
+  checkUserComment,
   createComment,
   deleteComment,
   getComment,
   getCommentBlog,
-  login,
-  recoverAccount,
   createProduct,
   deleteProduct,
   getAllProduct,
@@ -94,11 +117,35 @@ module.exports = {
   deleteType,
   getTypeById,
   getTypes,
-  createUser,
-  deleteUser,
-  getDetail,
-  getUser,
-  statusUser,
-  updateUser,
-  sendEmail
-}
+  getProfessionals,
+  createProfessional,
+  getProfessionalDetail,
+  statusProfessional,
+  updateProfessional,
+  deleteProfessional,
+  getProfessionalRating,
+  createProfessionalRating,
+  deleteProfessionalRating,
+  checkUserRating,
+  addSpecialty,
+  removeSpecialty,
+  addExperience,
+  updateExperience,
+  deleteExperience,
+  getAllQuestions,
+  createQuestion,
+  respondQuestion,
+  deleteQuestion,
+  getAllInterests,
+  createInterest,
+  deleteInterest,
+  sendEmail,
+  createAppointment,
+  getAppointments,
+  createService,
+  getAllServices,
+  updateService,
+  deleteService,
+  updateAppointment,
+  deleteAppointment,
+};

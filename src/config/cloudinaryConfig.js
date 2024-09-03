@@ -1,9 +1,15 @@
 const cloudinary = require('cloudinary').v2;
-const dotenv = require('dotenv');
-dotenv.config();
+const {
+  CLOUDINARY_NAME,
+  CLOUDINARY_KEY,
+  CLOUDINARY_SECRET,
+} = require('./envConfig');
 
-const { cloud_name, api_key, api_secret } = process.env;
-const cloudinaryCredentials = { cloud_name, api_key, api_secret };
+const cloudinaryCredentials = {
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_KEY,
+  api_secret: CLOUDINARY_SECRET,
+};
 cloudinary.config(cloudinaryCredentials);
 
 const FOLDER_PRODUCTS = 'FisiumFulness/products';
@@ -35,10 +41,17 @@ const userUploadOptions = {
   folder: FOLDER_USERS,
 };
 
+const curriculumUploadOptions = {
+  ...uploadOptions,
+  tags: ['curriculum'],
+  folder: FOLDER_USERS,
+};
+
 module.exports = {
   cloudinary,
   cloudinaryCredentials,
   productsUploadOptions,
   blogsUploadOptions,
   userUploadOptions,
+  curriculumUploadOptions,
 };

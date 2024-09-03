@@ -1,6 +1,9 @@
-const fs = require('fs');
-const { cloudinary, userUploadOptions } = require('../../config/cloudinaryConfig');
-const User = require('../../models/User');
+const fs = require('node:fs/promises');
+const {
+  cloudinary,
+  userUploadOptions,
+} = require('../../config/cloudinaryConfig');
+const User = require('../../models/user/User');
 
 const createUser = async (req, res) => {
   const {
@@ -13,7 +16,7 @@ const createUser = async (req, res) => {
     latitud,
     longitud,
     role,
-    address
+    address,
   } = req.body;
 
   try {
@@ -26,14 +29,12 @@ const createUser = async (req, res) => {
       const nameImageDelete = req.file.filename;
       const { public_id, url } = await cloudinary.uploader.upload(
         newImage,
-        userUploadOptions
+        userUploadOptions,
       );
-
       urlImage = url;
       public_id_prueba = public_id;
-
       const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
-      await fs.promises.unlink(routeImageDelete);
+      await fs.unlink(routeImageDelete);
     }
 
     const newData = {
@@ -57,9 +58,8 @@ const createUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  createUser
-}
+  createUser,
+};

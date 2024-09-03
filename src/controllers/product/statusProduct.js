@@ -1,6 +1,4 @@
-const Product = require('../../models/Product');
-
-
+const Product = require('../../models/product/Product');
 
 const statusProduct = async (req, res) => {
   const { id } = req.params;
@@ -18,9 +16,8 @@ const statusProduct = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  statusProduct
-}
+  statusProduct,
+};

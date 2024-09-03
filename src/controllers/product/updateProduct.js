@@ -1,10 +1,9 @@
-const fs = require('fs');
-const Product = require('../../models/Product');
+const fs = require('node:fs/promises');
+const Product = require('../../models/product/Product');
 const {
   cloudinary,
   productsUploadOptions,
 } = require('../../config/cloudinaryConfig.js');
-
 
 const updateProduct = async (req, res) => {
   const id = req.params.id;
@@ -23,7 +22,7 @@ const updateProduct = async (req, res) => {
         ...productsUploadOptions,
       });
       const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
-      await fs.promises.unlink(routeImageDelete);
+      await fs.unlink(routeImageDelete);
       newImage = url;
       newIdImage = public_id;
     }
@@ -45,9 +44,8 @@ const updateProduct = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
-
+};
 
 module.exports = {
-  updateProduct
-}
+  updateProduct,
+};

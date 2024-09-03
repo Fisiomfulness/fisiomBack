@@ -1,0 +1,13 @@
+@url = http://localhost:3000
+
+### crear una puntuación profesional
+POST  {{url}}/profesional_score
+Content-Type: application/json
+
+{
+  "_user": "661df9cf4d019890d80057ac",
+  "_profesional": "661df9d14d019890d80057af",
+  "name": "pepito",
+  "description": "descripcion",
+  "score": 1.4
+}

@@ -1,37 +1,43 @@
-const fs = require('fs');
-const { blogsUploadOptions, cloudinary } = require('../../config/cloudinaryConfig');
-const Blog = require('../../models/Blog');
+const fs = require('node:fs/promises');
+const {
+  cloudinary,
+  blogsUploadOptions,
+} = require('#src/config/cloudinaryConfig');
+const {
+  BadRequestError,
+  UnsupportedMediaTypeError,
+} = require('#src/util/errors');
+const Blog = require('../../models/blog/Blog');
 
 const createBlog = async (req, res) => {
-  const { text, title, type_id, createBy } = req.body;
+  const { professional_id, type_id } = req.validatedBody;
 
-  try {
-    const newImage = req.file.path;
-    const nameImageDelete = req.file.filename;
-    const { public_id, url } = await cloudinary.uploader.upload(
-      newImage,
-      blogsUploadOptions
-    );
-    const newBlog = {
-      text,
-      title,
-      type_id,
-      createBy,
-      image: url,
-      id_image: public_id,
-    };
-    const routeImageDelete = `../fisiumfulnessback/uploads/${nameImageDelete}`;
-    await fs.promises.unlink(routeImageDelete);
-    const blog = new Blog(newBlog);
-    await blog.save();
-    return res.status(200).json({ blog });
-  } catch (error) {
-    //console.log(error);
-    return res.status(400).json({ message: error.message });
+  const file = req.file || null;
+  if (!file) throw new BadRequestError('No se recibió una imagen para el blog');
+  if (!file.mimetype.startsWith('image/')) {
+    throw new UnsupportedMediaTypeError('El archivo enviado no es una imagen');
   }
-}
 
+  // ? Sube a cloudinary y retorna el url de la imagen, que luego es asignado al blog
+  const { public_id, url } = await cloudinary.uploader.upload(
+    file.path,
+    blogsUploadOptions,
+  );
+  await fs.unlink(file.path);
+
+  const newData = {
+    ...req.validatedBody,
+    createdBy: professional_id,
+    type: type_id,
+    image: url,
+    id_image: public_id,
+  };
+  const blog = new Blog(newData);
+  await blog.save();
+
+  res.status(201).json({ blog, message: 'blog creado correctamente' });
+};
 
 module.exports = {
-  createBlog
-}
+  createBlog,
+};

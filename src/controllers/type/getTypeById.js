@@ -1,4 +1,4 @@
-const Type = require('../../models/Type');
+const Type = require('../../models/blog/Type');
 
 const getTypeById = async (req, res) => {
   const { id } = req.params;
@@ -10,8 +10,8 @@ const getTypeById = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
-}
+};
 
 module.exports = {
-  getTypeById
-}
+  getTypeById,
+};

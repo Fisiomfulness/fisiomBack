@@ -1,0 +1,102 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+enum status {
+  private
+  public
+  delete
+}
+
+Table specialty {
+  id id [pk]
+  name string
+}
+
+Table user_specialty {
+  id id [pk]
+  specialty_id id [ref: > specialty.id]
+  user_id id [ref: > user.id]
+}
+
+Table user {
+  id id [pk]
+  status status
+  email string [unique]
+  name string
+  password string
+  birthDate string
+  role enum
+  gender enum
+  confirmEmail bool
+  phone string
+  latitud number
+  longitud number
+  address string
+  image string
+  created_date date
+  update_date date
+}
+
+Table professional {
+  id id [pk]
+  user_id id [ref: - user.id]
+  curriculum string
+  license string
+  professionalScore string
+  experience number
+}
+
+Table admin {
+  id id [pk]
+  user_id id [ref: - user.id]
+}
+
+Table section {
+  id id [pk]
+  name string
+}
+
+Table post {
+  id id [pk]
+  title string
+  body string
+  image string
+  user_id id [ref: > user.id, Note: "created_by"]
+  status status
+  section_id id [ref: < section.id]
+  created_date date
+  update_date date
+}
+
+Table comment {
+  id id [pk]//, ref: > user.id]
+  body string
+  post_id id [ref: > post.id]
+  user_id id [ref: > user.id]
+  status status
+  created_date date
+  update_date date
+}
+
+// products
+
+Table product {
+  id id [pk]
+  name string
+  price int
+  image string
+  stock int
+  amount int
+  category_id id [ref: < category.id]
+  description string
+  status status
+  created_date date
+  update_date date
+}
+
+Table category {
+  id id [pk]
+  name string
+  created_date date
+  update_date date
+}
