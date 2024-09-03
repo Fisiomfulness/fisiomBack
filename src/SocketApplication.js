@@ -3,6 +3,8 @@ const { DomainEvent } = require('#src/modules/event/models/DomainEvent');
 const {
   EVENT_PUBLIC_CHAT_CREATED,
 } = require('#src/modules/event/models/EventSymbols');
+const { FRONT_URL } = require('#src/config/envConfig');
+
 const {
   internalEventBus,
 } = require('#src/modules/event/models/InternalEventBus');
@@ -25,7 +27,7 @@ class SocketApplication {
     /** @readonly @type {SocketServer} */
     this.io = new SocketServer(httpServer, {
       cors: {
-        origin: 'http://localhost:3001',
+        origin: FRONT_URL,
       },
     });
   }
