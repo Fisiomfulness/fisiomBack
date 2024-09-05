@@ -19,6 +19,7 @@ const transporter = nodemailer.createTransport({
 
 // Función que envia confirmación de cita
 const sendAppointmentConfirmation = async (req, res) => {
+  console.log('sendAppointmentConfirmation ha sido llamada');
   const { email, appointmentDetails, productImage } = req.body;
 
   try {

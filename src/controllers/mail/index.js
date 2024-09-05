@@ -1,6 +1,7 @@
-const { sendEmail } = require("./sendMail")
-
+const { sendEmail } = require('./sendMail');
+const { sendAppointmentConfirmation } = require('./appointmentController');
 
 module.exports = {
-  sendEmail
-}
+  sendEmail,
+  sendAppointmentConfirmation,
+};

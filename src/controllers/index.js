@@ -79,7 +79,6 @@ const {
   getAppointments,
   updateAppointment,
   deleteAppointment,
-  sendAppointmentConfirmation,
 } = require('./appointment/index');
 
 const {
