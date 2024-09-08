@@ -1,11 +1,9 @@
-const { ORIGIN_ALLOWED, FRONT_URL } = require('./envConfig');
+const { ORIGIN_ALLOWED, FRONT_URL, NODE_ENV } = require('./envConfig');
 
 const optionCors = {
-  // origin: 'http://localhost:5173',
-  // ? To work with cookies needs a fix origin
   origin: (origin, callback) => {
     if (!origin) {
-      // Permitir solo en desarrollo o pruebas
+      // alowed only on development environment
       if (NODE_ENV === 'development' || NODE_ENV === 'test') {
         callback(null, true);
       } else {
