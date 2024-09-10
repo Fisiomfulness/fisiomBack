@@ -24,7 +24,7 @@ const professionalSchema = z.object({
     .date('No es una fecha valida YYYY-MM-DD')
     .refine(
       (value) => isDateOnRange(value, acceptedYears.min, acceptedYears.max),
-      `Debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`
+      `Debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`,
     ),
   description: z
     .string()
@@ -67,14 +67,14 @@ const professionalSchema = z.object({
     .instanceof(File)
     .refine(
       (value) => value.type.startsWith('image/'),
-      'El archivo no es una imagen'
+      'El archivo no es una imagen',
     )
     .refine(
       (value) => value && value.size <= MAX_PICTURE_SIZE,
-      'Tamaño de imagen máxima: 3MB'
+      'Tamaño de imagen máxima: 3MB',
     )
     .optional(),
-  services: z.array(serviceSchema),
+  services: z.array(serviceSchema).optional(),
 });
 
 const professionalRatingSchema = z.object({
@@ -90,13 +90,13 @@ const professionalRatingSchema = z.object({
     .string({ required_error: 'ID del usuario requerido' })
     .refine(
       async (value) => await validateId(value, 'User'),
-      'Usuario no encontrado'
+      'Usuario no encontrado',
     ),
   _professional: z
     .string({ required_error: 'ID del profesional requerido' })
     .refine(
       async (value) => await validateId(value, 'Profesional'),
-      'Profesional no encontrado'
+      'Profesional no encontrado',
     ),
 });
 
