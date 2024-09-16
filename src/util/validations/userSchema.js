@@ -25,7 +25,7 @@ const userSchema = z.object({
     .date('no es una fecha valida YYYY-MM-DD')
     .refine(
       (value) => isDateOnRange(value, acceptedYears.min, acceptedYears.max),
-      `debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`
+      `debes tener mas de ${acceptedYears.min} y menos de ${acceptedYears.max} años`,
     ),
   gender: z.enum(['Femenino', 'Masculino', 'Prefiero no responder'], {
     message: 'Genero debe ser Femenino | Masculino | Prefiero no responder',
@@ -40,27 +40,34 @@ const userSchema = z.object({
     .array(z.number())
     .length(2, 'debe tener el formato => [number, number]')
     .optional(),
-  interests: z.preprocess((value) => {
-    // ? FormData solo acepta strings/archivos [key value], asi que esto viene puede venir con un JSON.stringify
-    // ? por lo tanto de ser asi debemos parsearlo antes de hacer la validación.
-    if (typeof value === 'string') {
-      try {
-        return JSON.parse(value);
-      } catch (e) {
-        return value;
+  interests: z.preprocess(
+    (value) => {
+      // ? FormData solo acepta strings/archivos [key value], asi que esto viene puede venir con un JSON.stringify
+      // ? por lo tanto de ser asi debemos parsearlo antes de hacer la validación.
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch (e) {
+          return value;
+        }
       }
-    }
-    return value;
-  }, z.array(z.string()).max(5, 'No puede elegir mas de 5 intereses').optional().or(z.literal([]))),
+      return value;
+    },
+    z
+      .array(z.string())
+      .max(5, 'No puede elegir mas de 5 intereses')
+      .optional()
+      .or(z.literal([])),
+  ),
   image: z
     .instanceof(File)
     .refine(
       (value) => value.type.startsWith('image/'),
-      'el archivo enviado no es una imagen'
+      'el archivo enviado no es una imagen',
     )
     .refine(
       (value) => value && value.size <= MAX_PICTURE_SIZE,
-      'tamaño de imagen máxima: 3MB'
+      'tamaño de imagen máxima: 3MB',
     )
     .optional(),
 });
