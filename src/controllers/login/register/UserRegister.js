@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const { hashData } = require('#src/util/hashData');
-const { JWT_SECRET, FRONT_URL } = require('#src/config/envConfig');
-const { sendEmailNodemailer } = require('#src/util/nodemailer');
-const User = require('#src/models/user/User');
-const Profesional = require('#src/models/profesional/Profesional');
+const { hashData } = require("#src/util/hashData");
+const { JWT_SECRET, FRONT_URL } = require("#src/config/envConfig");
+const { sendEmailNodemailer } = require("#src/util/nodemailer");
+const User = require("#src/models/user/User");
+const Profesional = require("#src/models/profesional/Profesional");
 
 const UserRegister = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ const UserRegister = async (req, res) => {
       Profesional.findOne({ email: newData.email }),
     ]).then((settElements) => {
       const usersMap = settElements.map((settElement, index) => {
-        if (settElement.status === 'fulfilled' && settElement.value) {
+        if (settElement.status === "fulfilled" && settElement.value) {
           if (index === 0) {
             return { user: settElement.value };
           } else {
@@ -31,7 +31,31 @@ const UserRegister = async (req, res) => {
     });
 
     if (userExist)
-      return res.status(400).json({ message: 'Email ya registrado' });
+      return res.status(400).json({ message: "Email ya registrado" });
+
+    let userExistPhone = null;
+
+    await Promise.allSettled([
+      User.findOne({ phone: newData.phone }),
+      Profesional.findOne({ phone: newData.phone }),
+    ]).then((settElements) => {
+      const usersMap = settElements.map((settElement, index) => {
+        if (settElement.status === "fulfilled" && settElement.value) {
+          if (index === 0) {
+            return { user: settElement.value };
+          } else {
+            return { user: settElement.value };
+          }
+        } else {
+          return null;
+        }
+      });
+      const firstNonNullUser = usersMap.filter((user) => user)[0];
+      userExistPhone = firstNonNullUser?.user || null; // Manejar el caso nulo
+    });
+
+    if (userExistPhone)
+      return res.status(400).json({ message: "telefono ya registrado" });
 
     const hashedPass = await hashData(newData.password);
     const finalUser = {
@@ -50,7 +74,7 @@ const UserRegister = async (req, res) => {
 
     sendEmailNodemailer({
       to: newUser.email,
-      subject: 'Confirmacion de cuenta - Fisium Fulness',
+      subject: "Confirmacion de cuenta - Fisium Fulness",
       html: `
           <p> Hola! ${newUser.name}, confirma la creacion de tu cuenta de Fisium Fulness</p>
           <p> Has click en este enlace para confirmar tu cuenta:
@@ -58,11 +82,11 @@ const UserRegister = async (req, res) => {
           <p> Si tu no hiciste esta peticion, ignora este mensaje.</p>`,
     });
 
-    res.status(201).json({ message: 'Creado con exito' });
+    res.status(201).json({ message: "Creado con exito" });
   } catch (error) {
     res
       .status(500)
-      .send({ message: 'Algo fallo...', errorMessage: error.message });
+      .send({ message: "Algo fallo...", errorMessage: error.message });
   }
 };
 
