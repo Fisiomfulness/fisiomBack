@@ -1,12 +1,23 @@
-// debería importar el modelo Purchase y crear una Purchase con estado pending
+const Purchase = require('../../models/purchase/Purchase');
 
 const initPurchase = async (req, res) => {
   try {
-    const { total, transactionID, productsMap } = req.body;
-    console.log(total, transactionID, productsMap);
+    const { total, productsMap } = req.body;
 
-    // en lugar de esta response, iniciar el proceso de pago
-    return res.status(200).json({ total, transactionID, productsMap });
+    // genero el ID acá, no lo mando del front para evitar manipulaciones / interpreto que después en la respuesta de la transacción podés buscar este número
+    const transactionID = Math.floor(100000000000 + Math.random() * 900000000000);
+
+    const newPurchase = new Purchase({
+      _userId: req.user?.id,
+      transactionID: transactionID,
+      purchaseData: productsMap,
+      amount: total
+    })
+
+    await newPurchase.save()
+    
+    // en este punto en lugar de esta response podés hacer un redirect al inicio de tu cadena de pago 
+    return res.status(200).json({ Purchase: newPurchase });
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
