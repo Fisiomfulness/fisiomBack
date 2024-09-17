@@ -10,6 +10,9 @@ const { FRONT_URL, JWT_SECRET } = require("#src/config/envConfig");
 const { sendEmailNodemailer } = require("#src/util/nodemailer");
 const Profesional = require("#src/models/profesional/Profesional");
 const User = require("#src/models/user/User");
+const {
+  getCountryCode,
+} = require("#src/controllers/login/register/countryCodes");
 
 const profesionalRegister = async (req, res) => {
   if (!req.file) {
@@ -21,6 +24,11 @@ const profesionalRegister = async (req, res) => {
   try {
     const newData = req.validatedBody;
     console.log(newData);
+
+    // Obtener el código de país
+    const phoneCode = getCountryCode(newData.country);
+    const phoneWithCountryCode = `${phoneCode}${newData.phone}`;
+
     let userExists = null;
 
     await Promise.allSettled([
@@ -55,8 +63,8 @@ const profesionalRegister = async (req, res) => {
     let userExistsphone = null;
 
     await Promise.allSettled([
-      User.findOne({ phone: newData.phone }),
-      Profesional.findOne({ phone: newData.phone }),
+      User.findOne({ phone: phoneWithCountryCode }),
+      Profesional.findOne({ phone: phoneWithCountryCode }),
     ]).then((settElements) => {
       const usersMap = settElements.map((settElement, index) => {
         if (settElement.status === "fulfilled" && settElement.value) {

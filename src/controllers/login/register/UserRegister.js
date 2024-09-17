@@ -5,10 +5,21 @@ const { JWT_SECRET, FRONT_URL } = require("#src/config/envConfig");
 const { sendEmailNodemailer } = require("#src/util/nodemailer");
 const User = require("#src/models/user/User");
 const Profesional = require("#src/models/profesional/Profesional");
+const countryCodes = require("#src/controllers/login/register/countryCodes");
 
 const UserRegister = async (req, res) => {
   try {
     const newData = req.validatedBody;
+
+    // Valido si el código de país enviado es correcto
+    const countryCode = newData.countryCode;
+    if (!countryCodes.includes(countryCode)) {
+      return res.status(400).json({ message: "Código de país inválido" });
+    }
+
+    // nueva constante para almacenar el número de teléfono con el código de país
+    const phoneWithCountryCode = `${countryCode}${newData.phone}`;
+
     let userExist = null;
 
     await Promise.allSettled([
@@ -35,9 +46,11 @@ const UserRegister = async (req, res) => {
 
     let userExistPhone = null;
 
+    // Buscar usuarios y profesionales con el número de teléfono con el código de país
+
     await Promise.allSettled([
-      User.findOne({ phone: newData.phone }),
-      Profesional.findOne({ phone: newData.phone }),
+      User.findOne({ phone: phoneWithCountryCode }),
+      Profesional.findOne({ phone: phoneWithCountryCode }),
     ]).then((settElements) => {
       const usersMap = settElements.map((settElement, index) => {
         if (settElement.status === "fulfilled" && settElement.value) {
