@@ -53,7 +53,7 @@ router.patch('/status/:id', permit(roles.ADMIN, roles.SUPER_ADMIN), statusUser);
 // ! Agregar rol user si se agrega funcionalidad para eliminar propia cuenta.
 router.delete(
   '/delete/:id',
-  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
   deleteUser,
 );
 
