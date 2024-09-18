@@ -1,11 +1,10 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-const { hashData } = require("#src/util/hashData");
-const { JWT_SECRET, FRONT_URL } = require("#src/config/envConfig");
-const { sendEmailNodemailer } = require("#src/util/nodemailer");
-const User = require("#src/models/user/User");
-const Profesional = require("#src/models/profesional/Profesional");
-const countryCodes = require("#src/controllers/login/register/countryCodes");
+const { hashData } = require('#src/util/hashData');
+const { JWT_SECRET, FRONT_URL } = require('#src/config/envConfig');
+const { sendEmailNodemailer } = require('#src/util/nodemailer');
+const User = require('#src/models/user/User');
+const Profesional = require('#src/models/profesional/Profesional');
 
 const UserRegister = async (req, res) => {
   try {
@@ -14,7 +13,7 @@ const UserRegister = async (req, res) => {
     // Valido si el código de país enviado es correcto
     const countryCode = newData.countryCode;
     if (!countryCodes.includes(countryCode)) {
-      return res.status(400).json({ message: "Código de país inválido" });
+      return res.status(400).json({ message: 'Código de país inválido' });
     }
 
     // nueva constante para almacenar el número de teléfono con el código de país
@@ -27,7 +26,7 @@ const UserRegister = async (req, res) => {
       Profesional.findOne({ email: newData.email }),
     ]).then((settElements) => {
       const usersMap = settElements.map((settElement, index) => {
-        if (settElement.status === "fulfilled" && settElement.value) {
+        if (settElement.status === 'fulfilled' && settElement.value) {
           if (index === 0) {
             return { user: settElement.value };
           } else {
@@ -42,7 +41,7 @@ const UserRegister = async (req, res) => {
     });
 
     if (userExist)
-      return res.status(400).json({ message: "Email ya registrado" });
+      return res.status(400).json({ message: 'Email ya registrado' });
 
     let userExistPhone = null;
 
@@ -53,7 +52,7 @@ const UserRegister = async (req, res) => {
       Profesional.findOne({ phone: phoneWithCountryCode }),
     ]).then((settElements) => {
       const usersMap = settElements.map((settElement, index) => {
-        if (settElement.status === "fulfilled" && settElement.value) {
+        if (settElement.status === 'fulfilled' && settElement.value) {
           if (index === 0) {
             return { user: settElement.value };
           } else {
@@ -68,7 +67,7 @@ const UserRegister = async (req, res) => {
     });
 
     if (userExistPhone)
-      return res.status(400).json({ message: "telefono ya registrado" });
+      return res.status(400).json({ message: 'telefono ya registrado' });
 
     const hashedPass = await hashData(newData.password);
     const finalUser = {
@@ -87,7 +86,7 @@ const UserRegister = async (req, res) => {
 
     sendEmailNodemailer({
       to: newUser.email,
-      subject: "Confirmacion de cuenta - Fisium Fulness",
+      subject: 'Confirmacion de cuenta - Fisium Fulness',
       html: `
           <p> Hola! ${newUser.name}, confirma la creacion de tu cuenta de Fisium Fulness</p>
           <p> Has click en este enlace para confirmar tu cuenta:
@@ -95,11 +94,11 @@ const UserRegister = async (req, res) => {
           <p> Si tu no hiciste esta peticion, ignora este mensaje.</p>`,
     });
 
-    res.status(201).json({ message: "Creado con exito" });
+    res.status(201).json({ message: 'Creado con exito' });
   } catch (error) {
     res
       .status(500)
-      .send({ message: "Algo fallo...", errorMessage: error.message });
+      .send({ message: 'Algo fallo...', errorMessage: error.message });
   }
 };
 
