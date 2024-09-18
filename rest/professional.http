@@ -4,7 +4,7 @@
 GET {{url}}/professionals/
 
 ###get availability
-GET {{url}/professionals/availability/662a9dce3ac9256327142bf5
+GET {{url}}/professionals/availability/662a9dce3ac9256327142bf5
 
 ###post availability
 POST {{url}}/professionals/availability/662a9dce3ac9256327142bf5
@@ -32,12 +32,12 @@ Content-Type: application/json
    "curriculum": "https://res.cloudinary.com/do6ra4oau/image/upload/v1714055789/FisiumFulness/users/1714055787309-pdfpruebafisiomfulness.pdf",
    "license": "M1354",
    "phone": "11 1568942",
-    "streetName": "Montezuma",
-    "streetNumber": "750",
-    "city": "Lima",
-    "country": "Peru",
-   "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg",
-   "availability": 
+   "streetName": "Francia",
+   "streetNumber": "415",
+   "city": "Rosario",
+   "state": "Santa Fe",
+   "country": "Argentina",
+   "image": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/03/07/64075a057861c.r_d.1068-561-6456.jpeg"
 }
 
 ### GET USERS
