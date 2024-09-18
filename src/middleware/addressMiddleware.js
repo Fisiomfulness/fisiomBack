@@ -20,10 +20,10 @@ const addressMiddleware = async (req, res, next) => {
     if (
       bestResult &&
       bestResult.country &&
-      bestResult.state &&
+      // bestResult.state && // no suele venir para Perú
       bestResult.city &&
       bestResult.streetName &&
-      bestResult.streetNumber &&
+      // bestResult.streetNumber && // sin esto es menos exacto pero viene completo más veces, en especial para Lima, Peru
       bestResult.latitude &&
       bestResult.longitude
     ) {
