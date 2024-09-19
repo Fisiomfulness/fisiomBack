@@ -10,13 +10,6 @@ const {
   sendAppointmentConfirmation,
 } = require('../../controllers/mail/appointmentController');
 
-console.log(sendAppointmentConfirmation); // prueba
-
-console.log(createAppointment); // super prueba
-console.log(getAppointments);
-console.log(updateAppointment);
-console.log(deleteAppointment);
-
 const router = Router();
 
 router.post('/create', createAppointment);
