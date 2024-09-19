@@ -2,6 +2,7 @@
 const { PORT } = require('./config/envConfig');
 const { Server } = require('./server');
 const { mongoClientConnect } = require('./db');
+const { createSuperAdmin } = require('./createSuperAdmin');
 
 async function main() {
   /**
@@ -9,6 +10,8 @@ async function main() {
    * ejecutar el servidor
    */
   await mongoClientConnect();
+
+  await createSuperAdmin();
 
   const server = new Server(PORT);
   await server.start();

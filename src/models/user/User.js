@@ -1,8 +1,8 @@
-const moment = require('moment');
-const mongoose = require('mongoose');
+const moment = require("moment");
+const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
-const addressSchema = require('../addressSchema');
+const addressSchema = require("../addressSchema");
 
 const User = new Schema(
   {
@@ -31,26 +31,26 @@ const User = new Schema(
     },
     birthDate: {
       type: String,
-      default: '',
+      default: "",
       required: true,
     },
     role: {
       type: String,
-      enum: ['user', 'admin', 'super_admin'],
-      default: 'user',
+      enum: ["user", "admin", "super_admin"],
+      default: "user",
     },
     interests: {
       type: [
         {
           type: ObjectId,
-          ref: 'Interest',
+          ref: "Interest",
         },
       ],
       default: [],
     },
     gender: {
       type: String,
-      Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
+      Enum: ["Femenino", "Masculino", "Prefiero no responder"],
       required: true,
     },
     confirmEmail: {
@@ -59,41 +59,42 @@ const User = new Schema(
     },
     phone: {
       type: String,
-      default: '',
+      unique: true,
+      default: "",
     },
     coordinates: {
       type: [Number], // lat, lng
       default: [0, 0],
-      index: '2d',
+      index: "2d",
     },
     address: {
       type: addressSchema,
-      default: '',
+      default: "",
     },
     image: {
       type: String,
-      default: '',
+      default: "",
     },
     id_image: {
       type: String,
-      default: '',
+      default: "",
     },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
+  { timestamps: { createdAt: "createdDate", updatedAt: "updatedDate" } },
 );
 
-User.virtual('age').get(function () {
+User.virtual("age").get(function () {
   if (!this.birthDate) return null; // Return null if birthDate is not set
   const today = moment();
   const birthDate = moment(this.birthDate);
 
   // Calculate the age using Moment.js
-  const age = today.diff(birthDate, 'years');
+  const age = today.diff(birthDate, "years");
 
   return age;
 });
 
-User.set('toObject', { virtuals: true });
-User.set('toJSON', { virtuals: true });
+User.set("toObject", { virtuals: true });
+User.set("toJSON", { virtuals: true });
 
-module.exports = model('User', User);
+module.exports = model("User", User);
