@@ -18,6 +18,14 @@ const Profesional = new Schema(
       type: Boolean,
       default: true,
     },
+    suspended: {
+      type: Boolean,
+      default: false,
+    },
+    suspensionEndDate: {
+      type: Date,
+      default: null,
+    },
     email: {
       type: String,
       unique: true,
