@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const compression = require('compression');
+const path = require('path')
 
 const routes = require('#src/routes/index');
 const { optionCors } = require('#src/config/corsConfig');
@@ -28,7 +29,6 @@ class ExpressApplication {
     this.express.use(cookieParser());
     this.express.use(morgan('dev'));
     this.express.use(compression());
-
     this.express.use('/', routes);
 
     this.express.use(errorHandler);

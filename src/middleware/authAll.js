@@ -3,7 +3,6 @@ const { JWT_SECRET } = require('../config/envConfig');
 
 const authAll = (req, res, next) => {
   const token = req.cookies['accessToken'];
-
   if (!token) {
     return res.status(401).json({ message: 'No autorizado' });
   }

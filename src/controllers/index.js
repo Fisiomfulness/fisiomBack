@@ -90,6 +90,7 @@ const {
 
 const {
   initPurchase,
+  paymentForm,
   successPurchase,
 } = require('./purchase/index');
 

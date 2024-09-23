@@ -1,0 +1,17 @@
+doctype html
+html
+  body
+    script(src= "#NIUBIZ_CHECKOUT_ENDPOINT" defer)
+
+    script.
+      function openForm() {
+        VisanetCheckout.configure({
+          "#payload2front"    
+        });
+        VisanetCheckout.open();
+      }
+
+      // Trigger openForm as soon as the page is loaded
+      window.onload = function() {
+        openForm();
+      };

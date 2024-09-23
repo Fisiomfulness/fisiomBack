@@ -46,6 +46,15 @@ const envSchema = z.object({
   OPEN_CAGE: z.string().nonempty(),
 
   FRONT_URL: z.string().nonempty(),
+
+
+  MERCHANT_NAME: z.string().nonempty(),
+  MERCHANT_PASSWORD: z.string().nonempty(),
+  NIUBIZ_MERCHANT_ID: z.string().nonempty(),
+  NIUBIZ_SECURITY_ENDPOINT: z.string().nonempty(),
+  NIUBIZ_SESSION_ENDPOINT: z.string().nonempty(),
+  NIUBIZ_CHECKOUT_ENDPOINT: z.string().nonempty(),
+  NIUBIZ_TRANSACTION_AUTORIZATION_ENDPOINT: z.string().nonempty(),
 });
 
 /**
@@ -75,6 +84,15 @@ const envVars = envSchema.safeParse({
   OPEN_CAGE: process.env.OPEN_CAGE,
 
   FRONT_URL: process.env.FRONT_URL,
+
+  MERCHANT_NAME:process.env.MERCHANT_NAME,
+  MERCHANT_PASSWORD:process.env.MERCHANT_PASSWORD,
+  
+  NIUBIZ_MERCHANT_ID:process.env.NIUBIZ_MERCHANT_ID,
+  NIUBIZ_SECURITY_ENDPOINT:process.env.NIUBIZ_SECURITY_ENDPOINT,
+  NIUBIZ_SESSION_ENDPOINT:process.env.NIUBIZ_SESSION_ENDPOINT,
+  NIUBIZ_CHECKOUT_ENDPOINT:process.env.NIUBIZ_CHECKOUT_ENDPOINT,
+  NIUBIZ_TRANSACTION_AUTORIZATION_ENDPOINT:process.env.NIUBIZ_TRANSACTION_AUTORIZATION_ENDPOINT,
 });
 
 if (!envVars.success) {
