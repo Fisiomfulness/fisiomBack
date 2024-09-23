@@ -23,6 +23,7 @@ const userSchema = require('#src/util/validations/userSchema');
 const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
 const permit = require('#src/middleware/rolesMiddleware');
+const { suspendUser } = require('#src/controllers/user/suspendUser');
 
 const router = Router();
 
@@ -55,6 +56,12 @@ router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
   deleteUser,
+);
+
+router.put(
+  '/suspend/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
+  suspendUser,
 );
 
 router.use(errorMiddleware);

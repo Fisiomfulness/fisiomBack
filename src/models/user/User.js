@@ -16,6 +16,14 @@ const User = new Schema(
       type: Boolean,
       default: true,
     },
+    suspended: {
+      type: Boolean,
+      default: false,
+    },
+    suspensionEndDate: {
+      type: Date,
+      default: null,
+    },
     email: {
       type: String,
       unique: true,
@@ -77,7 +85,7 @@ const User = new Schema(
     id_image: {
       type: String,
       default: '',
-    },
+    }
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
 );
