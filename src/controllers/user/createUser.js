@@ -50,6 +50,7 @@ const createUser = async (req, res) => {
       address,
       image: urlImage,
       id_image: public_id_prueba,
+      authProvider: 'local',
     };
 
     const user = new User(newData);

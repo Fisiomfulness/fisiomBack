@@ -1,5 +1,5 @@
 const { Router } = require('express');
-
+const googleAuthRoutes = require('./googleAuth/googleAuthRoutes.js');
 const authRouter = require('./authRoutes/authRoutes.js');
 const user = require('./userRoutes/userRoutes.js');
 const blog = require('./blogRoutes/blogRoutes.js');
@@ -19,8 +19,9 @@ const appointmentRouter = require('./appointmentRoutes/appointmentRoutes.js');
 const register = require('./authRoutes/register.js');
 
 const router = Router();
-
+router.use('/api/auth', googleAuthRoutes);
 router.use('/auth', authRouter);
+
 router.use('/user_specialty', userSpecialtyRoutes);
 router.use('/specialty', specialty);
 router.use('/users', user);
