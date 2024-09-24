@@ -23,6 +23,7 @@ const userSchema = require('#src/util/validations/userSchema');
 const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
 const permit = require('#src/middleware/rolesMiddleware');
+const { suspendUser } = require('#src/controllers/user/suspendUser');
 
 const router = Router();
 
@@ -53,8 +54,14 @@ router.patch('/status/:id', permit(roles.ADMIN, roles.SUPER_ADMIN), statusUser);
 // ! Agregar rol user si se agrega funcionalidad para eliminar propia cuenta.
 router.delete(
   '/delete/:id',
-  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
   deleteUser,
+);
+
+router.put(
+  '/suspend/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
+  suspendUser,
 );
 
 router.use(errorMiddleware);

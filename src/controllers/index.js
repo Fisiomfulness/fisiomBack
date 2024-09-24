@@ -88,6 +88,11 @@ const {
   deleteService,
 } = require('./service/index');
 
+const {
+  initPurchase,
+  successPurchase,
+} = require('./purchase/index');
+
 module.exports = {
   createBlog,
   deleteBlog,
@@ -148,4 +153,6 @@ module.exports = {
   deleteService,
   updateAppointment,
   deleteAppointment,
+  initPurchase,
+  successPurchase,
 };
