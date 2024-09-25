@@ -1,4 +1,4 @@
-const { ORIGIN_ALLOWED, FRONT_URL, NODE_ENV } = require('./envConfig');
+const { FRONT_URL, NODE_ENV } = require('./envConfig');
 
 const optionCors = {
   origin: (origin, callback) => {
