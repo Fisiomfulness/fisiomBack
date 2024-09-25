@@ -2,7 +2,7 @@ const { BadRequestError } = require('#src/util/errors');
 const Service = require('#src/models/Service');
 const Professional = require('#src/models/profesional/Profesional');
 
-const LIMIT_SERVICES = 30;
+const LIMIT_SERVICES = 100;
 
 const getAllServices = async (req, res) => {
   const {
