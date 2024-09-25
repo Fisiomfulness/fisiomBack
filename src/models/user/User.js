@@ -35,12 +35,16 @@ const User = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return this.authProvider === 'local'; // Solo requerido si el proveedor es local
+      },
     },
     birthDate: {
       type: String,
       default: '',
-      required: true,
+      required: function () {
+        return this.authProvider === 'local'; // Solo requerido si el proveedor es local
+      },
     },
     role: {
       type: String,
@@ -58,8 +62,10 @@ const User = new Schema(
     },
     gender: {
       type: String,
-      Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
-      required: true,
+      enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
+      required: function () {
+        return this.authProvider === 'local'; // Solo requerido si el proveedor es local
+      },
     },
     confirmEmail: {
       type: Boolean,
@@ -76,7 +82,10 @@ const User = new Schema(
     },
     address: {
       type: addressSchema,
-      default: '',
+      required: function () {
+        return this.authProvider === 'local'; // Solo requerido si el proveedor es local
+      },
+      default: {},
     },
     image: {
       type: String,
@@ -85,7 +94,13 @@ const User = new Schema(
     id_image: {
       type: String,
       default: '',
-    }
+    },
+    // Aquí se agrega el campo authProvider
+    authProvider: {
+      type: String,
+      enum: ['local', 'google'], // Puede ser 'local' o 'google'
+      default: 'local', // Valor por defecto
+    },
   },
   { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
 );
