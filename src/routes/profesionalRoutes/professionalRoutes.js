@@ -15,6 +15,7 @@ const {
   addExperience,
   updateExperience,
   deleteExperience,
+  approveProfessional,
 } = require('../../controllers/index');
 
 const { upload } = require('#src/config/multerConfig');
@@ -81,6 +82,12 @@ router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   deleteProfessional,
+);
+
+router.patch(
+  '/approve/:id',
+  permit(roles.ADMIN, roles.SUPER_ADMIN), // Solo administradores pueden aprobar cuentas
+  approveProfessional,
 );
 
 // ? Los profesionales no pueden hacer comentarios a otros profesionales.
