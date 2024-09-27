@@ -1,20 +1,20 @@
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("#src/config/envConfig");
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('#src/config/envConfig');
 const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
-} = require("#src/util/errors");
-const { verifyHashedData } = require("#src/util/hashData");
-const User = require("#src/models/user/User");
-const Professional = require("#src/models/profesional/Profesional");
+} = require('#src/util/errors');
+const { verifyHashedData } = require('#src/util/hashData');
+const User = require('#src/models/user/User');
+const Professional = require('#src/models/profesional/Profesional');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     if (!email || !password)
-      throw new BadRequestError("Credenciales requeridas");
+      throw new BadRequestError('Credenciales requeridas');
 
     const [user, professional] = await Promise.all([
       User.findOne({ email }),
@@ -22,26 +22,25 @@ const login = async (req, res) => {
     ]);
 
     const foundUser = user || professional;
-    if (!foundUser) throw new NotFoundError("Usuario no encontrado");
+    if (!foundUser) throw new NotFoundError('Usuario no encontrado');
+
+    if (professional && !professional.isApproved) {
+      throw new UnauthorizedError(
+        'Tu cuenta está pendiente de aprobación por el administrador.',
+      );
+    }
 
     const passwordMatches = await verifyHashedData(
       password,
-      foundUser.password
+      foundUser.password,
     );
-    if (!passwordMatches) throw new UnauthorizedError("Contraseña incorrecta");
-
-    // * Eliminar la suspencion si el usuario vuelve a loguearse
+    if (!passwordMatches) throw new UnauthorizedError('Contraseña incorrecta');
 
     if (foundUser.suspended) {
-      // Reactivar la cuenta
       foundUser.suspended = false;
       foundUser.suspensionEndDate = null;
-      foundUser.address = foundUser.address;
-
       await foundUser.save();
     }
-
-    console.log(foundUser);
 
     // * Creación de JWT
     let payload = {
@@ -53,16 +52,16 @@ const login = async (req, res) => {
       coordinates: foundUser.coordinates,
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "2d" });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '2d' });
 
-    res.cookie("accessToken", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2, // ? 2 days
+    res.cookie('accessToken', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
     });
 
-    res.status(201).send({ ...payload, message: "Logeado con éxito!" });
+    res.status(201).send({ ...payload, message: 'Logeado con éxito!' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

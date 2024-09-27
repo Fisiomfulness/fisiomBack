@@ -129,7 +129,7 @@ const Profesional = new Schema(
     },
     isApproved: {
       type: Boolean,
-      default: false, // Las cuentas no están aprobadas por defecto
+      default: false,
     },
   },
   {

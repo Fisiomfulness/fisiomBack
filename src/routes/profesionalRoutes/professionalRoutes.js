@@ -18,6 +18,8 @@ const {
   approveProfessional,
 } = require('../../controllers/index');
 
+const { adminAuthMiddleware } = require('../../middleware/adminMiddleware');
+
 const { upload } = require('#src/config/multerConfig');
 const { errorMiddleware } = require('#src/middleware/errorMiddleware');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
@@ -84,9 +86,11 @@ router.delete(
   deleteProfessional,
 );
 
-router.patch(
-  '/approve/:id',
-  permit(roles.ADMIN, roles.SUPER_ADMIN), // Solo administradores pueden aprobar cuentas
+// Ruta para que el administrador apruebe a un profesional
+
+router.put(
+  '/approve/:professionalId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
   approveProfessional,
 );
 
