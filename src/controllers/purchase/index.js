@@ -1,10 +1,10 @@
 const { initPurchase } = require("./initPurchase")
-const { paymentForm } = require("./paymentForm")
+const { authorize } = require("./authorize")
 const { successPurchase } = require("./successPurchase")
 
 
 module.exports = {
     initPurchase,
-    paymentForm,
+    authorize,
     successPurchase,
 }

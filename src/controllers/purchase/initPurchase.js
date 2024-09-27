@@ -1,6 +1,7 @@
 const Purchase = require('../../models/purchase/Purchase');
-const { NIUBIZ_MERCHANT_ID, NIUBIZ_CHECKOUT_ENDPOINT } = require('../../config/envConfig');
+const { NIUBIZ_MERCHANT_ID, NIUBIZ_CHECKOUT_ENDPOINT} = require('../../config/envConfig');
 const { fetchAccessToken, fetchSessionKey } = require('../../services/niubizServices');
+
 
 const initPurchase = async (req, res) => {
   try {
@@ -9,12 +10,7 @@ const initPurchase = async (req, res) => {
     // genero el ID acá, no lo mando del front para evitar manipulaciones / interpreto que después en la respuesta de la transacción podés buscar este número
     const transactionID = Math.floor(100000000000 + Math.random() * 900000000000);
 
-    const newPurchase = new Purchase({
-      _userId: req.user?.id,
-      transactionID: transactionID,
-      purchaseData: productsMap,
-      amount: total
-    })
+
 
     const payload = {
       channel: 'web',
@@ -40,15 +36,13 @@ const initPurchase = async (req, res) => {
       amount: total,
       merchantId: NIUBIZ_MERCHANT_ID
     };
-    
-    await newPurchase.save()
 
     let accessToken, sessionKey;
     try {
     
         // Fetch access token
-        accessToken = await fetchAccessToken();  
-        
+        accessToken = await fetchAccessToken();
+                
         // Fetch session key
         sessionKey = await fetchSessionKey(accessToken, payload);
         
@@ -56,69 +50,74 @@ const initPurchase = async (req, res) => {
         // next(error); // Error handling middleware
         console.log(error)
       }
-  
-      
-      const payload2front = {         
-        sessiontoken: sessionKey,
-        channel: "web",
-        merchantid: NIUBIZ_MERCHANT_ID,
-        purchasenumber: transactionID,
+      try {
+      const newPurchase = new Purchase({
+        _userId: req.user?.id,
+        transactionID: transactionID,
+        purchaseData: productsMap,
         amount: total,
-        merchantname: "FISIOM FULNESS",
-        expirationminutes: "20",
-        timeouturl: "about:blank",
-        merchantlogo: "fisiom.png",
-        formbuttoncolor: "#000000",
-        action: '/purchases/renderPaymentResult',    
+        accessToken: accessToken,
+        sessionKey: sessionKey
+      })
+      
+      await newPurchase.save()
+   
+    }
+      catch (error) {
+        console.log(error)
+      }
+
+
+  const htmlContent = `
+  <script>
+    
+    (async () => {
+      try {
+        // Fetch the external script
+        const response = await fetch("https://static-content-qas.vnforapps.com/v2/js/checkout.js?qa=true");
+        
+        if (!response.ok) {
+          throw new Error("Failed to load the external script");
         }
 
 
-        const htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Visanet Checkout</title>
-        </head>
-        <body>
-          <script src="https://static-content-qas.vnforapps.com/v2/js/checkout.js?qa=true" defer></script>
-          <script>
-    
-            function openForm() {
-              VisanetCheckout.configure({
-                sessiontoken: "${sessionKey}",
-                channel: "${payload.channel}",
-                merchantid: "${NIUBIZ_MERCHANT_ID}",
-                purchasenumber: ${transactionID},
-                amount: ${total},
-                merchantname: "FISIOM FULNES",
-                expirationminutes: "20",
-                timeouturl: "about:blank",
-                merchantlogo: "fisiom.png",
-                formbuttoncolor: "#000000",
-                action: '/purchases/renderPaymentResult'
-              });
-              VisanetCheckout.open();
-            }
-    
-            window.onload = function() {
-              openForm();
-            };
-          </script>
-        </body>
-        </html>
-      ;`
-      // res.setHeader('Content-Type', 'text/html');
-      // res.send(htmlContent);
-      res.setHeader('Content-Type', 'text/html');
-      // res.type('html');
-      res.send(htmlContent);
-      // Render the web_payment.pug template with the session data
-      // res.redirect(`/paymentForm?sessionKey=${payload2front.sessionKey}&amount=${payload2front.amount}&merchantId=${payload2front.merchantId}&channel=${payload2front.channel}&sessionToken=${payload2front.sessionKey}&accessToken=${accesToken}`);
-      
+        // Get the script text and evaluate it
+        const scriptText = await response.text();
+        eval(scriptText);  // This will execute the script and define the classes or objects
 
-    // return res.status(200).json({ Purchase: newPurchase });
+
+          VisanetCheckout.configure({
+            sessiontoken: "${sessionKey}",
+            channel: "${payload.channel}",
+            merchantid: "${NIUBIZ_MERCHANT_ID}",
+            purchasenumber: ${transactionID},
+            amount: ${total},
+            merchantname: "FISIOM FULNES",
+            expirationminutes: "20",
+            timeouturl: "about:blank",
+            merchantlogo: "fisiom.png",
+            formbuttoncolor: "#000000",
+            action: 'http://localhost:3000/purchases/authorize?transactionID=${transactionID}'
+          });
+
+          // Open the checkout form
+          VisanetCheckout.open();
+        // } else {
+        //   console.error("VisanetCheckout class was not found.");
+        // }
+
+      } catch (error) {
+        console.error("Error in fetching or executing the script:", error);
+      }
+    })();
+  </script>
+`;
+    const transactions = await Purchase.find({})
+    .sort({ createdDate: -1 })
+    .limit(3);
+    console.log('Last 3 transactions:', transactions);  
+    res.setHeader('Content-Type', 'text/html');
+    res.send(htmlContent);
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }

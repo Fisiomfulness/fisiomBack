@@ -30,6 +30,14 @@ const Purchase = new Schema(
         type: Number,
         required: true,
     },
+    accessToken: {
+      type: String,
+      required: true,
+    },
+    sessionKey: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: ['PENDING', 'ACCEPTED', 'REJECTED'],

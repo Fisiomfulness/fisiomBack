@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const {
+    authorize,
     initPurchase,
-    paymentForm,
     successPurchase
 } = require('../../controllers/index');
 // const { adminAuthMiddleware } = require('../../middleware/adminMiddleware');
@@ -11,7 +11,7 @@ const authAll = require('#src/middleware/authAll');
 const router = Router();
 
 router.post('/init', authAll, initPurchase);
-// router.post('/paymentForm', paymentForm);
+router.post('/authorize', authorize);
 router.put('/success', successPurchase);
 
 module.exports = router;

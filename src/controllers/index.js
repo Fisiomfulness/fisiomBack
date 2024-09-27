@@ -90,7 +90,7 @@ const {
 
 const {
   initPurchase,
-  paymentForm,
+  authorize,
   successPurchase,
 } = require('./purchase/index');
 
@@ -155,5 +155,6 @@ module.exports = {
   updateAppointment,
   deleteAppointment,
   initPurchase,
+  authorize,
   successPurchase,
 };
