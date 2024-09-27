@@ -2,23 +2,22 @@ const Professional = require('../../models/profesional/Profesional');
 
 const approveProfessional = async (req, res) => {
   try {
-    const { professionalId } = req.params; // ID del profesional a aprobar
+    const { professionalId } = req.params;
 
-    // Buscar el profesional en la base de datos
-    const professional = await Professional.findByPk(professionalId);
+    const professional = await Professional.findById(professionalId);
 
     if (!professional) {
       return res.status(404).json({ message: 'Profesional no encontrado' });
     }
 
-    // Aprobar al profesional
-    professional.approved = true;
+    professional.isApproved = true;
     await professional.save();
 
     return res
       .status(200)
       .json({ message: 'Profesional aprobado con éxito', professional });
   } catch (error) {
+    console.error(error);
     res
       .status(500)
       .json({ message: 'Error en el servidor', error: error.message });
