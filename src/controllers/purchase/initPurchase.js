@@ -8,7 +8,7 @@ const initPurchase = async (req, res) => {
     const { total, productsMap } = req.body;
 
     // genero el ID acá, no lo mando del front para evitar manipulaciones / interpreto que después en la respuesta de la transacción podés buscar este número
-    const transactionID = Math.floor(100000000000 + Math.random() * 900000000000);
+    const purchaseNumber = Math.floor(100000000000 + Math.random() * 900000000000);
 
 
 
@@ -53,8 +53,7 @@ const initPurchase = async (req, res) => {
       try {
       const newPurchase = new Purchase({
         _userId: req.user?.id,
-        transactionID: transactionID,
-        purchaseData: productsMap,
+        purchaseNumber: purchaseNumber,
         amount: total,
         accessToken: accessToken,
         sessionKey: sessionKey
@@ -90,14 +89,14 @@ const initPurchase = async (req, res) => {
             sessiontoken: "${sessionKey}",
             channel: "${payload.channel}",
             merchantid: "${NIUBIZ_MERCHANT_ID}",
-            purchasenumber: ${transactionID},
+            purchasenumber: ${purchaseNumber},
             amount: ${total},
-            merchantname: "FISIOM FULNES",
+            merchantname: "FISIOM FULNESS",
             expirationminutes: "20",
             timeouturl: "about:blank",
             merchantlogo: "fisiom.png",
             formbuttoncolor: "#000000",
-            action: 'http://localhost:3000/purchases/authorize?transactionID=${transactionID}'
+            action: 'http://localhost:3000/purchases/authorize?purchaseNumber=${purchaseNumber}'
           });
 
           // Open the checkout form
@@ -112,10 +111,7 @@ const initPurchase = async (req, res) => {
     })();
   </script>
 `;
-    const transactions = await Purchase.find({})
-    .sort({ createdDate: -1 })
-    .limit(3);
-    console.log('Last 3 transactions:', transactions);  
+    
     res.setHeader('Content-Type', 'text/html');
     res.send(htmlContent);
   } catch (error) {

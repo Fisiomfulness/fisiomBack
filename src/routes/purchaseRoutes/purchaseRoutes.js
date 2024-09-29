@@ -8,10 +8,11 @@ const {
 const { upload } = require('../../config/multerConfig');
 const authAll = require('#src/middleware/authAll');
 
+
 const router = Router();
 
 router.post('/init', authAll, initPurchase);
-router.post('/authorize', authorize);
+router.post('/authorize', authAll, authorize);
 router.put('/success', successPurchase);
 
 module.exports = router;
