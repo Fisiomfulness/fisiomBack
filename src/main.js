@@ -3,6 +3,7 @@ const { PORT } = require('./config/envConfig');
 const { Server } = require('./server');
 const { mongoClientConnect } = require('./db');
 const { createSuperAdmin } = require('./createSuperAdmin');
+const { createUploadsFolder } = require('./createUploadsFolder');
 
 async function main() {
   /**
@@ -12,6 +13,8 @@ async function main() {
   await mongoClientConnect();
 
   await createSuperAdmin();
+
+  await createUploadsFolder();
 
   const server = new Server(PORT);
   await server.start();
