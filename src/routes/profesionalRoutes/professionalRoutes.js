@@ -16,6 +16,7 @@ const {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  getPendingProfessionals,
 } = require('../../controllers/index');
 
 const { adminAuthMiddleware } = require('../../middleware/adminMiddleware');
@@ -87,11 +88,17 @@ router.delete(
 );
 
 // Ruta para que el administrador apruebe a un profesional
-
 router.put(
   '/approve/:professionalId',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   approveProfessional,
+);
+
+// Ruta para obtener profesionales pendientes de aprobación
+router.get(
+  '/pending',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  getPendingProfessionals,
 );
 
 // ? Los profesionales no pueden hacer comentarios a otros profesionales.

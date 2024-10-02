@@ -11,6 +11,7 @@ const { checkUserRating } = require('./checkUserRating');
 const { addSpecialty } = require('./addSpecialty');
 const { removeSpecialty } = require('./removeSpecialty');
 const { approveProfessional } = require('./approveProfessional');
+const { getPendingProfessionals } = require('./getPendingProfessionals');
 const {
   addExperience,
   updateExperience,
@@ -35,4 +36,5 @@ module.exports = {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  getPendingProfessionals,
 };

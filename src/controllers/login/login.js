@@ -13,37 +13,49 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    if (!email || !password)
+    // Validar que se proporcionen las credenciales
+    if (!email || !password) {
       throw new BadRequestError('Credenciales requeridas');
+    }
 
+    // Buscar el usuario o profesional
     const [user, professional] = await Promise.all([
       User.findOne({ email }),
       Professional.findOne({ email }),
     ]);
 
     const foundUser = user || professional;
-    if (!foundUser) throw new NotFoundError('Usuario no encontrado');
 
-    if (professional && !professional.isApproved) {
-      throw new UnauthorizedError(
-        'Tu cuenta está pendiente de aprobación por el administrador.',
-      );
+    // Si no se encontró el usuario o profesional
+    if (!foundUser) {
+      throw new NotFoundError('Usuario no encontrado');
     }
 
+    // Verificar si es un profesional y si está aprobado
+    if (professional && !professional.isApproved) {
+      return res.status(403).json({
+        error: 'Tu cuenta está pendiente de aprobación por el administrador.',
+      });
+    }
+
+    // Verificar la contraseña
     const passwordMatches = await verifyHashedData(
       password,
       foundUser.password,
     );
-    if (!passwordMatches) throw new UnauthorizedError('Contraseña incorrecta');
+    if (!passwordMatches) {
+      throw new UnauthorizedError('Contraseña incorrecta');
+    }
 
+    // Verificar si el usuario está suspendido
     if (foundUser.suspended) {
       foundUser.suspended = false;
       foundUser.suspensionEndDate = null;
       await foundUser.save();
     }
 
-    // * Creación de JWT
-    let payload = {
+    // Crear JWT
+    const payload = {
       id: foundUser._id,
       name: foundUser.name,
       email: foundUser.email,
@@ -54,6 +66,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '2d' });
 
+    // Configurar cookie
     res.cookie('accessToken', token, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
       httpOnly: true,
@@ -61,9 +74,21 @@ const login = async (req, res) => {
       sameSite: 'strict',
     });
 
-    res.status(201).send({ ...payload, message: 'Logeado con éxito!' });
+    // Responder con el payload
+    res.status(200).json({ ...payload, message: 'Logeado con éxito!' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // Manejar el error adecuadamente
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error instanceof BadRequestError) {
+      return res.status(400).json({ message: error.message });
+    }
+    if (error instanceof UnauthorizedError) {
+      return res.status(401).json({ message: error.message });
+    }
+    // Manejar otros errores
+    res.status(500).json({ message: 'Error en el servidor' });
   }
 };
 
