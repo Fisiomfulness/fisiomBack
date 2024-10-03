@@ -57,6 +57,8 @@ const {
   addExperience,
   updateExperience,
   deleteExperience,
+  approveProfessional,
+  getPendingProfessionals,
 } = require('./professional/index');
 
 const {
@@ -88,10 +90,7 @@ const {
   deleteService,
 } = require('./service/index');
 
-const {
-  initPurchase,
-  successPurchase,
-} = require('./purchase/index');
+const { initPurchase, successPurchase } = require('./purchase/index');
 
 module.exports = {
   createBlog,
@@ -137,6 +136,8 @@ module.exports = {
   addExperience,
   updateExperience,
   deleteExperience,
+  approveProfessional,
+  getPendingProfessionals,
   getAllQuestions,
   createQuestion,
   respondQuestion,
