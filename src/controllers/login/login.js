@@ -4,6 +4,7 @@ const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
+  ForbiddenError,
 } = require('#src/util/errors');
 const { verifyHashedData } = require('#src/util/hashData');
 const User = require('#src/models/user/User');
@@ -33,9 +34,10 @@ const login = async (req, res) => {
 
     // Verificar si es un profesional y si está aprobado
     if (professional && !professional.isApproved) {
-      return res.status(403).json({
-        error: 'Tu cuenta está pendiente de aprobación por el administrador.',
-      });
+      // Lanzar un error en vez de retornar una respuesta directamente
+      throw new ForbiddenError(
+        'Tu cuenta está pendiente de aprobación por el administrador.',
+      );
     }
 
     // Verificar la contraseña
@@ -68,7 +70,7 @@ const login = async (req, res) => {
 
     // Configurar cookie
     res.cookie('accessToken', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2,
+      maxAge: 1000 * 60 * 60 * 24 * 2, // 2 días
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -87,7 +89,10 @@ const login = async (req, res) => {
     if (error instanceof UnauthorizedError) {
       return res.status(401).json({ message: error.message });
     }
-    // Manejar otros errores
+    if (error instanceof ForbiddenError) {
+      return res.status(403).json({ message: error.message });
+    }
+    // Manejar otros errores no especificados
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };
