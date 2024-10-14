@@ -13,7 +13,7 @@ const createAppointment = async (req, res) => {
     let {
       _professional,
       _patient,
-      title,
+      _service,
       start,
       end,
       additionalDescription,
@@ -131,7 +131,7 @@ const createAppointment = async (req, res) => {
           },
         );
 
-        if (isWithinWorkingHours) {
+        if (!isWithinWorkingHours) {
           return res.status(401).json({
             message:
               'La fecha y hora seleccionada no está dentro de la disponibilidad del profesional',
@@ -146,9 +146,9 @@ const createAppointment = async (req, res) => {
     const appointment = await Appointment.create({
       _professional,
       _patient,
+      _service,
       patientName,
       additionalDescription,
-      title,
       start,
       end,
       status,
