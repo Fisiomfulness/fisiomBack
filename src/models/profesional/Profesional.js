@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const ObjectId = mongoose.Types.ObjectId;
-const addressSchema = require("../addressSchema");
-const moment = require("moment");
-const experienceSchema = require("./experienceSchema");
-const serviceSchema = require("../serviceSchema");
+const addressSchema = require('../addressSchema');
+const moment = require('moment');
+const experienceSchema = require('./experienceSchema');
+const serviceSchema = require('../serviceSchema');
 
 const Profesional = new Schema(
   {
@@ -41,16 +41,16 @@ const Profesional = new Schema(
     },
     birthDate: {
       type: String,
-      default: "",
+      default: '',
       required: true,
     },
     role: {
       type: String,
-      default: "professional",
+      default: 'professional',
     },
     gender: {
       type: String,
-      Enum: ["Femenino", "Masculino", "Prefiero no responder"],
+      Enum: ['Femenino', 'Masculino', 'Prefiero no responder'],
       required: true,
     },
     curriculum: {
@@ -59,7 +59,7 @@ const Profesional = new Schema(
     },
     license: {
       type: String,
-      default: "",
+      default: '',
     },
     confirmEmail: {
       type: Boolean,
@@ -68,12 +68,12 @@ const Profesional = new Schema(
     phone: {
       type: String,
       unique: true,
-      default: "",
+      default: '',
       required: true,
     },
     description: {
       type: String,
-      default: "",
+      default: '',
     },
     address: {
       type: addressSchema,
@@ -82,15 +82,15 @@ const Profesional = new Schema(
     coordinates: {
       type: [Number], // lat, lng
       default: [0, 0],
-      index: "2d",
+      index: '2d',
     },
     image: {
       type: String,
-      default: "",
+      default: '',
     },
     id_image: {
       type: String,
-      default: "",
+      default: '',
     },
     /* availability: {
       monday: { type: [timeLapseSchema], default: [] },
@@ -118,7 +118,7 @@ const Profesional = new Schema(
       type: [
         {
           type: ObjectId,
-          ref: "Specialty",
+          ref: 'Specialty',
         },
       ],
       default: [],
@@ -127,10 +127,14 @@ const Profesional = new Schema(
       type: [serviceSchema],
       default: [],
     },
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    timestamps: { createdAt: "createdDate", updatedAt: "updatedDate" },
+    timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
   },
 );
 
-module.exports = model("Profesional", Profesional);
+module.exports = model('Profesional', Profesional);
