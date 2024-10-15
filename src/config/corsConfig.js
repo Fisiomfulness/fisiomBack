@@ -9,7 +9,7 @@ const optionCors = {
       } else {
         callback(new Error('Not allowed by CORS in production'));
       }
-    } else if (FRONT_URL == origin) {
+    } else if (FRONT_URL == origin || (origin.endsWith('.vercel.app'))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
