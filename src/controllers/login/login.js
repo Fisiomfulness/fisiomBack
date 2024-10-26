@@ -11,8 +11,7 @@ const User = require('#src/models/user/User');
 const Professional = require('#src/models/profesional/Profesional');
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-
+  const { email, password } = req.body; 
   try {
     // Validar que se proporcionen las credenciales
     if (!email || !password) {

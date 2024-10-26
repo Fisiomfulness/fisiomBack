@@ -62,8 +62,8 @@ POST {{url}}/login
 Content-Type: application/json
 
 {			
-	"email": "user4@gmail.com",
-	"password": "user"
+	"email": "bruno@otroemail.com",
+	"password": "password4"
 }
 
 ### logear usuario admin
