@@ -2,14 +2,13 @@ const { ORIGIN_ALLOWED, FRONT_URL, NODE_ENV } = require('./envConfig');
 
 const optionCors = {
   origin: (origin, callback) => {
-    if (!origin) {
+    // if (!origin) {
       // alowed only on development environment
-      if (NODE_ENV === 'development' || NODE_ENV === 'test') {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS in production'));
-      }
-    } else if (FRONT_URL == origin || (origin.endsWith('.vercel.app'))) {
+    if (NODE_ENV === 'development' || NODE_ENV === 'test') {
+      callback(null, true);
+    // } else {
+    //   callback(new Error('Not allowed by CORS in production'));
+    } else if (origin && (FRONT_URL == origin || (origin.endsWith('.vercel.app')))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
