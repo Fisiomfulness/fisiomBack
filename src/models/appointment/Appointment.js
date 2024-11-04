@@ -21,8 +21,9 @@ const Appointment = new Schema(
       ref: 'User',
       required: true,
     },
-    title: {
-      type: String,
+    _service: {
+      type: ObjectId,
+      ref: 'Service',
       required: true,
     },
     patientName: {

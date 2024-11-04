@@ -15,7 +15,11 @@ const {
   addExperience,
   updateExperience,
   deleteExperience,
+  approveProfessional,
+  getPendingProfessionals,
 } = require('../../controllers/index');
+
+const { adminAuthMiddleware } = require('../../middleware/adminMiddleware');
 
 const { upload } = require('#src/config/multerConfig');
 const { errorMiddleware } = require('#src/middleware/errorMiddleware');
@@ -81,6 +85,20 @@ router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   deleteProfessional,
+);
+
+// Ruta para que el administrador apruebe a un profesional
+router.put(
+  '/approve/:professionalId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  approveProfessional,
+);
+
+// Ruta para obtener profesionales pendientes de aprobación
+router.get(
+  '/pending',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  getPendingProfessionals,
 );
 
 // ? Los profesionales no pueden hacer comentarios a otros profesionales.

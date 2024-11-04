@@ -31,9 +31,15 @@ const createProfessional = async (req, res) => {
           restData.password = hashedPass;
           restData.birthDate = birthDate;
           restData.email = email;
+          restData.approved = false;
 
           const profesional = await Profesional.create(restData);
-          return res.status(201).json({ profesional });
+          return res
+            .status(201)
+            .json({
+              message: 'Profesional creado. Pendiente de aprobación.',
+              profesional,
+            });
         }
       }
     }

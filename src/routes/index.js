@@ -1,5 +1,5 @@
 const { Router } = require('express');
-
+const googleAuthRoutes = require('./googleAuth/googleAuthRoutes.js');
 const authRouter = require('./authRoutes/authRoutes.js');
 const user = require('./userRoutes/userRoutes.js');
 const blog = require('./blogRoutes/blogRoutes.js');
@@ -15,10 +15,13 @@ const interest = require('./userRoutes/interestRoutes.js');
 const chatRouter = require('./chatRouter.js');
 const appointmentRouter = require('./appointmentRoutes/appointmentRoutes.js');
 const register = require('./authRoutes/register.js');
+const purchaseRoutes = require('./purchaseRoutes/purchaseRoutes.js');
 
 const router = Router();
-
+router.use('/api/auth', googleAuthRoutes);
 router.use('/auth', authRouter);
+
+router.use('/user_specialty', userSpecialtyRoutes);
 router.use('/specialty', specialty);
 router.use('/users', user);
 router.use('/blogs', blog);
@@ -33,6 +36,7 @@ router.use('/questions', question);
 router.use('/interests', interest);
 router.use('/chat', chatRouter);
 router.use('/appointments', appointmentRouter);
+router.use('/purchases', purchaseRoutes);
 
 router.get('/logout', (req, res) => {
   res.clearCookie('accessToken');
