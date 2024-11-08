@@ -3,6 +3,8 @@ const { JWT_SECRET } = require('../config/envConfig');
 
 const authAll = (req, res, next) => {
   const token = req.cookies['accessToken'];
+  
+  
 
   if (!token) {
     return res.status(401).json({ message: 'No autorizado' });
@@ -13,6 +15,8 @@ const authAll = (req, res, next) => {
       res.clearCookie('accessToken');
       return res.status(401).json({ message: 'Token expirado o invalido' });
     }
+
+    console.log("Token verificado: ", decoded); // Log para verificar el token decodificado
     req.user = decoded;
     next();
   });

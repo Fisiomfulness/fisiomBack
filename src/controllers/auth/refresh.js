@@ -5,13 +5,12 @@ const Professional = require('#src/models/profesional/Profesional');
 const { NotFoundError } = require('#src/util/errors'); // Asegúrate de tener esto
 
 const refreshToken = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken; // Supongamos que el refresh token está en una cookie segura
+    const refreshToken = req.cookies.refreshToken;
+    console.log("Refresh Token recibido:", refreshToken); // Supongamos que el refresh token está en una cookie segura
 
     if (!refreshToken) {
         return res.status(401).json({ message: 'Refresh token missing' });
     }
-
-    // Verificación del refresh token y generación de un nuevo access token
     try {
         const payload = jwt.verify(refreshToken, JWT_SECRET_REFRESH);
 
@@ -42,26 +41,26 @@ const refreshToken = async (req, res) => {
         };
 
         const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1m' });
-        const newRefreshToken = jwt.sign(refreshTokenPayload, JWT_SECRET_REFRESH, { expiresIn: '7d' }); // Renombrado para evitar confusión
+        const newRefreshToken = jwt.sign(refreshTokenPayload, JWT_SECRET_REFRESH, { expiresIn: '7d' });
+        const tokenExpiresInSeg = 60
+        const refreshExpiresInSeg = 60 * 60 * 24 * 7
 
         // Configurar cookie para el access token
         res.cookie('accessToken', token, {
-            maxAge: 1000 * 60, // 1 minuto
+            maxAge: 1000 * tokenExpiresInSeg, 
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
         });
 
-        // Configurar cookie para el refresh token
-        res.cookie('refreshToken', newRefreshToken, { // Renombrado aquí también
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días
+        res.cookie('refreshToken', newRefreshToken, { 
+            maxAge: 1000 * refreshExpiresInSeg, 
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
         });
 
-        // Enviar respuesta
-        res.json({ accessToken: token, refreshToken: newRefreshToken, expiresIn: '60s'  });
+        res.json({ accessToken: token, refreshToken: newRefreshToken, tokenExpiresInSeg: tokenExpiresInSeg, refreshExpiresInSeg:refreshExpiresInSeg  });
     } catch (error) {
         return res.status(403).json({ message: 'Invalid refresh token' });
     }
