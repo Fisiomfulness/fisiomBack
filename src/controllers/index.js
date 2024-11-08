@@ -58,6 +58,7 @@ const {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  declineProfessional,
   getPendingProfessionals,
 } = require('./professional/index');
 
@@ -137,6 +138,7 @@ module.exports = {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  declineProfessional,
   getPendingProfessionals,
   getAllQuestions,
   createQuestion,
