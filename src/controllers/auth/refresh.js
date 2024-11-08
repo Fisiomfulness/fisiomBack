@@ -42,7 +42,7 @@ const refreshToken = async (req, res) => {
 
         const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1m' });
         const newRefreshToken = jwt.sign(refreshTokenPayload, JWT_SECRET_REFRESH, { expiresIn: '7d' });
-        const tokenExpiresInSeg = 60
+        const tokenExpiresInSeg = 60*60
         const refreshExpiresInSeg = 60 * 60 * 24 * 7
 
         // Configurar cookie para el access token
