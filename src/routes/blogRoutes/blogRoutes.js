@@ -8,6 +8,9 @@ const {
   statusBlog,
   deleteBlog,
   removeBlog,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
 } = require('../../controllers/index');
 const comment = require('./commentRoutes.js');
 const { asyncHandler } = require('../../util/asyncHandler');

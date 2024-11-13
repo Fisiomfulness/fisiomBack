@@ -161,4 +161,7 @@ module.exports = {
   deleteAppointment,
   initPurchase,
   successPurchase,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
 };
