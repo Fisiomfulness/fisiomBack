@@ -1,6 +1,6 @@
 const Professional = require('../../models/profesional/Profesional');
-const { sendProfessionalNotification } = require('../mail');
 
+const { sendProfessionalNotification } = require('../mail');
 
 const approveProfessional = async (req, res) => {
   try {

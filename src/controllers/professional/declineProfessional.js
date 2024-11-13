@@ -14,6 +14,7 @@ const declineProfessional = async (req, res) => {
     professional.isApproved = 'Rejected';
     await professional.save();
 
+
     await sendProfessionalNotification(professional.email, professional.name, professional.isApproved);
 
     return res
