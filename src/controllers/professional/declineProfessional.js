@@ -1,4 +1,5 @@
 const Professional = require('../../models/profesional/Profesional');
+const { sendProfessionalRejectionNotification } = require('../mail/declineProfessionalNotification');
 
 const declineProfessional = async (req, res) => {
   try {
@@ -12,6 +13,8 @@ const declineProfessional = async (req, res) => {
 
     professional.isApproved = 'Rejected';
     await professional.save();
+
+    await sendProfessionalRejectionNotification(professional.email, professional.name);
 
     return res
       .status(200)

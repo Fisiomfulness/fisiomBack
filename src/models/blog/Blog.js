@@ -35,6 +35,11 @@ const Blog = new Schema(
       type: Boolean,
       default: true,
     },
+    isApproved: {
+      type: String,
+      enum: ['Rejected', 'Pending', 'Approved'],
+      default: 'Pending',
+    },
     createdBy: {
       type: ObjectId,
       ref: 'Profesional',

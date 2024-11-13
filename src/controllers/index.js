@@ -7,6 +7,9 @@ const {
   removeBlog,
   statusBlog,
   updateBlog,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
 } = require('./blog/index');
 
 const {

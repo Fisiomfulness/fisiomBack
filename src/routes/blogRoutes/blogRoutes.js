@@ -60,6 +60,27 @@ router.put(
   asyncHandler(updateBlog),
 );
 
+// Ruta para que el administrador apruebe un blog
+router.patch(
+  '/approve/:blogId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  approveBlog,
+);
+
+// Ruta para que el administrador desapruebe un blog
+router.patch(
+  '/disapprove/:blogId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  declineBlog,
+);
+
+// Ruta para obtener blogs pendientes de aprobación
+router.get(
+  '/pending',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  getPendingBlogs,
+);
+
 router.patch(
   '/status/:id',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
