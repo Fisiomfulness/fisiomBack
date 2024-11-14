@@ -1,15 +1,10 @@
 const { sendEmail } = require('./sendMail');
-const { sendAppointmentConfirmation } = require('./appointmentController');
-const { sendProfessionalApprovalNotification } = require('./approveProfessionalNotification');
-const { sendProfessionalRejectionNotification } = require('./declineProfessionalNotification');
-const { sendBlogApprovalNotification } = require('./approveBlogNotification');
-const { sendBlogRejectionNotification } = require('./declineBlogNotification');
+const { sendBlogNotification } = require('./sendBlogNotification');
+const { sendProfessionalNotification } = require('./sendProfesionalNotification');
 
 module.exports = {
   sendEmail,
-  sendAppointmentConfirmation,
-  sendProfessionalApprovalNotification,
-  sendProfessionalRejectionNotification,
-  sendBlogApprovalNotification,
-  sendBlogRejectionNotification
+  sendProfessionalNotification,
+  sendBlogNotification,
 };
+

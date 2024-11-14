@@ -1,5 +1,6 @@
 const Professional = require('../../models/profesional/Profesional');
-const { sendProfessionalApprovalNotification } = require('../mail/approveProfessionalNotification');
+
+const { sendProfessionalNotification } = require('../mail');
 
 const approveProfessional = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ const approveProfessional = async (req, res) => {
     professional.isApproved = 'Approved';
     await professional.save();
 
-    await sendProfessionalApprovalNotification(professional.email, professional.name);
+    await sendProfessionalNotification(professional.email, professional.name, professional.isApproved);
 
     return res
       .status(200)

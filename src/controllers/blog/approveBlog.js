@@ -1,5 +1,6 @@
 const Blog = require('../../models/blog/Blog');
-const { sendBlogApprovalNotification } = require('../mail/approveBlogNotification'); 
+const { sendBlogNotification } = require('../mail/sendBlogNotification');
+
 
 const approveBlog = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ const approveBlog = async (req, res) => {
     blog.isApproved = 'Approved';
     await blog.save();
 
-    await sendBlogApprovalNotification(blog.createdBy.email, blog.title, blog.createdBy.name);
+    await sendBlogNotification(blog.createdBy.email, blog.title, blog.createdBy.name, blog.isApproved);
 
     return res
       .status(200)
@@ -28,3 +29,4 @@ const approveBlog = async (req, res) => {
 };
 
 module.exports = { approveBlog };
+
