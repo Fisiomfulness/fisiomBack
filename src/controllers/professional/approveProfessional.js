@@ -1,4 +1,5 @@
 const Professional = require('../../models/profesional/Profesional');
+const User = require('../../models/user/User');
 
 const approveProfessional = async (req, res) => {
   try {
@@ -12,6 +13,8 @@ const approveProfessional = async (req, res) => {
 
     professional.isApproved = true;
     await professional.save();
+
+    await User.findByIdAndDelete(professionalId);
 
     return res
       .status(200)

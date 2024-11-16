@@ -48,7 +48,7 @@ const User = new Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin', 'super_admin'],
+      enum: ['user', 'professional', 'admin', 'super_admin'],
       default: 'user',
     },
     interests: {
