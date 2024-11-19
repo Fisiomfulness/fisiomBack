@@ -2,7 +2,7 @@ const Professional = require('../../models/profesional/Profesional');
 
 const getPendingProfessionals = async (req, res) => {
   try {
-    const pendingProfessionals = await Professional.find({ isApproved: false });
+    const pendingProfessionals = await Professional.find({ isApproved: 'Pending' });
 
     if (pendingProfessionals.length === 0) {
       return res

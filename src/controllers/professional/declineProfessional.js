@@ -1,9 +1,7 @@
 const Professional = require('../../models/profesional/Profesional');
-const User = require('../../models/user/User');
-
 const { sendProfessionalNotification } = require('../mail');
 
-const approveProfessional = async (req, res) => {
+const declineProfessional = async (req, res) => {
   try {
     const { professionalId } = req.params;
 
@@ -13,17 +11,15 @@ const approveProfessional = async (req, res) => {
       return res.status(404).json({ message: 'Profesional no encontrado' });
     }
 
-    professional.isApproved = 'Approved';
+    professional.isApproved = 'Rejected';
     await professional.save();
 
-
-    await User.findByIdAndDelete(professionalId);
 
     await sendProfessionalNotification(professional.email, professional.name, professional.isApproved);
 
     return res
       .status(200)
-      .json({ message: 'Profesional aprobado con éxito', professional });
+      .json({ message: 'Profesional rechazado con éxito', professional });
   } catch (error) {
     console.error(error);
     res
@@ -32,4 +28,4 @@ const approveProfessional = async (req, res) => {
   }
 };
 
-module.exports = { approveProfessional };
+module.exports = { declineProfessional };

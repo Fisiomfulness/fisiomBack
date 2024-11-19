@@ -5,8 +5,10 @@ const {
   getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
-  statusBlog,
   updateBlog,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
 } = require('./blog/index');
 
 const {
@@ -58,6 +60,7 @@ const {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  declineProfessional,
   getPendingProfessionals,
 } = require('./professional/index');
 
@@ -81,6 +84,8 @@ const {
   getAppointments,
   updateAppointment,
   deleteAppointment,
+  getPendingAppointments,
+  adminConfirmAppointment,
 } = require('./appointment/index');
 
 const {
@@ -99,8 +104,10 @@ module.exports = {
   getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
-  statusBlog,
   updateBlog,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
   createCategory,
   deleteCategory,
   getCategoryById,
@@ -137,6 +144,7 @@ module.exports = {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  declineProfessional,
   getPendingProfessionals,
   getAllQuestions,
   createQuestion,
@@ -156,4 +164,7 @@ module.exports = {
   deleteAppointment,
   initPurchase,
   successPurchase,
+  getPendingAppointments,
+  adminConfirmAppointment,
 };
+

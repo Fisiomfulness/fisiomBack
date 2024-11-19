@@ -128,8 +128,9 @@ const Profesional = new Schema(
       default: [],
     },
     isApproved: {
-      type: Boolean,
-      default: false,
+      type: String,
+      enum: ['Rejected', 'Pending', 'Approved'],
+      default: 'Pending',
     },
   },
   {

@@ -2,14 +2,15 @@ const { createAppointment } = require('./createAppointment');
 const { deleteAppointment } = require('./deleteAppointment');
 const { getAppointments } = require('./getAppointments');
 const { updateAppointment } = require('./updateAppointment');
-const {
-  sendAppointmentConfirmation,
-} = require('../mail/appointmentController');
+const { getPendingAppointments } = require('./getPendingAppointments');
+const { adminConfirmAppointment } = require('./adminConfirmAppointment');
+
 
 module.exports = {
   createAppointment,
   getAppointments,
   updateAppointment,
   deleteAppointment,
-  sendAppointmentConfirmation,
+  adminConfirmAppointment,
+  getPendingAppointments,
 };

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('#src/config/envConfig');
+const { JWT_SECRET, JWT_SECRET_REFRESH } = require('#src/config/envConfig');
 const {
   NotFoundError,
   BadRequestError,
@@ -9,6 +9,15 @@ const {
 const { verifyHashedData } = require('#src/util/hashData');
 const User = require('#src/models/user/User');
 const Professional = require('#src/models/profesional/Profesional');
+
+const findUserByEmail = async(email)=>{
+
+    const[user, professional] = await Promise.all([
+        User.findOne({ email }),
+        Professional.findOne({email})
+    ])
+    return user || professional;
+}
 
 const login = async (req, res) => {
   const { email, password } = req.body; 
@@ -65,11 +74,25 @@ const login = async (req, res) => {
       coordinates: foundUser.coordinates,
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '2d' });
+    const refreshTokenPayload = {
+      id: foundUser._id,
+      email: foundUser.email, // Opcional
+    };
+    
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1m' });
+    const refreshToken = jwt.sign(refreshTokenPayload, JWT_SECRET_REFRESH, { expiresIn: '7d' })
 
     // Configurar cookie
     res.cookie('accessToken', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 2, // 2 días
+      maxAge: 1000 * 60, // 1 minuto
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -98,4 +121,5 @@ const login = async (req, res) => {
 
 module.exports = {
   login,
+  findUserByEmail
 };

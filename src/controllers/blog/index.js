@@ -4,8 +4,10 @@ const { getAllBlogs } = require("./getAllBlogs")
 const { getProfessionalBlogs } = require("./getProfessionalBlogs");
 const { getBlogDetail } = require("./getBlogDetail")
 const { removeBlog } = require("./removeBlog")
-const { statusBlog } = require("./statusBlog")
-const { updateBlog } = require("./updateBlog")
+const { updateBlog } = require("./updateBlog");
+const { approveBlog } = require("./approveBlog");
+const { declineBlog } = require("./declineBlog");
+const { getPendingBlogs } = require("./getPendingBlogs");
 
 
 module.exports = {
@@ -15,6 +17,8 @@ module.exports = {
   getProfessionalBlogs,
   getBlogDetail,
   removeBlog,
-  statusBlog,
-  updateBlog
+  updateBlog,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
 }

@@ -8,6 +8,9 @@ const {
   statusBlog,
   deleteBlog,
   removeBlog,
+  approveBlog,
+  declineBlog,
+  getPendingBlogs,
 } = require('../../controllers/index');
 const comment = require('./commentRoutes.js');
 const { asyncHandler } = require('../../util/asyncHandler');
@@ -58,6 +61,27 @@ router.put(
   upload,
   validationMiddleware(blogSchema, 'update'),
   asyncHandler(updateBlog),
+);
+
+// Ruta para que el administrador apruebe un blog
+router.patch(
+  '/approve/:blogId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  approveBlog,
+);
+
+// Ruta para que el administrador desapruebe un blog
+router.patch(
+  '/disapprove/:blogId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  declineBlog,
+);
+
+// Ruta para obtener blogs pendientes de aprobación
+router.get(
+  '/pending',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  getPendingBlogs,
 );
 
 router.patch(

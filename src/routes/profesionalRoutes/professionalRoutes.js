@@ -16,6 +16,7 @@ const {
   updateExperience,
   deleteExperience,
   approveProfessional,
+  declineProfessional,
   getPendingProfessionals,
   
 } = require('../../controllers/index');
@@ -90,10 +91,17 @@ router.delete(
 );
 
 // Ruta para que el administrador apruebe a un profesional
-router.put(
+router.patch(
   '/approve/:professionalId',
   permit(roles.ADMIN, roles.SUPER_ADMIN),
   approveProfessional,
+);
+
+//Ruta para que el administrador desapruebe a un profesional
+router.patch(
+  '/disapprove/:professionalId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  declineProfessional,
 );
 
 // Ruta para obtener profesionales pendientes de aprobación
