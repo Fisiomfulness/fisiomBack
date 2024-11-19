@@ -10,6 +10,15 @@ const { verifyHashedData } = require('#src/util/hashData');
 const User = require('#src/models/user/User');
 const Professional = require('#src/models/profesional/Profesional');
 
+const findUserByEmail = async(email)=>{
+
+    const[user, professional] = await Promise.all([
+        User.findOne({ email }),
+        Professional.findOne({email})
+    ])
+    return user || professional;
+}
+
 const login = async (req, res) => {
   const { email, password } = req.body; 
   try {
@@ -112,4 +121,5 @@ const login = async (req, res) => {
 
 module.exports = {
   login,
+  findUserByEmail
 };
