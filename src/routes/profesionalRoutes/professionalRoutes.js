@@ -18,7 +18,9 @@ const {
   approveProfessional,
   declineProfessional,
   getPendingProfessionals,
+  
 } = require('../../controllers/index');
+const { rejectProfessional } = require('../../controllers/professional/rejectProfessional');
 
 const { adminAuthMiddleware } = require('../../middleware/adminMiddleware');
 
@@ -138,6 +140,12 @@ router.delete(
   '/:id/experience/:experienceId',
   permit(roles.PROFESSIONAL, roles.ADMIN, roles.SUPER_ADMIN),
   deleteExperience,
+);
+
+router.put(
+  '/reject/:professionalId',
+  permit(roles.ADMIN, roles.SUPER_ADMIN),
+  rejectProfessional,
 );
 
 router.use(errorMiddleware);

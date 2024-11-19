@@ -1,4 +1,5 @@
 const Professional = require('../../models/profesional/Profesional');
+const User = require('../../models/user/User');
 
 const { sendProfessionalNotification } = require('../mail');
 
@@ -14,6 +15,9 @@ const approveProfessional = async (req, res) => {
 
     professional.isApproved = 'Approved';
     await professional.save();
+
+
+    await User.findByIdAndDelete(professionalId);
 
     await sendProfessionalNotification(professional.email, professional.name, professional.isApproved);
 
