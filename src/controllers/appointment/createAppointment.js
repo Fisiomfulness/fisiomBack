@@ -20,9 +20,13 @@ const createAppointment = async (req, res) => {
       status,
     } = req.body;
 
-    start = momentZone(start).tz('America/Lima').format(timeFormat);
-    end = momentZone(end).tz('America/Lima').format(timeFormat);
 
+    //ESTA TRANSFORMACION O UNA VARIANTE SE PUEDE REALIZAR UNA VEZ QUE SE SOLUCIONE LO DEL USO HORARIO YA QUE SI NO TRAE ERRORES DE RENDERIZADO EN EL CALENDARIO
+    // start = momentZone(start).tz('America/Lima').format(timeFormat);
+    // end = momentZone(end).tz('America/Lima').format(timeFormat);
+
+    start = momentZone(start).format(timeFormat);
+    end = momentZone(end).format(timeFormat);
     // Validate professional
     const professional = await Profesional.findById(_professional);
     if (!professional || !professional.status) {
@@ -39,19 +43,19 @@ const createAppointment = async (req, res) => {
     // Validate start and end formats (YYYY-MM-DDTHH:mm)
     if (
       !moment(start, timeFormat, true).isValid() ||
-      !moment(start, timeFormat, true).isValid()
+      !moment(end, timeFormat, true).isValid()
     ) {
       res.status(401).json({
         message: 'Formato de fecha de cita no válido',
       });
       return;
     }
-
+    
     // Validate start is not after end
     if (moment(start) > moment(end)) {
       return res.status(401).json({
         message:
-          'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización',
+        'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización',
       });
     }
 
