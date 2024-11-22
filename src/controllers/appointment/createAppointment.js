@@ -69,29 +69,27 @@ const createAppointment = async (req, res) => {
       return;
     }
 
-    // Validate there are no valid overlapping appointments
+    const now = moment().toDate();
     const overlapping = await Appointment.findOne({
       $and: [
-        // Status is ACCEPTED or PENDING but not yet expired
         {
           $or: [
             { status: 'ACCEPTED' },
             {
               $and: [
                 { status: 'PENDING' },
-                { end: { $gt: moment().toDate() } }, // Verifica que la cita pendiente no haya expirado
+                { expiration: { $gt: moment().toDate() } }, // Valida la expiración
               ],
             },
           ],
         },
-        // Are overlapping
         { end: { $gt: start } }, // La cita existente termina después de que comienza la nueva cita
         { start: { $lt: end } }, // La cita existente comienza antes de que termine la nueva cita
         // Are for the same professional or patient
         { $or: [{ _patient }, { _professional }] },
       ],
     });
-
+    
     if (overlapping) {
       res.status(401).json({
         message: 'La cita se superpone con una existente.',
