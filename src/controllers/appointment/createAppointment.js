@@ -153,6 +153,7 @@ const createAppointment = async (req, res) => {
       end,
       status,
     });
+
     return res
       .status(201)
       .json({ appointment, message: 'Agendado con exito!' });

@@ -77,7 +77,7 @@ const Appointment = new Schema(
     },
     status: {
       type: String,
-      enum: ['PENDING', 'ACCEPTED', 'REJECTED', 'DEACTIVATE'],
+      enum: ['PENDING', 'ACCEPTED', 'REJECTED', 'DESACTIVATE'],
       default: 'PENDING',
     },
     paymentInfo: {

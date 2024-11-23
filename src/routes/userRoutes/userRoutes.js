@@ -11,7 +11,7 @@ const {
   getSpecificUserData,
 } = require('#src/controllers/user/index');
 
-const { upload } = require('#src/config/multerConfig');
+const { upload, uploadCurriculum } = require('#src/config/multerConfig');
 const { addressMiddleware } = require('#src/middleware/addressMiddleware');
 const { decodeTokenUser } = require('#src/middleware/decodeTokenUser');
 const {
@@ -24,6 +24,7 @@ const roles = require('#src/util/roles');
 const authAll = require('#src/middleware/authAll');
 const permit = require('#src/middleware/rolesMiddleware');
 const { suspendUser } = require('#src/controllers/user/suspendUser');
+const { changeUserRole } = require('#src/controllers/user/changeUserRole');
 
 const router = Router();
 
@@ -62,6 +63,13 @@ router.put(
   '/suspend/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
   suspendUser,
+);
+
+router.put(
+  '/change-role/:id',
+  uploadCurriculum,
+  validateFileType('pdf'),
+  changeUserRole
 );
 
 router.use(errorMiddleware);

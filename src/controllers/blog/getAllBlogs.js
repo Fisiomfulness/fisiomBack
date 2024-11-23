@@ -26,7 +26,7 @@ const getAllBlogs = async (req, res) => {
   const queryLimit =
     limitInt <= 0 ? LIMIT_BLOGS : Math.min(limitInt, LIMIT_BLOGS);
   const skipIndex = (pageInt - 1) * queryLimit;
-  let query = {};
+  let query = { isApproved: 'Approved' };
   let sortOptions = {};
 
   if (status) {
