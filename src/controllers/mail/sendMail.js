@@ -39,7 +39,7 @@ const sendEmail = async (req, res) => {
     const mailToUserOptions = {
       from: MAIL_USER,
       to: email,
-      subject: 'Postulacion a FisiomFulness',
+      subject: 'Postulacion a FisioFulness',
       html: htmlUser,
       attachments: cvFile
         ? [
@@ -54,7 +54,7 @@ const sendEmail = async (req, res) => {
     await transporter.sendMail(mailToUserOptions);
 
     const htmlAdmin = `
-      <p>Se recibio una nueva postulacion a FisiomFulness.</p>
+      <p>Se recibio una nueva postulacion a FisioFulness.</p>
       <p>A continuación, los detalles:</p>
       <ul>
         <li>DNI: ${dniNumber}</li>
@@ -68,7 +68,7 @@ const sendEmail = async (req, res) => {
     const mailToAdminOptions = {
       from: MAIL_USER,
       to: MAIL_USER,
-      subject: 'Nueva postulacion a FisiomFulness',
+      subject: 'Nueva postulacion a FisioFulness',
       html: htmlAdmin,
       attachments: cvFile
         ? [
