@@ -1,0 +1,15 @@
+
+POST /professionals/availability/66d0b7965a6a78aff4d4f4b0
+{
+  "availability": [
+    {
+      "day" : "Miercoles",
+      "timeSlots": [
+        {
+          "start":"10:00", 
+          "end":"11:00"
+        }
+      ]
+    }
+  ]
+}

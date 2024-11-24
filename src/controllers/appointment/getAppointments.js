@@ -49,8 +49,10 @@ const getAppointments = async (req, res) => {
       };
     }
 
+
     // execute the query and return appointments in response
     const appointments = await Appointment.find(appointmentQuery);
+
     return res.status(200).json({ appointments });
   } catch (error) {
     return res.status(400).json({ message: error.message });
