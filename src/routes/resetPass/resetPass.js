@@ -1,10 +1,10 @@
 const {indexNewPassword} = require('#src/controllers/newPassword/indexnew_Pass')
-const {changePassword} = require('#src/controller/newPassword/changePassword')
+const {changePassword} = require('#src/controllers/newPassword/changePassword')
 const express = require('express')
 const router = express.Router()
 
     
-router.post("/resertPassword", indexNewPassword);
+router.post("/resetPassword", indexNewPassword);
 router.post("/changePassword", changePassword);
 
 
