@@ -6,9 +6,10 @@ const sendResetEmail = require('./sendResetEmail')
 const sendLinkEmail = async(email) => {
     
     try{
+     
        const[user, professional] = await Promise.all([
             User.findOne({ email }),
-            Professional.findOne({ email }),
+            Professional.findOne({ email}),
        ])
 
        const foundUser = user || professional
@@ -23,7 +24,8 @@ const sendLinkEmail = async(email) => {
        }
 
        //envio de link a correo electrónico
-       await sendResetEmail(email,tokenReset)
+       const resetLink = `${process.env.FRONT_URL}/reset_password?token=${tokenReset}&email=${email}`
+       await sendResetEmail(email,resetLink)
        console.log("El link de reestablecimiento ha sido enviado con éxito")
        
 
