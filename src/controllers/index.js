@@ -77,7 +77,10 @@ const {
   deleteInterest,
 } = require('./interest/index');
 
-const { sendEmail } = require('./mail/index');
+const { 
+  sendEmail, 
+  sendEmailRequestingBudget, 
+} = require('./mail/index');
 
 const {
   createAppointment,
@@ -166,5 +169,6 @@ module.exports = {
   successPurchase,
   getPendingAppointments,
   adminConfirmAppointment,
+  sendEmailRequestingBudget,
 };
 
