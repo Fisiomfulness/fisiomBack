@@ -5,8 +5,7 @@ const { cloudinary, curriculumUploadOptions } = require('../../config/cloudinary
 
 const changeUserRole = async (req, res) => {
   const { id } = req.params;
-  const { role } = req.body;
-  const curriculum = req.file;
+  const { role, curriculum } = req.body;
 
   try {
     const user = await User.findById(id);
@@ -20,29 +19,35 @@ const changeUserRole = async (req, res) => {
       throw new BadRequestError('Rol no válido para esta operación');
     }
 
-    // Subir el archivo a Cloudinary
-    const { secure_url } = await cloudinary.uploader.upload(
-      curriculum.path,
-      curriculumUploadOptions
-    );
+    const secure_url = curriculum;
 
-    // Crear un nuevo documento en el esquema de Professional
-    const newProfessional = new Professional({
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-      password: user.password,
-      birthDate: user.birthDate,
-      role: 'professional',
-      gender: user.gender,
-      curriculum: secure_url, // Usar la URL segura de Cloudinary
-      phone: user.phone,
-      address: user.address,
-    });
+    // Verificar si el profesional ya existe
+    let professional = await Professional.findById(id);
+    if (professional) {
+      // Actualizar el documento existente
+      professional.curriculum = secure_url;
+      professional.isApproved = 'Pending';
+      await professional.save();
+    } else {
+      // Crear un nuevo documento en el esquema de Professional
+      professional = new Professional({
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        birthDate: user.birthDate,
+        role: 'professional',
+        gender: user.gender,
+        curriculum: secure_url,
+        phone: user.phone,
+        address: user.address,
+        isApproved: 'Pending',
+      });
 
-    await newProfessional.save();
+      await professional.save();
+    }
 
-    res.status(200).json({ message: `Usuario cambiado a profesional`, professional: newProfessional });
+    res.status(200).json({ message: `Usuario cambiado a profesional`, professional });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
