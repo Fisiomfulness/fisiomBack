@@ -1,5 +1,8 @@
 const { Router } = require('express');
-const { sendEmail, sendEmailRequestingBudget } = require('../controllers/index');
+const {
+  sendEmail,
+  sendEmailRequestingBudget,
+} = require('../controllers/index');
 const { uploadCurriculum } = require('../config/multerConfig');
 
 const router = Router();
