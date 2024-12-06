@@ -5,31 +5,47 @@ const { cloudinary, curriculumUploadOptions } = require('../../config/cloudinary
 
 const changeUserRole = async (req, res) => {
   const { id } = req.params;
-  const { role, curriculum } = req.body;
+  const { role } = req.body;
+
+  console.log(`Iniciando cambio de rol para el usuario con ID: ${id}`);
 
   try {
     const user = await User.findById(id);
-    if (!user) throw new NotFoundError('Usuario no encontrado');
+    if (!user) {
+      console.error('Usuario no encontrado');
+      throw new NotFoundError('Usuario no encontrado');
+    }
+
+    console.log(`Usuario encontrado: ${user.email}`);
 
     if (user.role === role) {
+      console.error(`El usuario ya tiene el rol de ${role}`);
       throw new BadRequestError(`El usuario ya tiene el rol de ${role}`);
     }
 
     if (role !== 'professional') {
+      console.error('Rol no válido para esta operación');
       throw new BadRequestError('Rol no válido para esta operación');
     }
 
-    const secure_url = curriculum;
+    if (!req.file) {
+      console.error('No se adjuntó un curriculum');
+      return res.status(400).json({ message: 'No se adjuntó un curriculum' });
+    }
 
-    // Verificar si el profesional ya existe
+    console.log('Subiendo archivo a Cloudinary...');
+    const { secure_url } = await cloudinary.uploader.upload(req.file.path, curriculumUploadOptions);
+    console.log(`Archivo subido a Cloudinary: ${secure_url}`);
+
     let professional = await Professional.findById(id);
     if (professional) {
-      // Actualizar el documento existente
+      console.log('Actualizando documento existente de profesional');
       professional.curriculum = secure_url;
       professional.isApproved = 'Pending';
+      professional.coordinates = user.coordinates;
       await professional.save();
     } else {
-      // Crear un nuevo documento en el esquema de Professional
+      console.log('Creando nuevo documento en el esquema de Professional');
       professional = new Professional({
         _id: user._id,
         email: user.email,
@@ -41,14 +57,17 @@ const changeUserRole = async (req, res) => {
         curriculum: secure_url,
         phone: user.phone,
         address: user.address,
+        coordinates: user.coordinates,
         isApproved: 'Pending',
       });
 
       await professional.save();
     }
 
+    console.log('Cambio de rol a profesional completado');
     res.status(200).json({ message: `Usuario cambiado a profesional`, professional });
   } catch (error) {
+    console.error(`Error al cambiar el rol: ${error.message}`);
     res.status(400).json({ message: error.message });
   }
 };
