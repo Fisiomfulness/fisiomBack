@@ -23,6 +23,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-promise-router": "^4.1.1",
@@ -46,7 +47,6 @@
     "pretty-error": "^4.0.0",
     "socket.io": "^4.7.5",
     "uuid": "^9.0.1",
-    "cross-env": "^7.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
