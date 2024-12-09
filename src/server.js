@@ -1,8 +1,8 @@
 // @ts-check
-const { createServer } = require("node:http");
-const { SocketApplication } = require("./SocketApplication");
-const { ExpressApplication } = require("./ExpressApplication");
-require("./tasks/cron");
+const { createServer } = require('node:http');
+const { SocketApplication } = require('./SocketApplication');
+const { ExpressApplication } = require('./ExpressApplication');
+require('./tasks/cron');
 
 /** @typedef {import('express').Express} Express */
 

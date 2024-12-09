@@ -18,47 +18,58 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 // * Function to send an email
 const sendEmailRequestingBudget = async (req, res) => {
-    const { senderName, senderPhone, senderEmail, senderMessage } = req.body;
+  const {
+    senderName,
+    senderRuc,
+    senderEmail,
+    senderPhone,
+    senderPais,
+    senderEmployees,
+    senderAdditionalDetails,
+  } = req.body;
 
-    // transporter.verify((error, success) => {
-    //     if (error) {
-    //       console.error('SMTP connection error:', error);
-    //     } else {
-    //       console.log('SMTP server is ready to take messages:', success);
-    //     }
-    //   });
-    
+  // transporter.verify((error, success) => {
+  //     if (error) {
+  //       console.error('SMTP connection error:', error);
+  //     } else {
+  //       console.log('SMTP server is ready to take messages:', success);
+  //     }
+  //   });
+
   try {
     const htmlAdmin = `
       <p>Se recibio un nuevo pedido de cotización a FisioFulness.</p>
       <p>A continuación, los detalles:</p>
       <ul>
-        <li>Empresa: ${senderName}</li>
+        <li>Nombre de la empresa o solicitante: ${senderName}</li>
+        <li>RUC: ${senderRuc}</li>
+        <li>Correo electrónico: ${senderEmail}</li>
         <li>Teléfono: ${senderPhone}</li>
-        <li>Correo Electrónico: ${senderEmail}</li>
+        <li>País: ${senderPais}</li>
+        <li>Número de empleados: ${senderEmployees}</li>
       </ul>
-      <p>Mensaje:</p>
-      <p>${senderMessage}</p>
+      <p>Detalles adicionales:</p>
+      <p>${senderAdditionalDetails}</p>
     `;
 
     const mailToAdminOptions = {
       from: MAIL_USER,
       to: MAIL_USER,
+      replyTo: senderEmail,
       subject: 'Nueva postulacion a FisioFulness',
       html: htmlAdmin,
     };
 
     await transporter.sendMail(mailToAdminOptions);
 
-    res.status(200).json({ message: 'Email sent successfully' });
+    res.status(200).json({ message: 'Correo electrónico enviado con éxito' });
   } catch (error) {
-    res.status(400).json({ message: 'Error sending email' });
+    res.status(400).json({ message: 'Error al enviar el correo electrónico' });
   }
 };
 
 module.exports = {
-    sendEmailRequestingBudget,
+  sendEmailRequestingBudget,
 };
