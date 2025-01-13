@@ -19,15 +19,13 @@ const transporter = nodemailer.createTransport({
 });
 
 // * Function to send an email
-const sendEmailRequestingBudget = async (req, res) => {
+const sendEmailRequestingInfo = async (req, res) => {
   const {
-    senderName,
-    senderRuc,
-    senderEmail,
-    senderPhone,
-    senderPais,
-    senderEmployees,
-    senderAdditionalDetails,
+    nombre,
+    correo,
+    celular,
+    dolencia,
+    distrito,
   } = req.body;
 
   // transporter.verify((error, success) => {
@@ -40,25 +38,23 @@ const sendEmailRequestingBudget = async (req, res) => {
 
   try {
     const htmlAdmin = `
-      <p>Se recibio un nuevo pedido de cotización a Fullness.</p>
+      <p>Se recibió un nuevo mensaje de un paciente para Fullness.</p>
       <p>A continuación, los detalles:</p>
       <ul>
-        <li>Nombre de la empresa o solicitante: ${senderName}</li>
-        <li>RUC: ${senderRuc}</li>
-        <li>Correo electrónico: ${senderEmail}</li>
-        <li>Teléfono: ${senderPhone}</li>
-        <li>País: ${senderPais}</li>
-        <li>Número de empleados: ${senderEmployees}</li>
+        <li>Paciente: ${nombre}</li>
+        <li>Correo electrónico: ${correo}</li>
+        <li>Teléfono: ${celular}</li>
+        <li>Distrito: ${distrito}</li>
       </ul>
-      <p>Detalles adicionales:</p>
-      <p>${senderAdditionalDetails}</p>
+      <p>Dolencias para diagnostico:</p>
+      <p>${dolencia}</p>
     `;
 
     const mailToAdminOptions = {
       from: MAIL_USER,
       to: MAIL_USER,
-      replyTo: senderEmail,
-      subject: 'Nueva postulacion a FisioFulness',
+      replyTo: correo,
+      subject: 'Nuevo mensaje a Fullness',
       html: htmlAdmin,
     };
 
@@ -71,5 +67,5 @@ const sendEmailRequestingBudget = async (req, res) => {
 };
 
 module.exports = {
-  sendEmailRequestingBudget,
+  sendEmailRequestingInfo
 };

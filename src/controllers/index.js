@@ -79,7 +79,8 @@ const {
 
 const { 
   sendEmail, 
-  sendEmailRequestingBudget, 
+  sendEmailRequestingBudget,
+  sendEmailRequestingInfo 
 } = require('./mail/index');
 
 const {
@@ -170,5 +171,6 @@ module.exports = {
   getPendingAppointments,
   adminConfirmAppointment,
   sendEmailRequestingBudget,
+  sendEmailRequestingInfo
 };
 
