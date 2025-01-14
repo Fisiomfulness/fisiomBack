@@ -17,7 +17,7 @@ const getProfessionals = async (req, res) => {
       position = '0,0',
       bbox = '',
     } = req.query;
-
+	
     const pageInt = parseInt(page);
     const limitInt = parseInt(limit);
 
@@ -72,11 +72,12 @@ const getProfessionals = async (req, res) => {
         .filter((s) => s);
 
       // Get all professionals in query so far and populate spelcialties
+
       const professionals = await Profesional.find(professionalQuery).populate(
         'specialties',
-        'name keywords',
+        'name keywords'
       );
-
+      console.log('profesional buscaro', professionals, professionalQuery);
       // Set up Fuse for fuzzy search on professionals and specialties
       const fuseOptions = {
         includeScore: true,
@@ -99,12 +100,12 @@ const getProfessionals = async (req, res) => {
       const fuseResultIDs = searchArray.map((term) =>
         fuseProfessionals
           .search(term)
-          .map((result) => result?.item._id.toString()),
+          .map((result) => result?.item._id.toString())
       );
 
       // Filter unique professional IDs present in every fuse result
       const matchedProfessionalIds = fuseResultIDs[0].filter((id) =>
-        fuseResultIDs.every((ids) => ids.includes(id)),
+        fuseResultIDs.every((ids) => ids.includes(id))
       );
 
       // Add matched professional IDs to the query
@@ -140,7 +141,7 @@ const getProfessionals = async (req, res) => {
           professional.address.streetNumber = 'hidden';
           professional.address.floorAppartment = 'hidden';
           professional.coordinates = getRandomCoordinates(
-            professional.coordinates,
+            professional.coordinates
           );
         });
       }
@@ -170,13 +171,14 @@ const getProfessionals = async (req, res) => {
           professional.address.streetNumber = 'hidden';
           professional.address.floorAppartment = 'hidden';
           professional.coordinates = getRandomCoordinates(
-            professional.coordinates,
+            professional.coordinates
           );
         });
       }
 
-      const totalProfessionals =
-        await Profesional.countDocuments(professionalQuery);
+      const totalProfessionals = await Profesional.countDocuments(
+        professionalQuery
+      );
       const totalPages = Math.ceil(totalProfessionals / queryLimit);
 
       return res.status(200).json({

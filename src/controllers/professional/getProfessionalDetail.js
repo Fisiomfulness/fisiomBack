@@ -7,10 +7,11 @@ const getProfessionalDetail = async (req, res) => {
     const { id } = req.params;
     const professional = await Profesional.findById(id).populate(
       'specialties',
-      'name',
+      'name'
     );
 
-    if (!professional) throw new Error('professional not found');
+    if (!professional)
+      return res.status(200).json({ message: 'Profesional no encontrado' });
 
     if (
       !req.user ||
