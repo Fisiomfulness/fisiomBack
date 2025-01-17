@@ -84,6 +84,10 @@ const Appointment = new Schema(
       type: String,
       default: '',
     },
+    title: {
+      type: String,
+      default: '',
+    },
     expiration: {
       type: Date,
       default: new Date(Date.now() + 3 * 60 * 60 * 1000), // 3 hours
@@ -91,7 +95,7 @@ const Appointment = new Schema(
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },
-  },
+  }
 );
 
 module.exports = model('Appointment', Appointment);
