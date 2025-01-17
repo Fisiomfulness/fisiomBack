@@ -10,7 +10,6 @@ const getAppointments = async (req, res) => {
       _patient = '',
       status = '',
     } = req.query;
-
     if (!moment(from).isValid() || !moment(to).isValid()) {
       return res.status(400).json({
         message: 'Debe proveer una fecha inicial "from:" y final "to:" válida',
@@ -41,7 +40,7 @@ const getAppointments = async (req, res) => {
         $or: [
           { status: 'ACCEPTED' },
           {
-            $and: [{ status: 'PENDING' }, { expiration: { $gt: Date.now() } }],
+            $and: [{ status: 'PENDING' }], // { expiration: { $gt: Date.now() } }], lo comento por ahora para testear el calendario
           },
         ],
       };
@@ -50,11 +49,13 @@ const getAppointments = async (req, res) => {
     const appointments = await Appointment.find(appointmentQuery);
 
     // Convertir fechas a UTC antes de enviarlas
-    const formattedAppointments = appointments.map(appointment => ({
+    const formattedAppointments = appointments.map((appointment) => ({
       ...appointment.toObject(),
       start: moment(appointment.start).utc().format('YYYY-MM-DD HH:mm'),
       end: moment(appointment.end).utc().format('YYYY-MM-DD HH:mm'),
-      expiration: moment(appointment.expiration).utc().format('YYYY-MM-DD HH:mm'),
+      expiration: moment(appointment.expiration)
+        .utc()
+        .format('YYYY-MM-DD HH:mm'),
     }));
 
     return res.status(200).json({ appointments: formattedAppointments });
