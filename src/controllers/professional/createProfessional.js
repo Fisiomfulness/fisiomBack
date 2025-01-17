@@ -34,12 +34,10 @@ const createProfessional = async (req, res) => {
           restData.approved = false;
 
           const profesional = await Profesional.create(restData);
-          return res
-            .status(201)
-            .json({
-              message: 'Profesional creado. Pendiente de aprobación.',
-              profesional,
-            });
+          return res.status(201).json({
+            message: 'Profesional creado. Pendiente de aprobación.',
+            profesional,
+          });
         }
       }
     }

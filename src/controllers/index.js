@@ -77,10 +77,10 @@ const {
   deleteInterest,
 } = require('./interest/index');
 
-const { 
-  sendEmail, 
+const {
+  sendEmail,
   sendEmailRequestingBudget,
-  sendEmailRequestingInfo 
+  sendEmailRequestingInfo,
 } = require('./mail/index');
 
 const {
@@ -98,6 +98,14 @@ const {
   updateService,
   deleteService,
 } = require('./service/index');
+
+const {
+  populateCountryCodes,
+  createCountryCode,
+  editCountryCode,
+  deleteCountryCode,
+  getAllCountryCodes,
+} = require('./country/index');
 
 const { initPurchase, successPurchase } = require('./purchase/index');
 
@@ -171,6 +179,10 @@ module.exports = {
   getPendingAppointments,
   adminConfirmAppointment,
   sendEmailRequestingBudget,
-  sendEmailRequestingInfo
+  sendEmailRequestingInfo,
+  populateCountryCodes,
+  createCountryCode,
+  editCountryCode,
+  deleteCountryCode,
+  getAllCountryCodes,
 };
-

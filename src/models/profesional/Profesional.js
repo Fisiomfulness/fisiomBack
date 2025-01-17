@@ -132,6 +132,11 @@ const Profesional = new Schema(
       enum: ['Rejected', 'Pending', 'Approved'],
       default: 'Pending',
     },
+	countryCode: { 
+		type: mongoose.Schema.Types.ObjectId, 
+		ref: "CountryCode", 
+		required: false 
+	  },
   },
   {
     timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' },

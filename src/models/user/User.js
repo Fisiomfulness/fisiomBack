@@ -101,8 +101,13 @@ const User = new Schema(
       enum: ['local', 'google'], // Puede ser 'local' o 'google'
       default: 'local', // Valor por defecto
     },
+    countryCode: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CountryCode',
+      required: false,
+    },
   },
-  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } },
+  { timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } }
 );
 
 User.virtual('age').get(function () {
