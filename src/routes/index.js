@@ -18,7 +18,7 @@ const chatRouter = require('./chatRouter.js');
 const appointmentRouter = require('./appointmentRoutes/appointmentRoutes.js');
 const register = require('./authRoutes/register.js');
 const purchaseRoutes = require('./purchaseRoutes/purchaseRoutes.js');
-
+const country = require('./countryRoutes/countryRoutes.js');
 const router = Router();
 router.use('/api/auth', googleAuthRoutes);
 router.use('/auth', authRouter);
@@ -40,6 +40,7 @@ router.use('/interests', interest);
 router.use('/chat', chatRouter);
 router.use('/appointments', appointmentRouter);
 router.use('/purchases', purchaseRoutes);
+router.use('/country', country);
 
 router.get('/logout', (req, res) => {
   res.clearCookie('accessToken');

@@ -17,6 +17,7 @@ const createUser = async (req, res) => {
     longitud,
     role,
     address,
+    countryCode,
   } = req.body;
 
   try {
@@ -29,7 +30,7 @@ const createUser = async (req, res) => {
       const nameImageDelete = req.file.filename;
       const { public_id, url } = await cloudinary.uploader.upload(
         newImage,
-        userUploadOptions,
+        userUploadOptions
       );
       urlImage = url;
       public_id_prueba = public_id;
@@ -51,6 +52,7 @@ const createUser = async (req, res) => {
       image: urlImage,
       id_image: public_id_prueba,
       authProvider: 'local',
+      countryCode,
     };
 
     const user = new User(newData);
