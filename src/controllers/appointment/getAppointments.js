@@ -45,7 +45,7 @@ const getAppointments = async (req, res) => {
         ],
       };
     }
-
+	
     const appointments = await Appointment.find(appointmentQuery);
 
     // Convertir fechas a UTC antes de enviarlas

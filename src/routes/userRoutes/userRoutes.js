@@ -9,6 +9,7 @@ const {
   getUserById,
   verifyCredentials,
   getSpecificUserData,
+  updateGooglePassword,
 } = require('#src/controllers/user/index');
 
 const { upload, uploadCurriculum } = require('#src/config/multerConfig');
@@ -47,7 +48,13 @@ router.put(
   addressMiddleware,
   validationMiddleware(userSchema, 'update'),
   permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
-  updateUser,
+  updateUser
+);
+
+router.put(
+  '/update/google/:id',
+  permit(roles.USER, roles.ADMIN, roles.SUPER_ADMIN),
+  updateGooglePassword
 );
 
 router.patch('/status/:id', permit(roles.ADMIN, roles.SUPER_ADMIN), statusUser);
@@ -56,13 +63,13 @@ router.patch('/status/:id', permit(roles.ADMIN, roles.SUPER_ADMIN), statusUser);
 router.delete(
   '/delete/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
-  deleteUser,
+  deleteUser
 );
 
 router.put(
   '/suspend/:id',
   permit(roles.ADMIN, roles.SUPER_ADMIN, roles.USER),
-  suspendUser,
+  suspendUser
 );
 
 router.put(
