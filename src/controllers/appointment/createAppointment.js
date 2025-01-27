@@ -18,8 +18,8 @@ const createAppointment = async (req, res) => {
       end,
       additionalDescription,
       status,
+      title,
     } = req.body;
-
 
     //ESTA TRANSFORMACION O UNA VARIANTE SE PUEDE REALIZAR UNA VEZ QUE SE SOLUCIONE LO DEL USO HORARIO YA QUE SI NO TRAE ERRORES DE RENDERIZADO EN EL CALENDARIO
     // start = momentZone(start).tz('America/Lima').format(timeFormat);
@@ -50,12 +50,12 @@ const createAppointment = async (req, res) => {
       });
       return;
     }
-    
+
     // Validate start is not after end
     if (moment(start) > moment(end)) {
       return res.status(401).json({
         message:
-        'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización',
+          'La fecha/hora de inicio debe ser menor a la fecha/hora de finalización',
       });
     }
 
@@ -89,7 +89,7 @@ const createAppointment = async (req, res) => {
         { $or: [{ _patient }, { _professional }] },
       ],
     });
-    
+
     if (overlapping) {
       res.status(401).json({
         message: 'La cita se superpone con una existente.',
@@ -111,7 +111,7 @@ const createAppointment = async (req, res) => {
         findProfessionalAvailability[0].availability;
 
       const availabilityForDay = professionalAvailability.find(
-        (availability) => availability.day.toLowerCase() === dayOfWeek,
+        (availability) => availability.day.toLowerCase() === dayOfWeek
       );
 
       const isTimeInRange = (time, range) => {
@@ -130,7 +130,7 @@ const createAppointment = async (req, res) => {
             return (
               isTimeInRange(start, timeSlot) || isTimeInRange(end, timeSlot)
             );
-          },
+          }
         );
 
         if (!isWithinWorkingHours) {
@@ -154,6 +154,7 @@ const createAppointment = async (req, res) => {
       start,
       end,
       status,
+      title,
     });
 
     return res

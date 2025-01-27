@@ -31,7 +31,7 @@ const envSchema = z.object({
     .string()
     .nonempty()
     .default(
-      'https://res.cloudinary.com/diypmot81/image/upload/v1689621612/FisiumFulness/users/profile_ifkavf.jpg',
+      'https://res.cloudinary.com/diypmot81/image/upload/v1689621612/FisiumFulness/users/profile_ifkavf.jpg'
     ),
   CLOUDINARY_NAME: z.string().nonempty(),
   CLOUDINARY_KEY: z.string().nonempty(),
